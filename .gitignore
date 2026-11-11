@@ -16,3 +16,6 @@ __pycache__/
 .env
 *.pem
 *.key
+
+# Local export scratch
+_to_delete/
