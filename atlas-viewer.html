@@ -115,8 +115,8 @@ canvas{display:block;width:100%!important;height:100%!important}
 #footer{padding:7px 12px;border-top:1px solid #21262d;font-size:10px;color:#57606a;flex-shrink:0;line-height:1.5}
 #footer a{color:#57606a;text-decoration:underline}
 
-/* status bar */
-#status{position:fixed;bottom:14px;left:calc(135px + 50%);transform:translateX(-50%);
+/* status bar — centred in the 3D viewport */
+#status{position:fixed;bottom:14px;left:270px;right:0;margin:0 auto;width:fit-content;
   font-size:11px;color:#8b949e;background:rgba(13,17,23,0.8);
   padding:4px 14px;border-radius:12px;z-index:10;pointer-events:none;
   transition:opacity 1.5s;white-space:nowrap}
@@ -147,11 +147,20 @@ canvas{display:block;width:100%!important;height:100%!important}
 ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:#30363d;border-radius:3px}
 
-/* ── mode switcher (F1) ── */
-#mode-switcher{display:flex;gap:0;margin-bottom:10px;border:1px solid #30363d;border-radius:6px;overflow:hidden}
-.mode-tab{flex:1;padding:5px 0;font-size:11px;background:#161b22;border:none;color:#8b949e;cursor:pointer;text-align:center}
-.mode-tab:hover{background:#21262d;color:#c9d1d9}
-.mode-tab.active{background:#238636;color:#fff;font-weight:600}
+/* ── side-panel 5-tab bar (Tier 4) ── */
+#panel-tabs{display:flex;flex-shrink:0;border-bottom:1px solid #21262d;background:#0d1117}
+.ptab{flex:1;padding:7px 2px 6px;font-size:10px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;
+  background:transparent;border:none;color:#57606a;cursor:pointer;text-align:center;border-bottom:2px solid transparent;transition:color .15s,border-color .15s}
+.ptab:hover{color:#c9d1d9}
+.ptab.active{color:#58a6ff;border-bottom-color:#58a6ff}
+/* each pane fills remaining height */
+.panel-pane{display:none;flex:1;overflow-y:auto;flex-direction:column}
+.panel-pane.active{display:flex}
+/* scrollable content inside panes */
+.pane-scroll{flex:1;overflow-y:auto;padding:10px 12px}
+/* ── legacy mode-switcher kept as invisible passthrough (Tier 2 JS still references ids) ── */
+#mode-switcher{display:none}
+.mode-tab{display:none}
 
 /* ── onboarding welcome card ── */
 #onboard-card{background:#161b22;border:1px solid #388bfd;border-radius:8px;padding:14px 14px 10px;margin:0 12px 10px;font-size:12px;color:#c9d1d9}
@@ -231,8 +240,8 @@ details.learn-clinical-details summary:hover{color:#ffa657}
 .badge-expert{background:#1a2a4a;color:#58a6ff}
 .tour-list-close{margin-top:10px;padding:5px 14px;font-size:12px;background:#21262d;border:1px solid #30363d;border-radius:5px;color:#c9d1d9;cursor:pointer}
 .tour-list-close:hover{background:#30363d}
-/* Tour HUD */
-#tour-hud{position:fixed;bottom:20px;left:calc(135px + 50%);transform:translateX(-50%);z-index:20;background:rgba(13,17,23,0.94);border:1px solid #388bfd;border-radius:10px;padding:14px 20px;min-width:320px;max-width:540px;display:none;backdrop-filter:blur(4px)}
+/* Tour HUD — centred inside the 3D viewport */
+#tour-hud{position:fixed;bottom:20px;left:270px;right:0;margin:0 auto;width:fit-content;min-width:320px;max-width:540px;z-index:20;background:rgba(13,17,23,0.94);border:1px solid #388bfd;border-radius:10px;padding:14px 20px;display:none;backdrop-filter:blur(4px)}
 #tour-hud.visible{display:block}
 #tour-hud-progress{font-size:10px;color:#8b949e;margin-bottom:6px}
 #tour-hud-predict{background:#1a2a3a;border:1px solid #388bfd;border-radius:6px;padding:8px 10px;margin-bottom:8px;font-size:12px;color:#58a6ff;display:none}
@@ -290,10 +299,11 @@ details.learn-clinical-details summary:hover{color:#ffa657}
   border-radius:6px;color:#fff;cursor:pointer;font-weight:600}
 #btn-start-quiz:hover{background:#2ea043}
 
-/* ── quiz active overlay (F3/F4) ── */
-#quiz-hud{position:fixed;top:12px;left:calc(135px + 50%);transform:translateX(-50%);z-index:20;
+/* ── quiz active overlay (F3/F4) — centred inside the 3D viewport (left:270px) ── */
+#quiz-hud{position:fixed;top:12px;left:270px;right:0;margin:0 auto;width:fit-content;
+  min-width:320px;max-width:520px;z-index:20;
   background:rgba(13,17,23,0.92);border:1px solid #30363d;border-radius:10px;
-  padding:12px 20px;min-width:320px;max-width:520px;text-align:center;display:none;
+  padding:12px 20px;text-align:center;display:none;
   backdrop-filter:blur(4px)}
 #quiz-hud.visible{display:block}
 #qhud-progress{font-size:10px;color:#8b949e;margin-bottom:6px}
@@ -334,16 +344,15 @@ details.learn-clinical-details summary:hover{color:#ffa657}
 .summ-btn.primary{background:#238636;border-color:#2ea043;color:#fff}
 .summ-btn.primary:hover{background:#2ea043}
 
-/* ── mastery map legend (F7) ── */
-#mastery-legend{padding:6px 12px 4px;border-bottom:1px solid #21262d;display:none}
-#mastery-legend.visible{display:block}
+/* ── mastery map legend (F7) — now inside Progress pane, always-block ── */
+#mastery-legend{padding:0 0 8px}
 #mastery-legend h2{font-size:11px;font-weight:600;color:#8b949e;text-transform:uppercase;
   letter-spacing:.05em;margin-bottom:5px}
 .mleg-row{display:flex;align-items:center;gap:5px;font-size:11px;color:#c9d1d9;margin-bottom:3px}
 .mleg-swatch{width:12px;height:12px;border-radius:2px;flex-shrink:0}
 
-/* ── progress panel (F8) ── */
-#progress-panel{padding:6px 12px 6px;border-bottom:1px solid #21262d;display:none}
+/* ── progress panel (F8) — now a pane; legacy .visible kept as no-op ── */
+#progress-panel{display:block;padding:0}
 #progress-panel.visible{display:block}
 #progress-panel h2{font-size:11px;font-weight:600;color:#8b949e;text-transform:uppercase;
   letter-spacing:.05em;margin-bottom:6px}
@@ -357,6 +366,56 @@ details.learn-clinical-details summary:hover{color:#ffa657}
 .rc-btn{padding:3px 10px;font-size:11px;border-radius:4px;cursor:pointer;border:1px solid #30363d;background:#161b22;color:#c9d1d9}
 .rc-btn.danger{border-color:#f85149;color:#f85149}
 .rc-btn.danger:hover{background:#4a1a1a}
+
+/* ── quiz cards (Tier 4 Section 3) ── */
+#quiz-cards{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
+.quiz-card{padding:12px 14px;background:#161b22;border:1px solid #30363d;border-radius:8px;cursor:pointer;transition:border-color .15s}
+.quiz-card:hover:not(:disabled):not([disabled]){border-color:#388bfd;background:#1a2433}
+.quiz-card:disabled,.quiz-card[disabled]{opacity:.45;cursor:default}
+.quiz-card-title{font-size:13px;font-weight:600;color:#e6edf3;margin-bottom:3px}
+.quiz-card-desc{font-size:11px;color:#8b949e;line-height:1.4}
+.quiz-card-badge{display:inline-block;font-size:10px;padding:1px 6px;border-radius:8px;margin-top:4px;background:#1a4a2a;color:#56d364}
+.quiz-card-badge.zero{background:#21262d;color:#57606a}
+#custom-quiz-toggle{font-size:11px;color:#57606a;cursor:pointer;padding:4px 0;user-select:none;text-align:center;border-top:1px solid #21262d;padding-top:8px}
+#custom-quiz-toggle:hover{color:#c9d1d9}
+#custom-quiz-section{display:none}
+#custom-quiz-section.open{display:block}
+/* quiz progress bar */
+#qhud-bar-wrap{width:100%;height:3px;background:#21262d;border-radius:2px;margin-bottom:8px;overflow:hidden}
+#qhud-bar{height:100%;background:#388bfd;border-radius:2px;transition:width .3s}
+/* Show-me button */
+#btn-show-me{margin-top:4px;padding:3px 10px;font-size:11px;background:#161b22;
+  border:1px solid #388bfd;border-radius:4px;color:#58a6ff;cursor:pointer;display:none}
+#btn-show-me.visible{display:inline-block}
+#btn-show-me:hover{background:#1a2433}
+
+/* ── focus mode sub-tabs (Tier 4 Section 2) ── */
+/* Fix 3: wrap onto two rows so all 6 tabs fit in 270px */
+#focus-subtabs{display:flex;flex-shrink:0;flex-wrap:wrap;border-bottom:1px solid #21262d;background:#0d1117}
+.stab{padding:4px 6px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.03em;
+  white-space:nowrap;background:transparent;border:none;color:#57606a;cursor:pointer;border-bottom:2px solid transparent}
+.stab:hover{color:#c9d1d9}
+.stab.active{color:#58a6ff;border-bottom-color:#58a6ff}
+.stab:disabled{opacity:.35;cursor:default}
+/* disabled sub-tabs keep their "No cited content yet" tooltip via the title attribute */
+#focus-subpane{flex:1;overflow-y:auto;padding:10px 12px}
+/* structure focus header */
+#focus-header{padding:10px 12px 6px;border-bottom:1px solid #21262d;flex-shrink:0}
+#focus-back-btn{font-size:10px;color:#57606a;background:none;border:none;cursor:pointer;padding:0 0 4px;display:none}
+#focus-back-btn:hover{color:#c9d1d9}
+#focus-back-btn.visible{display:block}
+#focus-header-name{font-size:14px;font-weight:600;color:#e6edf3;line-height:1.3;margin-bottom:3px}
+#focus-breadcrumb{font-size:11px;color:#8b949e;margin-bottom:6px;word-break:break-word}
+.focus-action-bar{display:flex;gap:5px;margin-top:6px}
+.foc-btn{padding:4px 10px;font-size:11px;background:#161b22;border:1px solid #30363d;border-radius:5px;color:#c9d1d9;cursor:pointer}
+.foc-btn:hover{background:#21262d}
+.foc-btn.danger{border-color:#f85149;color:#f85149}
+/* parts list */
+.parts-row{display:flex;align-items:baseline;gap:6px;padding:5px 0;border-bottom:1px solid #21262d;cursor:pointer;font-size:12px}
+.parts-row:hover{background:#1a2433}
+.parts-row-name{color:#58a6ff;font-weight:600;flex:1}
+.parts-row-short{color:#8b949e;font-size:11px;flex:2}
+.parts-row-count{color:#57606a;font-size:10px;white-space:nowrap}
 </style>
 </head>
 <body>
@@ -364,186 +423,288 @@ details.learn-clinical-details summary:hover{color:#ffa657}
 <div id="canvas-wrap"><canvas id="c"></canvas></div>
 
 <div id="panel">
-  <div id="panel-top">
+  <!-- ── header row ── -->
+  <div id="panel-top" style="padding:8px 12px 0">
     <h1>Brain Atlas</h1>
-    <!-- F1: mode switcher -->
-    <div id="mode-switcher">
-      <button class="mode-tab active" id="tab-explore">Explore</button>
-      <button class="mode-tab" id="tab-quiz">Quiz</button>
-    </div>
-    <div id="search-wrap">
-      <input id="search" type="text" placeholder="Search structures…" autocomplete="off" spellcheck="false">
-      <div id="search-results"></div>
-    </div>
-    <div id="toggle-bar">
-      <button class="tog-btn" id="btn-skin">Skin</button>
-      <button class="tog-btn" id="btn-hnm">Muscles</button>
-      <button class="tog-btn active" id="btn-reset-view">Reset View</button>
-      <button class="tog-btn" id="btn-mastery-map">Mastery</button>
-    </div>
-    <div id="preset-bar">
-      <button class="preset-btn" data-preset="anterior">Ant</button>
-      <button class="preset-btn" data-preset="posterior">Post</button>
-      <button class="preset-btn" data-preset="left">Left</button>
-      <button class="preset-btn" data-preset="right">Right</button>
-      <button class="preset-btn" data-preset="superior">Sup</button>
-      <button class="preset-btn" data-preset="inferior">Inf</button>
+    <!-- legacy invisible mode-switcher; Tier-2 JS references tab-explore / tab-quiz -->
+    <div id="mode-switcher" aria-hidden="true">
+      <button class="mode-tab active" id="tab-explore"></button>
+      <button class="mode-tab" id="tab-quiz"></button>
     </div>
   </div>
 
-  <!-- F2: quiz setup -->
-  <div id="quiz-setup">
-    <div>
-      <div class="qs-label">Scope</div>
-      <select class="qs-sel" id="qs-scope">
-        <option value="all">All brain structures</option>
-        <option value="core">Core structures (beginner)</option>
-        <option value="studied">Only structures I've studied</option>
-        <option value="group">Current group filter</option>
-      </select>
-    </div>
-    <div>
-      <div class="qs-label">Question type</div>
-      <select class="qs-sel" id="qs-type">
-        <option value="mixed">Mixed</option>
-        <option value="findit">Find it</option>
-        <option value="nameit">Name it</option>
-        <option value="function">Function (from topics)</option>
-      </select>
-    </div>
-    <div>
-      <div class="qs-label">Session length</div>
-      <select class="qs-sel" id="qs-length">
-        <option value="10">10 questions</option>
-        <option value="20">20 questions</option>
-        <option value="30">30 questions</option>
-      </select>
-    </div>
-    <button id="btn-start-quiz">Start Quiz</button>
+  <!-- ── 5-tab bar ── -->
+  <div id="panel-tabs">
+    <button class="ptab active" data-pane="pane-explore">Explore</button>
+    <button class="ptab" data-pane="pane-learn">Learn</button>
+    <button class="ptab" data-pane="pane-quiz">Quiz</button>
+    <button class="ptab" data-pane="pane-progress">Progress</button>
+    <button class="ptab" data-pane="pane-tools">Tools</button>
   </div>
 
-  <!-- F7: mastery legend (shown in Explore when mastery map is on) -->
-  <div id="mastery-legend">
-    <h2>Mastery Map</h2>
-    <div class="mleg-row"><span class="mleg-swatch" style="background:#555"></span>Unseen</div>
-    <div class="mleg-row"><span class="mleg-swatch" style="background:#c62828"></span>Box 1</div>
-    <div class="mleg-row"><span class="mleg-swatch" style="background:#e65100"></span>Box 2</div>
-    <div class="mleg-row"><span class="mleg-swatch" style="background:#f9a825"></span>Box 3</div>
-    <div class="mleg-row"><span class="mleg-swatch" style="background:#558b2f"></span>Box 4</div>
-    <div class="mleg-row"><span class="mleg-swatch" style="background:#1b5e20"></span>Box 5</div>
-  </div>
-
-  <!-- F8: progress panel -->
-  <div id="progress-panel">
-    <h2>Progress</h2>
-    <div id="prog-rows"></div>
-    <div class="prog-row"><span>Due today</span><span id="prog-due">0</span></div>
-    <button id="btn-reset-progress">Reset progress…</button>
-    <div id="reset-confirm">
-      <span>Sure?</span>
-      <button class="rc-btn danger" id="rc-yes">Yes, reset</button>
-      <button class="rc-btn" id="rc-no">Cancel</button>
-    </div>
-  </div>
-
-  <!-- Level switch row (always visible after onboarding) -->
-  <div id="level-switch-row" style="display:none">
-    <label for="learner-level-sel">Level:</label>
-    <select id="learner-level-sel">
-      <option value="beginner">New to it</option>
-      <option value="some">Some background</option>
-      <option value="expert">Expert</option>
-    </select>
-    <button id="btn-about">About</button>
-  </div>
-
-  <!-- Tour button (shown in explore mode) -->
-  <div id="tour-btn-wrap">
-    <button id="btn-tours">🗺 Guided Tours</button>
-  </div>
-
-  <!-- Glossary list panel -->
-  <div id="glossary-panel">
-    <details>
-      <summary>Glossary</summary>
-      <div id="glossary-panel-inner">
-        <div id="glossary-list"></div>
+  <!-- ══ PANE 1: Explore ══ -->
+  <div class="panel-pane active" id="pane-explore">
+    <!-- search always at top of Explore -->
+    <div style="padding:8px 12px 0;flex-shrink:0">
+      <div id="search-wrap">
+        <input id="search" type="text" placeholder="Search structures…" autocomplete="off" spellcheck="false">
+        <div id="search-results"></div>
       </div>
-    </details>
-  </div>
-
-  <div id="hemi-section">
-    <h2>Hemisphere</h2>
-    <div id="hemi-bar">
-      <label class="hemi-label"><input type="checkbox" id="hemi-left" checked> Left</label>
-      <label class="hemi-label"><input type="checkbox" id="hemi-right" checked> Right</label>
-      <label class="hemi-label"><input type="checkbox" id="hemi-mid" checked> Midline</label>
     </div>
-  </div>
 
-  <div id="clip-section">
-    <h2>Cutting Planes</h2>
-    <div class="clip-row">
-      <input type="checkbox" id="clip-sag-en">
-      <label for="clip-sag-en">Sagittal</label>
-      <input type="range" id="clip-sag-sl" min="0" max="100" value="50">
-      <button class="clip-flip" data-plane="sag">flip</button>
-    </div>
-    <div class="clip-row">
-      <input type="checkbox" id="clip-cor-en">
-      <label for="clip-cor-en">Coronal</label>
-      <input type="range" id="clip-cor-sl" min="0" max="100" value="50">
-      <button class="clip-flip" data-plane="cor">flip</button>
-    </div>
-    <div class="clip-row">
-      <input type="checkbox" id="clip-axi-en">
-      <label for="clip-axi-en">Axial</label>
-      <input type="range" id="clip-axi-sl" min="0" max="100" value="50">
-      <button class="clip-flip" data-plane="axi">flip</button>
-    </div>
-  </div>
-
-  <div id="ctx-section">
-    <label for="ctx-opacity">Context opacity</label>
-    <input type="range" id="ctx-opacity" min="0" max="30" value="8">
-  </div>
-
-  <div id="group-section">
-    <h2>Filter by Group</h2>
-    <select id="group-filter"><option value="">— All structures —</option></select>
-  </div>
-
-  <div id="fail-section">
-    <h2>Load failures</h2>
-    <div id="fail-list"></div>
-  </div>
-
-  <div id="info">
-    <div id="info-placeholder">Click a structure to inspect it, or use the search box.</div>
-    <div id="info-content">
-      <div id="inf-breadcrumb"></div>
-      <div style="display:flex;align-items:flex-start;gap:6px;margin-bottom:8px">
-        <span id="info-swatch"></span>
-        <div id="info-name"></div>
+    <!-- focus-mode structure page (hidden when nothing selected) -->
+    <div id="focus-page" style="display:none;flex:1;overflow:hidden;display:none;flex-direction:column">
+      <!-- focus header: back, name, breadcrumb, action buttons -->
+      <div id="focus-header">
+        <button id="focus-back-btn">← Back</button>
+        <div id="focus-header-name"></div>
+        <div id="focus-breadcrumb"></div>
+        <div class="focus-action-bar">
+          <button class="foc-btn" id="foc-isolate">Isolate</button>
+          <button class="foc-btn" id="foc-show-all">Show All</button>
+          <button class="foc-btn danger" id="foc-deselect">Deselect</button>
+        </div>
       </div>
-      <div class="info-row"><span class="info-label">Hemisphere</span><span class="info-val" id="inf-hemi"></span></div>
-      <div class="info-row"><span class="info-label">Atlas ID(s)</span><span class="info-val" id="inf-aids"></span></div>
-      <div class="info-row"><span class="info-label">Label value</span><span class="info-val" id="inf-lbl"></span></div>
-      <div class="info-row"><span class="info-label">Parent groups</span><span class="info-val" id="inf-parents"></span></div>
-      <div class="info-row" id="inf-radlex-row"><span class="info-label">RadLex ID</span><span class="info-val" id="inf-radlex"></span></div>
-      <div id="learn-panel">
-        <h3>Learn <span id="learn-panel-level-badge"></span></h3>
-        <div id="learn-panel-body"></div>
+      <!-- sub-tab bar -->
+      <div id="focus-subtabs">
+        <button class="stab active" data-stab="stab-overview">Overview</button>
+        <button class="stab" data-stab="stab-functions">Functions</button>
+        <button class="stab" data-stab="stab-parts">Parts</button>
+        <button class="stab" data-stab="stab-connections">Connections</button>
+        <button class="stab" data-stab="stab-clinical">Clinical</button>
+        <button class="stab" data-stab="stab-practice">Practice</button>
       </div>
-      <div class="isolate-bar">
-        <button class="iso-btn" id="btn-isolate">Isolate</button>
-        <button class="iso-btn" id="btn-show-all">Show All</button>
-        <button class="iso-btn danger" id="btn-deselect">Deselect</button>
+      <!-- sub-tab content -->
+      <div id="focus-subpane">
+        <div id="stab-overview"></div>
+        <div id="stab-functions" style="display:none"></div>
+        <div id="stab-parts" style="display:none"></div>
+        <div id="stab-connections" style="display:none"></div>
+        <div id="stab-clinical" style="display:none"></div>
+        <div id="stab-practice" style="display:none"></div>
+      </div>
+    </div>
+
+    <!-- placeholder (no selection) -->
+    <div id="explore-placeholder" style="padding:0 12px;margin-top:8px;flex-shrink:0">
+      <div id="info-placeholder" style="color:#8b949e;font-size:12px;line-height:1.6;text-align:center;margin-top:24px">Click a structure to inspect it, or use the search box.</div>
+    </div>
+
+    <!-- legacy info-content hidden (JS still populates it; focus-page replaces it visually) -->
+    <div id="info" style="display:none">
+      <div id="info-content" style="display:none">
+        <div id="inf-breadcrumb"></div>
+        <div style="display:flex;align-items:flex-start;gap:6px;margin-bottom:8px">
+          <span id="info-swatch"></span>
+          <div id="info-name"></div>
+        </div>
+        <div class="info-row"><span class="info-label">Hemisphere</span><span class="info-val" id="inf-hemi"></span></div>
+        <div class="info-row"><span class="info-label">Atlas ID(s)</span><span class="info-val" id="inf-aids"></span></div>
+        <div class="info-row"><span class="info-label">Label value</span><span class="info-val" id="inf-lbl"></span></div>
+        <div class="info-row"><span class="info-label">Parent groups</span><span class="info-val" id="inf-parents"></span></div>
+        <div class="info-row" id="inf-radlex-row"><span class="info-label">RadLex ID</span><span class="info-val" id="inf-radlex"></span></div>
+        <div id="learn-panel">
+          <h3>Learn <span id="learn-panel-level-badge"></span></h3>
+          <div id="learn-panel-body"></div>
+        </div>
+        <div class="isolate-bar">
+          <button class="iso-btn" id="btn-isolate">Isolate</button>
+          <button class="iso-btn" id="btn-show-all">Show All</button>
+          <button class="iso-btn danger" id="btn-deselect">Deselect</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- view presets: always visible in Explore pane -->
+    <div style="padding:0 12px 6px;flex-shrink:0">
+      <div id="toggle-bar">
+        <button class="tog-btn" id="btn-reset-view">Reset View</button>
+        <button class="tog-btn" id="btn-mastery-map">Mastery</button>
+      </div>
+      <div id="preset-bar">
+        <button class="preset-btn" data-preset="anterior">Ant</button>
+        <button class="preset-btn" data-preset="posterior">Post</button>
+        <button class="preset-btn" data-preset="left">Left</button>
+        <button class="preset-btn" data-preset="right">Right</button>
+        <button class="preset-btn" data-preset="superior">Sup</button>
+        <button class="preset-btn" data-preset="inferior">Inf</button>
+      </div>
+    </div>
+
+    <div id="fail-section" style="display:none;border-top:1px solid #21262d;padding:6px 12px">
+      <h2 style="font-size:11px;color:#f85149;font-weight:600;margin-bottom:4px">Load failures</h2>
+      <div id="fail-list"></div>
+    </div>
+
+    <div id="footer" style="padding:7px 12px;border-top:1px solid #21262d;font-size:10px;color:#57606a;flex-shrink:0;line-height:1.5;margin-top:auto"><!-- filled from manifest --></div>
+  </div>
+
+  <!-- ══ PANE 2: Learn ══ -->
+  <div class="panel-pane" id="pane-learn">
+    <div class="pane-scroll">
+      <!-- onboarding card (JS moves this here) -->
+      <!-- Level switch row -->
+      <div id="level-switch-row" style="display:none;align-items:center;gap:6px;margin-bottom:10px;font-size:11px;color:#8b949e">
+        <label for="learner-level-sel">Level:</label>
+        <select id="learner-level-sel">
+          <option value="beginner">New to it</option>
+          <option value="some">Some background</option>
+          <option value="expert">Expert</option>
+        </select>
+        <button id="btn-about" style="margin-left:auto">About</button>
+      </div>
+      <!-- Tour button -->
+      <div id="tour-btn-wrap" style="display:none;margin-bottom:8px">
+        <button id="btn-tours" style="width:100%;padding:5px;font-size:11px;background:#161b22;border:1px solid #30363d;border-radius:5px;color:#c9d1d9;cursor:pointer">🗺 Guided Tours</button>
+      </div>
+      <!-- Glossary list panel -->
+      <div id="glossary-panel" style="display:none">
+        <details>
+          <summary style="font-size:11px;font-weight:600;color:#8b949e;text-transform:uppercase;letter-spacing:.05em;padding:0 0 4px;cursor:pointer;user-select:none;list-style:none">Glossary</summary>
+          <div id="glossary-panel-inner">
+            <div id="glossary-list"></div>
+          </div>
+        </details>
       </div>
     </div>
   </div>
 
-  <div id="footer"><!-- filled from manifest --></div>
+  <!-- ══ PANE 3: Quiz ══ -->
+  <div class="panel-pane" id="pane-quiz">
+    <div class="pane-scroll">
+      <!-- quiz cards -->
+      <div id="quiz-cards">
+        <button class="quiz-card" id="qcard-daily">
+          <div class="quiz-card-title">Daily review</div>
+          <div class="quiz-card-desc">Work through today's Leitner due items.</div>
+          <span class="quiz-card-badge zero" id="qcard-daily-badge">0 due</span>
+        </button>
+        <button class="quiz-card" id="qcard-quick">
+          <div class="quiz-card-title">Quick 10</div>
+          <div class="quiz-card-desc">10 mixed questions from your level's pool.</div>
+        </button>
+        <button class="quiz-card" id="qcard-region" disabled>
+          <div class="quiz-card-title">This region</div>
+          <div class="quiz-card-desc" id="qcard-region-desc">Select a structure or group first.</div>
+        </button>
+      </div>
+      <!-- custom quiz (collapsed) -->
+      <div id="custom-quiz-toggle">▸ Custom quiz…</div>
+      <div id="custom-quiz-section">
+        <!-- F2: quiz setup — kept for Tier 2 JS compatibility -->
+        <div id="quiz-setup" style="padding:10px 0;display:flex;flex-direction:column;gap:7px">
+          <div>
+            <div class="qs-label">Scope</div>
+            <select class="qs-sel" id="qs-scope">
+              <option value="all">All brain structures</option>
+              <option value="core">Core structures (beginner)</option>
+              <option value="studied">Only structures I've studied</option>
+              <option value="group">Current group filter</option>
+            </select>
+          </div>
+          <div>
+            <div class="qs-label">Question type</div>
+            <select class="qs-sel" id="qs-type">
+              <option value="mixed">Mixed</option>
+              <option value="findit">Find it</option>
+              <option value="nameit">Name it</option>
+              <option value="function">Function (from topics)</option>
+            </select>
+          </div>
+          <div>
+            <div class="qs-label">Session length</div>
+            <select class="qs-sel" id="qs-length">
+              <option value="10">10 questions</option>
+              <option value="20">20 questions</option>
+              <option value="30">30 questions</option>
+            </select>
+          </div>
+          <button id="btn-start-quiz">Start Quiz</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ PANE 4: Progress ══ -->
+  <div class="panel-pane" id="pane-progress">
+    <div class="pane-scroll">
+      <div id="progress-panel">
+        <h2>Leitner boxes</h2>
+        <div id="prog-rows"></div>
+        <div class="prog-row"><span>Due today</span><span id="prog-due">0</span></div>
+        <button id="btn-reset-progress">Reset progress…</button>
+        <div id="reset-confirm">
+          <span>Sure?</span>
+          <button class="rc-btn danger" id="rc-yes">Yes, reset</button>
+          <button class="rc-btn" id="rc-no">Cancel</button>
+        </div>
+      </div>
+      <div style="margin-top:14px">
+        <button class="tog-btn" id="btn-mastery-map-prog" style="width:100%">Toggle Mastery Map</button>
+      </div>
+      <div id="mastery-legend" style="margin-top:12px">
+        <h2>Mastery Map legend</h2>
+        <div class="mleg-row"><span class="mleg-swatch" style="background:#555"></span>Unseen</div>
+        <div class="mleg-row"><span class="mleg-swatch" style="background:#c62828"></span>Box 1</div>
+        <div class="mleg-row"><span class="mleg-swatch" style="background:#e65100"></span>Box 2</div>
+        <div class="mleg-row"><span class="mleg-swatch" style="background:#f9a825"></span>Box 3</div>
+        <div class="mleg-row"><span class="mleg-swatch" style="background:#558b2f"></span>Box 4</div>
+        <div class="mleg-row"><span class="mleg-swatch" style="background:#1b5e20"></span>Box 5</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ PANE 5: Tools ══ -->
+  <div class="panel-pane" id="pane-tools">
+    <div class="pane-scroll">
+      <div id="toggle-bar-tools" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px">
+        <button class="tog-btn" id="btn-skin">Skin</button>
+        <button class="tog-btn" id="btn-hnm">Muscles</button>
+      </div>
+
+      <div id="hemi-section" style="margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid #21262d">
+        <h2>Hemisphere</h2>
+        <div id="hemi-bar">
+          <label class="hemi-label"><input type="checkbox" id="hemi-left" checked> Left</label>
+          <label class="hemi-label"><input type="checkbox" id="hemi-right" checked> Right</label>
+          <label class="hemi-label"><input type="checkbox" id="hemi-mid" checked> Midline</label>
+        </div>
+      </div>
+
+      <div id="clip-section" style="margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid #21262d">
+        <h2>Cutting Planes</h2>
+        <div class="clip-row">
+          <input type="checkbox" id="clip-sag-en">
+          <label for="clip-sag-en">Sagittal</label>
+          <input type="range" id="clip-sag-sl" min="0" max="100" value="50">
+          <button class="clip-flip" data-plane="sag">flip</button>
+        </div>
+        <div class="clip-row">
+          <input type="checkbox" id="clip-cor-en">
+          <label for="clip-cor-en">Coronal</label>
+          <input type="range" id="clip-cor-sl" min="0" max="100" value="50">
+          <button class="clip-flip" data-plane="cor">flip</button>
+        </div>
+        <div class="clip-row">
+          <input type="checkbox" id="clip-axi-en">
+          <label for="clip-axi-en">Axial</label>
+          <input type="range" id="clip-axi-sl" min="0" max="100" value="50">
+          <button class="clip-flip" data-plane="axi">flip</button>
+        </div>
+      </div>
+
+      <div id="ctx-section" style="margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid #21262d;display:flex;align-items:center;gap:6px;font-size:11px;color:#8b949e">
+        <label for="ctx-opacity" style="flex-shrink:0">Context opacity</label>
+        <input type="range" id="ctx-opacity" min="0" max="30" value="8" style="flex:1;accent-color:#388bfd">
+      </div>
+
+      <div id="group-section">
+        <h2>Filter by Group</h2>
+        <select id="group-filter"><option value="">— All structures —</option></select>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <!-- hover tooltip -->
@@ -574,8 +735,10 @@ details.learn-clinical-details summary:hover{color:#ffa657}
 <!-- F3/F4: quiz HUD -->
 <div id="quiz-hud">
   <div id="qhud-progress"></div>
+  <div id="qhud-bar-wrap"><div id="qhud-bar" style="width:0%"></div></div>
   <div id="qhud-prompt"></div>
   <div id="qhud-feedback"></div>
+  <button id="btn-show-me">Show me →</button>
   <div id="qhud-options"></div>
   <div id="conf-label">How confident were you?</div>
   <div id="confidence-row">
@@ -2469,15 +2632,12 @@ function markTopicSeen(topicId) {
 
 // ── Onboarding ───────────────────────────────────────────────────────────────
 (function initOnboarding() {
-  const panelTop  = document.getElementById('panel-top');
   const card      = document.getElementById('onboard-card');
 
-  // Move card into panel-top after h1
-  const h1 = panelTop.querySelector('h1');
-  if (h1 && h1.nextSibling) {
-    panelTop.insertBefore(card, h1.nextSibling);
-  } else {
-    panelTop.appendChild(card);
+  // Move card into the Learn pane (Tier 4: panel-top no longer holds this content)
+  const learnScroll = document.querySelector('#pane-learn .pane-scroll');
+  if (learnScroll) {
+    learnScroll.insertBefore(card, learnScroll.firstChild);
   }
 
   if (!learnerProfile.onboarded) {
@@ -2535,8 +2695,9 @@ function showLevelSwitch() {
       if (entry) renderLearnPanel(entry.modelDef);
     }
   });
-  // Show tours button in explore mode
-  document.getElementById('tour-btn-wrap').classList.add('visible');
+  // Show tours button in Learn pane
+  const tourWrap = document.getElementById('tour-btn-wrap');
+  tourWrap.style.display = 'block';
 }
 
 function applyProfileToQuizScope() {
@@ -2553,10 +2714,16 @@ function getTopicForModel(mod) {
   const atlasIds = (mod.structures || []).map(s => s.atlas_id);
 
   // Pass 1: exact atlas_id match — most specific, wins over any group match.
+  // If several topics list this structure, the one covering the fewest
+  // structures is the most specific (e.g. caudate nucleus beats basal nuclei).
+  let best = null, bestCount = Infinity;
   for (const topic of topics) {
     const tIds = (topic.applies_to || {}).atlas_ids || [];
-    if (atlasIds.some(id => tIds.includes(id))) return topic;
+    if (atlasIds.some(id => tIds.includes(id)) && tIds.length < bestCount) {
+      best = topic; bestCount = tIds.length;
+    }
   }
+  if (best) return best;
 
   // Pass 2: walk ancestor groups nearest→farthest; take the first topic match.
   // Build the ancestor chain for each structure's parent groups.
@@ -2843,7 +3010,7 @@ function buildGlossaryPanel() {
   list.innerHTML = '';
   const glossary = learningData.glossary || [];
   if (!glossary.length) {
-    document.getElementById('glossary-panel').classList.remove('visible');
+    document.getElementById('glossary-panel').style.display = 'none';
     return;
   }
   glossary.forEach(entry => {
@@ -2859,7 +3026,7 @@ function buildGlossaryPanel() {
     div.appendChild(def);
     list.appendChild(div);
   });
-  document.getElementById('glossary-panel').classList.add('visible');
+  document.getElementById('glossary-panel').style.display = 'block';
 }
 
 // Build a regex that matches all glossary terms (whole word, case-insensitive)
@@ -3635,6 +3802,1009 @@ buildDisctractors = function(targetId, targetEntry, count) {
 document.getElementById('btn-start-quiz').addEventListener('click', () => {
   quizConfidentWrong = 0;
 }, true); // capture phase, runs before the existing handler
+
+// ══════════════════════════════════════════════════════════════════════════════
+// TIER 4 — SECTION 1: Side-panel tabs
+// ══════════════════════════════════════════════════════════════════════════════
+const UI_KEY = 'neuroapp.ui.v1';
+let currentPaneId = 'pane-explore';
+
+(function initPanelTabs() {
+  // restore last tab
+  try {
+    const saved = localStorage.getItem(UI_KEY);
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      if (parsed && parsed.pane) currentPaneId = parsed.pane;
+    }
+  } catch(e) { /* ignore */ }
+
+  function activatePane(paneId) {
+    currentPaneId = paneId;
+    document.querySelectorAll('.ptab').forEach(t => {
+      t.classList.toggle('active', t.dataset.pane === paneId);
+    });
+    document.querySelectorAll('.panel-pane').forEach(p => {
+      p.classList.toggle('active', p.id === paneId);
+    });
+    // When switching to Quiz, refresh card badges
+    if (paneId === 'pane-quiz') refreshQuizCards();
+    // When switching to Progress, refresh counts
+    if (paneId === 'pane-progress') refreshProgressPanel();
+    // Save
+    try { localStorage.setItem(UI_KEY, JSON.stringify({ pane: paneId })); } catch(e) {}
+  }
+
+  document.querySelectorAll('.ptab').forEach(btn => {
+    btn.addEventListener('click', () => activatePane(btn.dataset.pane));
+  });
+
+  // Apply saved tab
+  activatePane(currentPaneId);
+})();
+
+// Alt+1..5 keyboard shortcuts for tabs
+document.addEventListener('keydown', function panelTabKeys(e) {
+  if (!e.altKey) return;
+  if (document.activeElement === document.getElementById('search')) return;
+  const PANES = ['pane-explore', 'pane-learn', 'pane-quiz', 'pane-progress', 'pane-tools'];
+  const idx = parseInt(e.key, 10) - 1;
+  if (idx >= 0 && idx < PANES.length) {
+    e.preventDefault();
+    document.querySelector('.ptab[data-pane="' + PANES[idx] + '"]').click();
+  }
+});
+
+// Switch to Explore pane whenever a structure is selected (selectModel / selectGroup patched below)
+function switchToExplorePane() {
+  if (currentPaneId !== 'pane-explore') {
+    document.querySelector('.ptab[data-pane="pane-explore"]').click();
+  }
+}
+
+// Mastery map button in Progress pane mirrors the Explore one
+document.getElementById('btn-mastery-map-prog').addEventListener('click', () => {
+  document.getElementById('btn-mastery-map').click();
+  document.getElementById('btn-mastery-map-prog').classList.toggle('active', masteryMapOn);
+});
+// Keep in sync
+const _origBtnMastery = document.getElementById('btn-mastery-map');
+_origBtnMastery.addEventListener('click', () => {
+  document.getElementById('btn-mastery-map-prog').classList.toggle('active', masteryMapOn);
+});
+
+// Custom quiz toggle
+document.getElementById('custom-quiz-toggle').addEventListener('click', function() {
+  const sec = document.getElementById('custom-quiz-section');
+  const open = sec.classList.toggle('open');
+  this.textContent = open ? '▾ Custom quiz…' : '▸ Custom quiz…';
+});
+
+// ── Section 1 patch: setMode(explore/quiz) now also switches pane ─────────────
+const _origSetMode = setMode;
+setMode = function(m) {
+  _origSetMode(m);
+  if (m === 'quiz') {
+    document.querySelector('.ptab[data-pane="pane-quiz"]').click();
+  }
+};
+
+// ══════════════════════════════════════════════════════════════════════════════
+// TIER 4 — SECTION 2: Focus mode (structure page with sub-tabs)
+// ══════════════════════════════════════════════════════════════════════════════
+
+// State
+let focusStack     = [];   // [{type:'model'|'group', id}] — history for Back button
+let focusCurrentType = null;  // 'model' | 'group'
+let focusCurrentId   = null;
+
+// DOM refs
+const focusPageEl      = document.getElementById('focus-page');
+const focusPlaceholderEl = document.getElementById('explore-placeholder');
+const focusBackBtn     = document.getElementById('focus-back-btn');
+const focusHeaderName  = document.getElementById('focus-header-name');
+const focusBreadcrumb  = document.getElementById('focus-breadcrumb');
+const focusSubtabBtns  = document.querySelectorAll('.stab');
+const focusSubpanes    = {
+  overview:    document.getElementById('stab-overview'),
+  functions:   document.getElementById('stab-functions'),
+  parts:       document.getElementById('stab-parts'),
+  connections: document.getElementById('stab-connections'),
+  clinical:    document.getElementById('stab-clinical'),
+  practice:    document.getElementById('stab-practice'),
+};
+let activeSubtab = 'overview';
+
+function activateSubtab(name) {
+  activeSubtab = name;
+  focusSubtabBtns.forEach(b => {
+    b.classList.toggle('active', b.dataset.stab === 'stab-' + name);
+  });
+  Object.entries(focusSubpanes).forEach(([k, el]) => {
+    el.style.display = k === name ? '' : 'none';
+  });
+}
+
+focusSubtabBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    if (btn.disabled) return;
+    activateSubtab(btn.dataset.stab.replace('stab-', ''));
+  });
+});
+
+// Focus-header action buttons
+document.getElementById('foc-isolate').addEventListener('click', () => {
+  if (selectedModelId) document.getElementById('btn-isolate').click();
+});
+document.getElementById('foc-show-all').addEventListener('click', () => {
+  document.getElementById('btn-show-all').click();
+});
+document.getElementById('foc-deselect').addEventListener('click', () => {
+  hideFocusPage();
+  document.getElementById('btn-deselect').click();
+});
+focusBackBtn.addEventListener('click', () => {
+  if (focusStack.length > 1) {
+    focusStack.pop(); // remove current
+    const prev = focusStack[focusStack.length - 1];
+    focusStack.pop(); // will be re-pushed by navigate
+    if (prev.type === 'model') selectModel(prev.id);
+    else selectGroupFocus(prev.id);
+  }
+});
+
+function showFocusPage() {
+  focusPageEl.style.display  = 'flex';
+  document.getElementById('info').style.display = 'none';  // focus page replaces the legacy info panel
+  focusPlaceholderEl.style.display = 'none';
+  focusBackBtn.classList.toggle('visible', focusStack.length > 1);
+}
+
+function hideFocusPage() {
+  focusPageEl.style.display  = 'none';
+  document.getElementById('info').style.display = '';
+  focusPlaceholderEl.style.display = '';
+  focusStack = [];
+}
+
+// ── Render focus page for a STRUCTURE ────────────────────────────────────────
+function renderFocusModel(mod) {
+  const s0      = (mod.structures || [])[0] || {};
+  const topic   = getTopicForModel(mod);
+  const level   = learnerProfile.level;
+
+  // Fix 2: clear every sub-pane before rendering to avoid stale content
+  Object.values(focusSubpanes).forEach(el => { el.innerHTML = ''; });
+
+  // Header
+  focusHeaderName.textContent = mod.name;
+  _renderFocusBreadcrumb(mod);
+
+  // Reset to overview
+  activateSubtab('overview');
+
+  const levels  = topic ? (topic.levels || {}) : {};
+  const begData = levels.beginner || {};
+  const expData = levels.expert   || {};
+  const sources = learningData.sources || {};
+
+  // Fix 1: hasFunctions counts only function/untagged points
+  const allBegPts = begData.points || [];
+  const allExpPts = expData.points || [];
+  const hasFunctions = allBegPts.some(p => !p.tab || p.tab === 'function') ||
+                       allExpPts.some(p => !p.tab || p.tab === 'function');
+
+  const hasConn     = !!(topic && (topic.connections || []).length);
+  const hasClinical = !!(topic && (topic.clinical || []).length);
+
+  // ── Overview sub-pane ─────────────────────────────────────────────────────
+  const overviewEl = focusSubpanes.overview;
+  // Color swatch + level badge
+  const colorStr = s0.color ? (s0.color.startsWith('rgba') ? rgbaToRgb(s0.color) : s0.color) : '#888';
+  const swatchWrap = document.createElement('div');
+  swatchWrap.style.cssText = 'display:flex;align-items:center;gap:6px;margin-bottom:8px';
+  const sw = document.createElement('span');
+  sw.style.cssText = 'width:12px;height:12px;border-radius:2px;display:inline-block;flex-shrink:0;background:' + escHtml(colorStr);
+  const lvlBadge = document.createElement('span');
+  lvlBadge.style.cssText = 'font-size:10px;padding:1px 6px;border-radius:8px;background:#1a2433;color:#58a6ff';
+  const lvlLabels = { beginner: 'New to it', some: 'Some background', expert: 'Expert' };
+  lvlBadge.textContent = lvlLabels[level] || level;
+  swatchWrap.appendChild(sw);
+  swatchWrap.appendChild(lvlBadge);
+  overviewEl.appendChild(swatchWrap);
+
+  // Summary
+  if (topic) {
+    const sum = (level === 'expert' ? expData.summary : begData.summary) || begData.summary || expData.summary;
+    if (sum) {
+      const summEl = document.createElement('div');
+      summEl.className = 'learn-summary';
+      applyGlossaryMarkup(summEl, sum);
+      overviewEl.appendChild(summEl);
+    }
+  } else {
+    const noContent = document.createElement('div');
+    noContent.className = 'learn-no-content';
+    noContent.textContent = 'No reviewed content yet.';
+    overviewEl.appendChild(noContent);
+  }
+
+  // Fix 1: anatomy points in Overview (after summary, before metadata)
+  if (topic) {
+    resetCiteOrder();
+    const pts = level === 'expert' ? (allExpPts.length ? allExpPts : allBegPts) : allBegPts;
+    const anatPts = pts.filter(p => p.tab === 'anatomy');
+    if (anatPts.length) {
+      const anatHdr = document.createElement('div');
+      anatHdr.style.cssText = 'font-size:11px;font-weight:600;color:#8b949e;text-transform:uppercase;letter-spacing:.04em;margin:8px 0 4px';
+      anatHdr.textContent = 'Anatomy';
+      overviewEl.appendChild(anatHdr);
+      _renderPointsList(overviewEl, anatPts, sources);
+    }
+  }
+
+  // Meta fields
+  function addRow(label, value) {
+    if (!value) return;
+    const row = document.createElement('div');
+    row.className = 'info-row';
+    const lbl = document.createElement('span');
+    lbl.className = 'info-label';
+    lbl.textContent = label;
+    const val = document.createElement('span');
+    val.className = 'info-val';
+    val.textContent = value;
+    row.appendChild(lbl);
+    row.appendChild(val);
+    overviewEl.appendChild(row);
+  }
+  addRow('Hemisphere',
+    mod.hemisphere === 'left'  ? 'Left'  :
+    mod.hemisphere === 'right' ? 'Right' : 'Midline / not lateralized');
+  addRow('Atlas ID(s)', (mod.structures || []).map(s => s.atlas_id).join(', ') || '—');
+  addRow('Label value', (mod.structures || []).map(s => s.label_value).filter(v => v != null).join(', ') || '—');
+  const parents2 = [...new Set((mod.structures || []).flatMap(s => (s.parent_groups || []).map(p => p.name)))];
+  addRow('Parent groups', parents2.join(' › ') || '—');
+  const radlex2 = (mod.structures || []).map(s => s.radlex_id).filter(Boolean).join(', ');
+  if (radlex2) addRow('RadLex ID', radlex2);
+
+  // ── Functions sub-pane ────────────────────────────────────────────────────
+  const funcsEl = focusSubpanes.functions;
+  if (topic) {
+    resetCiteOrder();
+    const pts = level === 'expert' ? (allExpPts.length ? allExpPts : allBegPts) : allBegPts;
+    const funcPts = pts.filter(p => !p.tab || p.tab === 'function');
+    _renderPointsList(funcsEl, funcPts, sources);
+    if (level === 'beginner' && allExpPts.some(p => !p.tab || p.tab === 'function')) {
+      const det = document.createElement('details');
+      det.style.marginTop = '8px';
+      const s = document.createElement('summary');
+      s.style.cssText = 'font-size:11px;color:#58a6ff;cursor:pointer';
+      s.textContent = 'Show expert detail';
+      det.appendChild(s);
+      const expDiv = document.createElement('div');
+      _renderPointsList(expDiv, allExpPts.filter(p => !p.tab || p.tab === 'function'), sources);
+      det.appendChild(expDiv);
+      funcsEl.appendChild(det);
+    }
+  }
+
+  // ── Parts sub-pane (structure view: parent + siblings) ────────────────────
+  const partsEl = focusSubpanes.parts;
+  const pg0Id = s0?.parent_groups?.[0]?.id;
+  if (pg0Id) {
+    const pgEntry = groupIndex.get(pg0Id);
+    if (pgEntry) {
+      const parentLink = document.createElement('div');
+      parentLink.style.cssText = 'font-size:12px;color:#8b949e;margin-bottom:8px';
+      const partOfSpan = document.createElement('span');
+      partOfSpan.textContent = 'Part of: ';
+      const pgLink = document.createElement('span');
+      pgLink.style.cssText = 'color:#58a6ff;cursor:pointer';
+      pgLink.textContent = pgEntry.name;
+      pgLink.addEventListener('click', () => selectGroupFocus(pg0Id));
+      parentLink.appendChild(partOfSpan);
+      parentLink.appendChild(pgLink);
+      partsEl.appendChild(parentLink);
+      const sibHdr = document.createElement('div');
+      sibHdr.style.cssText = 'font-size:11px;color:#8b949e;margin-bottom:4px;font-weight:600';
+      sibHdr.textContent = 'Siblings:';
+      partsEl.appendChild(sibHdr);
+      const sibIds = getModelIdsForGroup(pg0Id);
+      sibIds.forEach(mid => {
+        if (mid === mod.id) return;
+        const sibEntry = meshMap.get(mid);
+        if (!sibEntry) return;
+        const row = document.createElement('div');
+        row.className = 'parts-row';
+        const nameSpan = document.createElement('span');
+        nameSpan.className = 'parts-row-name';
+        nameSpan.textContent = sibEntry.modelDef.name;
+        const sibTopic = getTopicForModel(sibEntry.modelDef);
+        const shortSpan = document.createElement('span');
+        shortSpan.className = 'parts-row-short';
+        shortSpan.textContent = (sibTopic && sibTopic.short) ? sibTopic.short : 'No lesson yet';
+        row.appendChild(nameSpan);
+        row.appendChild(shortSpan);
+        row.addEventListener('click', () => selectModel(mid));
+        partsEl.appendChild(row);
+      });
+    }
+  } else {
+    const noP = document.createElement('div');
+    noP.className = 'learn-no-content';
+    noP.textContent = 'No parent group information.';
+    partsEl.appendChild(noP);
+  }
+
+  // ── Connections sub-pane — each connection on its own block row ───────────
+  const connEl = focusSubpanes.connections;
+  if (topic) {
+    (topic.connections || []).forEach(conn => {
+      const row = document.createElement('div');
+      row.className = 'conn-chip';
+      row.style.display = 'block';
+      row.style.marginBottom = '4px';
+      row.textContent = conn.label || (conn.atlas_ids || []).join(', ');
+      row.title = conn.label || '';
+      row.addEventListener('click', () => {
+        (conn.atlas_ids || []).forEach(aid => {
+          const mid = atlasIdToModelId.get(aid);
+          if (mid) selectModel(mid);
+        });
+      });
+      connEl.appendChild(row);
+    });
+  }
+
+  // ── Clinical sub-pane ─────────────────────────────────────────────────────
+  const clinEl = focusSubpanes.clinical;
+  if (topic) {
+    (topic.clinical || []).forEach(note => {
+      const noteEl = document.createElement('div');
+      noteEl.className = 'learn-clinical-note';
+      applyGlossaryMarkup(noteEl, note.text || '');
+      (note.cite || []).forEach(c => {
+        const sup = document.createElement('sup');
+        sup.className   = 'cite-sup';
+        sup.textContent = '[src]';
+        sup.title       = sources[c] ? sources[c].citation : c;
+        noteEl.appendChild(sup);
+      });
+      clinEl.appendChild(noteEl);
+    });
+    if (clinEl.children.length) {
+      const disc = document.createElement('div');
+      disc.className   = 'learn-clinical-disclaimer';
+      disc.textContent = 'Educational use only — not medical advice.';
+      clinEl.appendChild(disc);
+    }
+  }
+
+  // ── Enable tabs based on actual rendered content ──────────────────────────
+  _setStabEnabled('overview',    true);
+  _setStabEnabled('functions',   hasFunctions);
+  _setStabEnabled('parts',       true);
+  _setStabEnabled('connections', connEl.children.length > 0);
+  _setStabEnabled('clinical',    clinEl.children.length > 0);
+  _setStabEnabled('practice',    true);
+
+  // ── Practice sub-pane ─────────────────────────────────────────────────────
+  _renderPracticePane(focusSubpanes.practice, 'model', mod.id);
+}
+
+// ── Render focus page for a GROUP ─────────────────────────────────────────────
+function renderFocusGroup(g, groupId) {
+  // Fix 2: clear every sub-pane before rendering to avoid stale content
+  Object.values(focusSubpanes).forEach(el => { el.innerHTML = ''; });
+
+  // Header
+  focusHeaderName.textContent = g.name;
+  focusBreadcrumb.innerHTML = '';
+
+  // Render breadcrumb for the group itself
+  const path = buildAncestorPath(groupId);
+  path.forEach((gid, i) => {
+    const gEntry = groupIndex.get(gid);
+    if (!gEntry) return;
+    if (i > 0) {
+      const sep = document.createElement('span');
+      sep.className = 'bc-sep';
+      sep.textContent = '›';
+      focusBreadcrumb.appendChild(sep);
+    }
+    const link = document.createElement('span');
+    link.className = 'bc-link';
+    link.textContent = gEntry.name;
+    link.addEventListener('click', () => selectGroupFocus(gid));
+    focusBreadcrumb.appendChild(link);
+  });
+
+  activateSubtab('overview');
+
+  const memberIds   = getModelIdsForGroup(groupId);
+  const sources     = learningData.sources || {};
+  const level       = learnerProfile.level;
+
+  // Fix 2: look up the group's own topic first; fall back to nearest ancestor
+  let groupTopic = (learningData.topics || []).find(t =>
+    ((t.applies_to || {}).groups || []).includes(groupId)
+  );
+  let groupTopicLabel = null;
+  if (!groupTopic) {
+    // Walk ancestor path (leaf-first) to find nearest ancestor with a group topic
+    const ancestorPath = buildAncestorPath(groupId); // [root, ..., groupId]
+    for (let i = ancestorPath.length - 2; i >= 0; i--) {
+      const anc = ancestorPath[i];
+      const t = (learningData.topics || []).find(tt =>
+        ((tt.applies_to || {}).groups || []).includes(anc)
+      );
+      if (t) {
+        groupTopic = t;
+        groupTopicLabel = groupIndex.get(anc)?.name || anc;
+        break;
+      }
+    }
+  }
+
+  // Collect child topics (for fallback functions / connections / clinical)
+  const childTopics = [];
+  memberIds.forEach(mid => {
+    const e = meshMap.get(mid);
+    if (e) {
+      const t = getTopicForModel(e.modelDef);
+      if (t && !childTopics.find(ct => ct.id === t.id)) childTopics.push(t);
+    }
+  });
+
+  const gtLevels  = groupTopic ? (groupTopic.levels || {}) : {};
+  const gtBeg     = gtLevels.beginner || {};
+  const gtExp     = gtLevels.expert   || {};
+  const gtBegPts  = gtBeg.points || [];
+  const gtExpPts  = gtExp.points || [];
+
+  // ── Overview ──────────────────────────────────────────────────────────────
+  const overviewEl = focusSubpanes.overview;
+  const countLine = document.createElement('div');
+  countLine.style.cssText = 'font-size:12px;color:#c9d1d9;margin-bottom:6px';
+  countLine.textContent = g.name + ' — ' + memberIds.size + ' structures';
+  overviewEl.appendChild(countLine);
+
+  if (groupTopic) {
+    if (groupTopicLabel) {
+      const inheritNote = document.createElement('div');
+      inheritNote.style.cssText = 'font-size:10px;color:#57606a;margin-bottom:6px';
+      inheritNote.textContent = 'From: ' + groupTopicLabel;
+      overviewEl.appendChild(inheritNote);
+    }
+    const sum = (level === 'expert' ? gtExp.summary : gtBeg.summary) || gtBeg.summary || gtExp.summary;
+    if (sum) {
+      const summEl = document.createElement('div');
+      summEl.className = 'learn-summary';
+      applyGlossaryMarkup(summEl, sum);
+      overviewEl.appendChild(summEl);
+    }
+    // Anatomy points in overview
+    resetCiteOrder();
+    const pts = level === 'expert' ? (gtExpPts.length ? gtExpPts : gtBegPts) : gtBegPts;
+    const anatPts = pts.filter(p => p.tab === 'anatomy');
+    if (anatPts.length) {
+      const anatHdr = document.createElement('div');
+      anatHdr.style.cssText = 'font-size:11px;font-weight:600;color:#8b949e;text-transform:uppercase;letter-spacing:.04em;margin:8px 0 4px';
+      anatHdr.textContent = 'Anatomy';
+      overviewEl.appendChild(anatHdr);
+      _renderPointsList(overviewEl, anatPts, sources);
+    }
+  }
+
+  // ── Functions ─────────────────────────────────────────────────────────────
+  const funcsEl = focusSubpanes.functions;
+  if (groupTopic) {
+    // Group has its own topic: render function/untagged points
+    resetCiteOrder();
+    const pts = level === 'expert' ? (gtExpPts.length ? gtExpPts : gtBegPts) : gtBegPts;
+    const funcPts = pts.filter(p => !p.tab || p.tab === 'function');
+    _renderPointsList(funcsEl, funcPts, sources);
+    if (level === 'beginner' && gtExpPts.some(p => !p.tab || p.tab === 'function')) {
+      const det = document.createElement('details');
+      det.style.marginTop = '8px';
+      const s = document.createElement('summary');
+      s.style.cssText = 'font-size:11px;color:#58a6ff;cursor:pointer';
+      s.textContent = 'Show expert detail';
+      det.appendChild(s);
+      const expDiv = document.createElement('div');
+      _renderPointsList(expDiv, gtExpPts.filter(p => !p.tab || p.tab === 'function'), sources);
+      det.appendChild(expDiv);
+      funcsEl.appendChild(det);
+    }
+  }
+  if (!funcsEl.children.length) {
+    // Fallback: list each child topic's short description as clickable rows
+    const shortItems = [];
+    (g.members || []).forEach(childId => {
+      if (groupIndex.has(childId)) {
+        // sub-group: walk its members
+        const subMemberIds = getModelIdsForGroup(childId);
+        const seenTopics = new Set();
+        subMemberIds.forEach(mid => {
+          const e = meshMap.get(mid);
+          if (!e) return;
+          const t = getTopicForModel(e.modelDef);
+          if (t && t.short && !seenTopics.has(t.id)) {
+            seenTopics.add(t.id);
+            shortItems.push({ name: groupIndex.get(childId)?.name || childId, short: t.short, type: 'group', id: childId });
+          }
+        });
+      } else {
+        const mid = atlasIdToModelId.get(childId);
+        if (!mid) return;
+        const e = meshMap.get(mid);
+        if (!e) return;
+        const t = getTopicForModel(e.modelDef);
+        if (t && t.short) shortItems.push({ name: e.modelDef.name, short: t.short, type: 'model', id: mid });
+      }
+    });
+    if (shortItems.length) {
+      shortItems.forEach(item => {
+        const row = document.createElement('div');
+        row.className = 'parts-row';
+        const nameSpan = document.createElement('span');
+        nameSpan.className = 'parts-row-name';
+        nameSpan.textContent = item.name;
+        const shortSpan = document.createElement('span');
+        shortSpan.className = 'parts-row-short';
+        shortSpan.textContent = item.short;
+        row.appendChild(nameSpan);
+        row.appendChild(shortSpan);
+        row.addEventListener('click', () => {
+          if (item.type === 'group') selectGroupFocus(item.id);
+          else selectModel(item.id);
+        });
+        funcsEl.appendChild(row);
+      });
+    }
+  }
+
+  // ── Parts ─────────────────────────────────────────────────────────────────
+  const partsEl = focusSubpanes.parts;
+  const directChildren = g.members || [];
+  if (directChildren.length) {
+    const hdr = document.createElement('div');
+    hdr.style.cssText = 'font-size:11px;color:#8b949e;margin-bottom:6px;font-weight:600';
+    hdr.textContent = 'Direct children:';
+    partsEl.appendChild(hdr);
+    directChildren.forEach(childId => {
+      if (groupIndex.has(childId)) {
+        const childGroup = groupIndex.get(childId);
+        const childMemberCount = getModelIdsForGroup(childId).size;
+        const row = document.createElement('div');
+        row.className = 'parts-row';
+        const nameSpan = document.createElement('span');
+        nameSpan.className = 'parts-row-name';
+        nameSpan.textContent = childGroup.name;
+        const countSpan = document.createElement('span');
+        countSpan.className = 'parts-row-count';
+        countSpan.textContent = childMemberCount + ' parts';
+        row.appendChild(nameSpan);
+        row.appendChild(countSpan);
+        row.addEventListener('click', () => selectGroupFocus(childId));
+        partsEl.appendChild(row);
+      } else {
+        const mid = atlasIdToModelId.get(childId);
+        if (!mid) return;
+        const childEntry = meshMap.get(mid);
+        if (!childEntry) return;
+        const childTopic = getTopicForModel(childEntry.modelDef);
+        const row = document.createElement('div');
+        row.className = 'parts-row';
+        const nameSpan = document.createElement('span');
+        nameSpan.className = 'parts-row-name';
+        nameSpan.textContent = childEntry.modelDef.name;
+        const shortSpan = document.createElement('span');
+        shortSpan.className = 'parts-row-short';
+        shortSpan.textContent = (childTopic && childTopic.short) ? childTopic.short : 'No lesson yet';
+        row.appendChild(nameSpan);
+        row.appendChild(shortSpan);
+        row.addEventListener('click', () => selectModel(mid));
+        partsEl.appendChild(row);
+      }
+    });
+  }
+  if (memberIds.size > directChildren.length) {
+    const togBtn = document.createElement('button');
+    togBtn.style.cssText = 'margin-top:8px;font-size:11px;color:#58a6ff;background:none;border:none;cursor:pointer;padding:0';
+    togBtn.textContent = '▸ Show all sub-parts (' + memberIds.size + ')';
+    let allShown = false;
+    const allList = document.createElement('div');
+    allList.style.display = 'none';
+    memberIds.forEach(mid => {
+      const childEntry = meshMap.get(mid);
+      if (!childEntry) return;
+      const childTopic = getTopicForModel(childEntry.modelDef);
+      const row = document.createElement('div');
+      row.className = 'parts-row';
+      const nameSpan = document.createElement('span');
+      nameSpan.className = 'parts-row-name';
+      nameSpan.textContent = childEntry.modelDef.name;
+      const shortSpan = document.createElement('span');
+      shortSpan.className = 'parts-row-short';
+      shortSpan.textContent = (childTopic && childTopic.short) ? childTopic.short : '';
+      row.appendChild(nameSpan);
+      row.appendChild(shortSpan);
+      row.addEventListener('click', () => selectModel(mid));
+      allList.appendChild(row);
+    });
+    togBtn.addEventListener('click', () => {
+      allShown = !allShown;
+      allList.style.display = allShown ? '' : 'none';
+      togBtn.textContent = (allShown ? '▾' : '▸') + ' Show all sub-parts (' + memberIds.size + ')';
+    });
+    partsEl.appendChild(togBtn);
+    partsEl.appendChild(allList);
+  }
+
+  // ── Connections — block elements, own topic first then child topics ────────
+  const connEl = focusSubpanes.connections;
+  const connSeen = new Set();
+  const addConnRow = (conn) => {
+    const key = (conn.atlas_ids || []).join(',') + (conn.label || '');
+    if (connSeen.has(key)) return;
+    connSeen.add(key);
+    const row = document.createElement('div');
+    row.className = 'conn-chip';
+    row.style.display = 'block';
+    row.style.marginBottom = '4px';
+    row.textContent = conn.label || (conn.atlas_ids || []).join(', ');
+    row.addEventListener('click', () => {
+      (conn.atlas_ids || []).forEach(aid => {
+        const mid = atlasIdToModelId.get(aid);
+        if (mid) selectModel(mid);
+      });
+    });
+    connEl.appendChild(row);
+  };
+  if (groupTopic) (groupTopic.connections || []).forEach(addConnRow);
+  childTopics.forEach(t => (t.connections || []).forEach(addConnRow));
+
+  // ── Clinical — own topic first then child topics ──────────────────────────
+  const clinEl = focusSubpanes.clinical;
+  const addClinNote = (note) => {
+    const noteEl = document.createElement('div');
+    noteEl.className = 'learn-clinical-note';
+    applyGlossaryMarkup(noteEl, note.text || '');
+    (note.cite || []).forEach(c => {
+      const sup = document.createElement('sup');
+      sup.className   = 'cite-sup';
+      sup.textContent = '[src]';
+      sup.title       = sources[c] ? sources[c].citation : c;
+      noteEl.appendChild(sup);
+    });
+    clinEl.appendChild(noteEl);
+  };
+  if (groupTopic) (groupTopic.clinical || []).forEach(addClinNote);
+  childTopics.forEach(t => (t.clinical || []).forEach(addClinNote));
+  if (clinEl.children.length) {
+    const disc = document.createElement('div');
+    disc.className   = 'learn-clinical-disclaimer';
+    disc.textContent = 'Educational use only — not medical advice.';
+    clinEl.appendChild(disc);
+  }
+
+  // ── Enable tabs based on actual rendered content ──────────────────────────
+  _setStabEnabled('overview',    true);
+  _setStabEnabled('functions',   funcsEl.children.length > 0);
+  _setStabEnabled('parts',       true);
+  _setStabEnabled('connections', connEl.children.length > 0);
+  _setStabEnabled('clinical',    clinEl.children.length > 0);
+  _setStabEnabled('practice',    memberIds.size >= 2);
+
+  // ── Practice ──────────────────────────────────────────────────────────────
+  _renderPracticePane(focusSubpanes.practice, 'group', groupId);
+}
+
+// ── Shared helpers ────────────────────────────────────────────────────────────
+function _setStabEnabled(name, enabled) {
+  const btn = document.querySelector('.stab[data-stab="stab-' + name + '"]');
+  if (!btn) return;
+  btn.disabled = !enabled;
+  btn.title    = enabled ? '' : 'No cited content yet';
+}
+
+function _renderPointsList(container, points, sources) {
+  if (!points || !points.length) return;
+  const ul = document.createElement('ul');
+  ul.className = 'learn-points';
+  points.forEach(pt => {
+    const li = document.createElement('li');
+    li.className = 'learn-point';
+    const bullet = document.createElement('span');
+    bullet.className   = 'learn-point-bullet';
+    bullet.textContent = '•';
+    const text = document.createElement('span');
+    applyGlossaryMarkup(text, pt.text || '');
+    (pt.cite || []).forEach(c => {
+      const sup = document.createElement('sup');
+      sup.className   = 'cite-sup';
+      sup.textContent = '[src]';
+      sup.title       = sources[c] ? sources[c].citation : c;
+      text.appendChild(sup);
+    });
+    li.appendChild(bullet);
+    li.appendChild(text);
+    ul.appendChild(li);
+  });
+  container.appendChild(ul);
+}
+
+function _renderFocusBreadcrumb(mod) {
+  focusBreadcrumb.innerHTML = '';
+  const s0   = (mod.structures || [])[0];
+  const pgId = s0?.parent_groups?.[0]?.id;
+  if (!pgId) return;
+  const path = buildAncestorPath(pgId);
+  path.forEach((gid, i) => {
+    const gEntry = groupIndex.get(gid);
+    if (!gEntry) return;
+    if (i > 0) {
+      const sep = document.createElement('span');
+      sep.className = 'bc-sep';
+      sep.textContent = '›';
+      focusBreadcrumb.appendChild(sep);
+    }
+    const link = document.createElement('span');
+    link.className = 'bc-link';
+    link.textContent = gEntry.name;
+    link.addEventListener('click', () => selectGroupFocus(gid));
+    focusBreadcrumb.appendChild(link);
+  });
+}
+
+function _renderPracticePane(container, focusType, focusId) {
+  container.innerHTML = '';
+  const desc = document.createElement('div');
+  desc.style.cssText = 'font-size:12px;color:#c9d1d9;margin-bottom:10px;line-height:1.5';
+
+  const startBtn = document.createElement('button');
+  startBtn.style.cssText = 'padding:8px 16px;font-size:13px;background:#238636;border:1px solid #2ea043;border-radius:6px;color:#fff;cursor:pointer;font-weight:600;width:100%';
+
+  if (focusType === 'model') {
+    const entry = meshMap.get(focusId);
+    const s0    = entry ? ((entry.modelDef.structures || [])[0]) : null;
+    const pg0Id = s0?.parent_groups?.[0]?.id;
+    desc.textContent = 'Quiz on this structure and its siblings.';
+    startBtn.textContent = 'Quiz me on this region →';
+    startBtn.addEventListener('click', () => {
+      const pool = pg0Id ? [...getModelIdsForGroup(pg0Id)] : [focusId];
+      _startRegionQuiz(pool.length >= 4 ? pool : [focusId]);
+    });
+  } else {
+    const memberIds = [...getModelIdsForGroup(focusId)];
+    desc.textContent = 'Quiz on all ' + memberIds.length + ' structures in this region.';
+    startBtn.textContent = 'Quiz me on this region →';
+    startBtn.addEventListener('click', () => {
+      _startRegionQuiz(memberIds);
+    });
+  }
+
+  container.appendChild(desc);
+  container.appendChild(startBtn);
+}
+
+function _startRegionQuiz(pool) {
+  if (pool.length < 4) {
+    setStatus('Not enough structures in scope (need ≥ 4)', false);
+    return;
+  }
+  // Override qs-scope for this session; use a temporary flag
+  const origScope = document.getElementById('qs-scope').value;
+  document.getElementById('qs-scope').value = 'all';
+  // Temporarily override buildQuizPool
+  const _tmpBuild = buildQuizPool;
+  buildQuizPool = function() { return pool; };
+  const len = parseInt(document.getElementById('qs-length').value, 10) || 10;
+  quizQueue  = buildSessionQueue(pool, len);
+  quizType   = document.getElementById('qs-type').value;
+  quizIdx    = 0;
+  quizMissed = [];
+  quizCorrect = 0;
+  quizConfidentWrong = 0;
+  buildQuizPool = _tmpBuild;
+  document.getElementById('qs-scope').value = origScope;
+  enterQuizMode();
+  showNextQuestion();
+}
+
+// ── Patch selectModel & selectGroup to drive focus-page ──────────────────────
+const _origSelectModel = selectModel;
+selectModel = function(modelId) {
+  _origSelectModel(modelId);
+  const entry = meshMap.get(modelId);
+  if (!entry) return;
+  switchToExplorePane();
+  // Push to stack
+  if (!focusStack.length || focusStack[focusStack.length - 1].id !== modelId || focusStack[focusStack.length - 1].type !== 'model') {
+    focusStack.push({ type: 'model', id: modelId });
+  }
+  focusCurrentType = 'model';
+  focusCurrentId   = modelId;
+  renderFocusModel(entry.modelDef);
+  showFocusPage();
+  // Update quiz card
+  refreshQuizCards();
+};
+
+const _origSelectGroup = selectGroup;
+function selectGroupFocus(groupId) {
+  // Do the 3D highlight
+  _origSelectGroup(groupId);
+  const g = groupIndex.get(groupId);
+  if (!g) return;
+  switchToExplorePane();
+  if (!focusStack.length || focusStack[focusStack.length - 1].id !== groupId || focusStack[focusStack.length - 1].type !== 'group') {
+    focusStack.push({ type: 'group', id: groupId });
+  }
+  focusCurrentType = 'group';
+  focusCurrentId   = groupId;
+  renderFocusGroup(g, groupId);
+  showFocusPage();
+  refreshQuizCards();
+}
+// Patch selectGroup global so tour/breadcrumbs drive focus page too
+selectGroup = selectGroupFocus;
+
+// Patch clearSelection to hide focus page
+const _origClearSelection = clearSelection;
+clearSelection = function() {
+  _origClearSelection();
+  hideFocusPage();
+  focusCurrentType = null;
+  focusCurrentId   = null;
+  refreshQuizCards();
+};
+
+// When a model is selected from the 3D view while a GROUP is focused, focus that structure
+// This is handled: selectModel is already patched above to call renderFocusModel.
+
+// ══════════════════════════════════════════════════════════════════════════════
+// TIER 4 — SECTION 3: Friendlier quiz cards + progress bar + Show-me
+// ══════════════════════════════════════════════════════════════════════════════
+
+// Refresh quiz card badges
+function refreshQuizCards() {
+  if (!manifest) return;
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  let dueCount = 0;
+  manifest.models.forEach(mod => {
+    const rec = srsGet(mod.id);
+    if (rec.seen && rec.due && new Date(rec.due) <= today) dueCount++;
+  });
+
+  const dailyBadge = document.getElementById('qcard-daily-badge');
+  const dailyBtn   = document.getElementById('qcard-daily');
+  dailyBadge.textContent = dueCount + ' due';
+  dailyBadge.classList.toggle('zero', dueCount === 0);
+  dailyBtn.disabled = dueCount === 0;
+
+  // Region card
+  const regionBtn  = document.getElementById('qcard-region');
+  const regionDesc = document.getElementById('qcard-region-desc');
+  if (focusCurrentId) {
+    let regionName = '';
+    if (focusCurrentType === 'model') {
+      const e = meshMap.get(focusCurrentId);
+      regionName = e ? e.modelDef.name : '';
+    } else if (focusCurrentType === 'group') {
+      const g = groupIndex.get(focusCurrentId);
+      regionName = g ? g.name : '';
+    }
+    regionDesc.textContent = 'Quiz on: ' + regionName;
+    regionBtn.disabled = false;
+  } else {
+    regionDesc.textContent = 'Select a structure or group first.';
+    regionBtn.disabled = true;
+  }
+}
+
+// Wire quiz cards
+document.getElementById('qcard-daily').addEventListener('click', () => {
+  // Set scope to "all", type "mixed", use only due items
+  document.getElementById('qs-type').value = 'mixed';
+  document.getElementById('qs-scope').value = 'all';
+  const pool    = buildQuizPool();
+  const duePool = pool.filter(id => srsIsDue(id));
+  if (!duePool.length) { setStatus('Nothing due today!', false); return; }
+  quizQueue  = shuffle(duePool);
+  quizType   = 'mixed';
+  quizIdx    = 0;
+  quizMissed = [];
+  quizCorrect = 0;
+  quizConfidentWrong = 0;
+  enterQuizMode();
+  showNextQuestion();
+});
+
+document.getElementById('qcard-quick').addEventListener('click', () => {
+  document.getElementById('qs-type').value   = 'mixed';
+  document.getElementById('qs-scope').value  = learnerProfile.level === 'beginner' ? 'core' : 'all';
+  document.getElementById('qs-length').value = '10';
+  document.getElementById('btn-start-quiz').click();
+});
+
+document.getElementById('qcard-region').addEventListener('click', () => {
+  if (!focusCurrentId) return;
+  if (focusCurrentType === 'model') {
+    const entry = meshMap.get(focusCurrentId);
+    if (!entry) return;
+    const s0    = (entry.modelDef.structures || [])[0];
+    const pg0Id = s0?.parent_groups?.[0]?.id;
+    const pool  = pg0Id ? [...getModelIdsForGroup(pg0Id)] : [focusCurrentId];
+    _startRegionQuiz(pool.length >= 4 ? pool : [focusCurrentId]);
+  } else {
+    const pool = [...getModelIdsForGroup(focusCurrentId)];
+    _startRegionQuiz(pool);
+  }
+});
+
+// ── Progress bar in quiz HUD ──────────────────────────────────────────────────
+const qhudBarEl = document.getElementById('qhud-bar');
+function updateQuizProgressBar() {
+  const total = quizQueue.length;
+  const pct   = total > 0 ? Math.round((quizIdx / total) * 100) : 0;
+  qhudBarEl.style.width = pct + '%';
+}
+
+// Patch showNextQuestion to update progress bar
+const _origShowNextQ4 = showNextQuestion;
+showNextQuestion = function() {
+  updateQuizProgressBar();
+  _origShowNextQ4();
+};
+
+// ── Show-me button ────────────────────────────────────────────────────────────
+const btnShowMe = document.getElementById('btn-show-me');
+btnShowMe.addEventListener('click', () => {
+  // Focus the correct structure in Explore; quiz state is unchanged
+  if (!quizCurrentQ) return;
+  const targetId = quizCurrentQ.modelId;
+  btnShowMe.classList.remove('visible');
+  leaveQuizMode();
+  switchToExplorePane();
+  selectModel(targetId);
+});
+
+// Patch onFindItClick to show Show-me on wrong
+const _origOnFindItClick4 = onFindItClick;
+onFindItClick = function(clickedModelId) {
+  btnShowMe.classList.remove('visible');
+  _origOnFindItClick4(clickedModelId);
+  // If wrong, show the button
+  const { modelId: targetId } = quizCurrentQ || {};
+  if (targetId && clickedModelId !== targetId) {
+    btnShowMe.classList.add('visible');
+  }
+};
+
+// Patch onNameItAnswer to show Show-me on wrong
+const _origOnNameIt4 = onNameItAnswer;
+onNameItAnswer = function(chosenId, targetId, opts) {
+  btnShowMe.classList.remove('visible');
+  _origOnNameIt4(chosenId, targetId, opts);
+  if (chosenId !== targetId) {
+    btnShowMe.classList.add('visible');
+  }
+};
+
+// ── Ensure Show-me is hidden on new question ─────────────────────────────────
+const _origShowNextQ4b = showNextQuestion;
+showNextQuestion = function() {
+  btnShowMe.classList.remove('visible');
+  _origShowNextQ4b();
+};
+
+// ══════════════════════════════════════════════════════════════════════════════
+// TIER 4 — SECTION 4 — hash suppression already exists; confirmed.
+// quiz HUD / tour HUD positioning done in CSS above.
+// ══════════════════════════════════════════════════════════════════════════════
 </script>
 </body>
 </html>
