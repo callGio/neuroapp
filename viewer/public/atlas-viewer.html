@@ -758,7 +758,7 @@ let defaultCamPos, defaultTarget;
 function fitAll() {
   // setFromObject gives world-space box — pass directly to applyCameraToBox
   const box = new THREE.Box3();
-  group.traverse(c => { if (c.isMesh && c.visible) box.expandByObject(c); });
+  group.traverse(c => { if (c.isMesh && isShown(c)) box.expandByObject(c); });
   if (box.isEmpty()) return;
   applyCameraToBox(box, 1.15);
   defaultCamPos = camera.position.clone();
@@ -1175,7 +1175,7 @@ function animateToPreset(presetName) {
 
   // Bounding sphere of all visible meshes
   const box = new THREE.Box3();
-  group.traverse(c => { if (c.isMesh && c.visible) box.expandByObject(c); });
+  group.traverse(c => { if (c.isMesh && isShown(c)) box.expandByObject(c); });
   const sphere = new THREE.Sphere();
   if (!box.isEmpty()) box.getBoundingSphere(sphere);
   else sphere.center.copy(controls.target);
@@ -1421,6 +1421,13 @@ let pointerMoved = false;
 
 // Bug 5: return only hits whose world-space point is on the unclipped side of
 // every active clipping plane (distanceToPoint >= 0 means inside/on the plane).
+// A mesh counts as shown only if it and every ancestor are visible
+// (hiding a structure hides its glTF scene root, not the child mesh).
+function isShown(obj) {
+  for (let o = obj; o; o = o.parent) if (!o.visible) return false;
+  return true;
+}
+
 function filterClippedHits(hits) {
   const planes = ['sag','cor','axi']
     .filter(ax => clipState[ax].enabled)
@@ -1444,7 +1451,7 @@ function setupRaycaster() {
 
     raycaster.setFromCamera(mouseVec, camera);
     const allMeshes = [];
-    group.traverse(c => { if (c.isMesh && c.visible) allMeshes.push(c); });
+    group.traverse(c => { if (c.isMesh && isShown(c)) allMeshes.push(c); });
     const hits = filterClippedHits(raycaster.intersectObjects(allMeshes, false));  // Bug 5
     if (!hits.length) return;
     const modelId = hits[0].object.userData.modelId;
@@ -1481,7 +1488,7 @@ function tickHover() {
   );
   raycaster.setFromCamera(hv, camera);
   const allMeshes = [];
-  group.traverse(c => { if (c.isMesh && c.visible) allMeshes.push(c); });
+  group.traverse(c => { if (c.isMesh && isShown(c)) allMeshes.push(c); });
   const hits = filterClippedHits(raycaster.intersectObjects(allMeshes, false));  // Bug 5
 
   if (!hits.length) { tooltipEl.style.display = 'none'; return; }
@@ -2241,7 +2248,7 @@ renderer.domElement.addEventListener('pointerup', function(e) {
   if (!raycaster) return;
   raycaster.setFromCamera(mv, camera);
   const allMeshes = [];
-  group.traverse(c => { if (c.isMesh && c.visible) allMeshes.push(c); });
+  group.traverse(c => { if (c.isMesh && isShown(c)) allMeshes.push(c); });
   const hits = filterClippedHits(raycaster.intersectObjects(allMeshes, false));  // Bug 5
   if (!hits.length) return;
   const clickedModelId = hits[0].object.userData.modelId;
