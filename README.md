@@ -14,6 +14,9 @@ It is designed for two kinds of learners at once:
 
 Every factual statement in the lessons cites an open, checkable source.
 
+**Live demo:** https://callgio.github.io/neuroapp/ (works in any modern desktop browser;
+the first load downloads about 55 MB of 3D models).
+
 > Educational use only. Not medical advice. The underlying atlas is not FDA-reviewed and
 > is not intended for clinical use.
 
@@ -110,6 +113,25 @@ against its sources before being marked reviewed. Corrections are welcome as iss
 - All text from data files is escaped before display; a Content Security Policy limits
   what the page may load.
 - No analytics, cookies, accounts or personal data.
+
+## Deploying the demo
+
+The demo is served by GitHub Pages from the `gh-pages` branch, which holds only the
+contents of `viewer/public/`. After changing the app on `main`, publish it with:
+
+```bash
+git subtree split --prefix viewer/public -b gh-pages-tmp
+git push -f origin gh-pages-tmp:gh-pages
+git branch -D gh-pages-tmp
+```
+
+## License
+
+The code and lesson text written for this project are released under the
+[MIT License](LICENSE). Third-party material keeps its own license: the 3D models
+and manifest derived from the SPL/NAC Brain Atlas are under the 3D Slicer license,
+three.js is MIT, and cited works remain under their publishers' terms. See
+[NOTICE.md](NOTICE.md).
 
 ## Credits
 
