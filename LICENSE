@@ -19,16 +19,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
----------------------------------------------------------------------------
-Scope: this MIT license covers the material written for this project
-(the scripts, the viewer pages, and the lesson text in
-viewer/public/content/learning.json). It does NOT cover third-party material,
-which keeps its own license:
-
-- viewer/public/models/, viewer/public/models_sample/ and
-  viewer/public/atlas-manifest.json are derived from the SPL/NAC Brain Atlas
-  and are licensed under the 3D Slicer license
-  (third_party/spl-brain-atlas/SLICER-LICENSE.txt). See NOTICE.md.
-- viewer/public/vendor/three/ is three.js, MIT License, (c) three.js authors.
-- Works cited in the lessons remain under their own licenses.
