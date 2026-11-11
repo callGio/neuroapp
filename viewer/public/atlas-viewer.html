@@ -19,7 +19,7 @@ canvas{display:block;width:100%!important;height:100%!important}
   display:flex;flex-direction:column;overflow:hidden;backdrop-filter:blur(4px)}
 #panel-top{padding:12px 12px 0}
 #panel-top h1{font-size:12px;font-weight:600;letter-spacing:.06em;
-  color:#8b949e;text-transform:uppercase;margin-bottom:10px}
+  color:#8b949e;text-transform:none;margin-bottom:10px}
 
 /* search */
 #search-wrap{position:relative;margin-bottom:8px}
@@ -51,7 +51,7 @@ canvas{display:block;width:100%!important;height:100%!important}
 
 /* hemisphere toggles */
 #hemi-section{padding:0 12px 8px;border-bottom:1px solid #21262d}
-#hemi-section h2{font-size:11px;font-weight:600;color:#8b949e;text-transform:uppercase;
+#hemi-section h2{font-size:11px;font-weight:600;color:#8b949e;text-transform:none;
   letter-spacing:.05em;margin-bottom:5px}
 #hemi-bar{display:flex;gap:6px}
 .hemi-label{display:flex;align-items:center;gap:4px;font-size:12px;color:#c9d1d9;cursor:pointer}
@@ -59,7 +59,7 @@ canvas{display:block;width:100%!important;height:100%!important}
 
 /* cutting planes */
 #clip-section{padding:6px 12px 6px;border-bottom:1px solid #21262d}
-#clip-section h2{font-size:11px;font-weight:600;color:#8b949e;text-transform:uppercase;
+#clip-section h2{font-size:11px;font-weight:600;color:#8b949e;text-transform:none;
   letter-spacing:.05em;margin-bottom:5px}
 .clip-row{display:flex;align-items:center;gap:5px;margin-bottom:4px;font-size:11px}
 .clip-row input[type=checkbox]{accent-color:#388bfd;flex-shrink:0}
@@ -77,7 +77,7 @@ canvas{display:block;width:100%!important;height:100%!important}
 
 /* group filter */
 #group-section{padding:6px 12px 4px;border-bottom:1px solid #21262d}
-#group-section h2{font-size:11px;font-weight:600;color:#8b949e;text-transform:uppercase;
+#group-section h2{font-size:11px;font-weight:600;color:#8b949e;text-transform:none;
   letter-spacing:.05em;margin-bottom:5px}
 #group-filter{background:#161b22;border:1px solid #30363d;border-radius:6px;
   padding:4px 8px;font-size:12px;color:#e6edf3;width:100%;outline:none;
@@ -150,7 +150,7 @@ canvas{display:block;width:100%!important;height:100%!important}
 
 /* ── side-panel 5-tab bar (Tier 4) ── */
 #panel-tabs{display:flex;flex-shrink:0;border-bottom:1px solid #21262d;background:#0d1117}
-.ptab{flex:1;padding:7px 2px 6px;font-size:10px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;
+.ptab{flex:1;padding:7px 2px 6px;font-size:10px;font-weight:600;letter-spacing:.04em;text-transform:none;
   background:transparent;border:none;color:#57606a;cursor:pointer;text-align:center;border-bottom:2px solid transparent;transition:color .15s,border-color .15s}
 .ptab:hover{color:#c9d1d9}
 .ptab.active{color:#58a6ff;border-bottom-color:#58a6ff}
@@ -182,7 +182,7 @@ canvas{display:block;width:100%!important;height:100%!important}
 
 /* ── learn panel ── */
 #learn-panel{border-top:1px solid #30363d;padding:10px 12px;font-size:12px}
-#learn-panel h3{font-size:11px;font-weight:600;color:#8b949e;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+#learn-panel h3{font-size:11px;font-weight:600;color:#8b949e;text-transform:none;margin-bottom:8px;display:flex;align-items:center;gap:6px}
 #learn-panel-body{color:#c9d1d9;line-height:1.6}
 .learn-summary{margin-bottom:8px;font-size:12px;color:#c9d1d9}
 .learn-points{margin:0;padding-left:0;list-style:none}
@@ -191,7 +191,7 @@ canvas{display:block;width:100%!important;height:100%!important}
 .cite-sup{font-size:9px;color:#58a6ff;cursor:pointer;vertical-align:super;margin-left:1px}
 .cite-sup:hover{text-decoration:underline}
 .learn-sources{margin-top:8px;border-top:1px solid #21262d;padding-top:6px}
-.learn-sources-title{font-size:10px;color:#8b949e;margin-bottom:4px;font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+.learn-sources-title{font-size:10px;color:#8b949e;margin-bottom:4px;font-weight:600;text-transform:none;letter-spacing:.04em}
 .learn-source-item{font-size:10px;color:#8b949e;margin-bottom:3px}
 .learn-source-item a{color:#58a6ff}
 .learn-connections{margin-bottom:8px}
@@ -212,7 +212,7 @@ details.learn-clinical-details summary:hover{color:#ffa657}
 /* ── glossary list panel ── */
 #glossary-panel{border-bottom:1px solid #21262d;display:none}
 #glossary-panel.visible{display:block}
-#glossary-panel details summary{font-size:11px;font-weight:600;color:#8b949e;text-transform:uppercase;letter-spacing:.05em;padding:6px 12px 4px;cursor:pointer;user-select:none;list-style:none}
+#glossary-panel details summary{font-size:11px;font-weight:600;color:#8b949e;text-transform:none;letter-spacing:0;padding:6px 12px 4px;cursor:pointer;user-select:none;list-style:none}
 #glossary-panel details summary::-webkit-details-marker{display:none}
 #glossary-panel details summary::before{content:'▸ ';font-size:9px}
 #glossary-panel details[open] summary::before{content:'▾ '}
@@ -281,7 +281,7 @@ details.learn-clinical-details summary:hover{color:#ffa657}
 #about-box h2{font-size:14px;font-weight:600;color:#e6edf3;margin-bottom:10px}
 #about-box p{font-size:12px;color:#c9d1d9;margin-bottom:8px;line-height:1.6}
 #about-box a{color:#58a6ff}
-.about-sources-title{font-size:11px;font-weight:600;color:#8b949e;text-transform:uppercase;letter-spacing:.04em;margin:10px 0 5px}
+.about-sources-title{font-size:11px;font-weight:600;color:#8b949e;text-transform:none;margin:10px 0 5px}
 .about-source-item{font-size:11px;color:#8b949e;margin-bottom:5px;line-height:1.5}
 .about-source-item a{color:#58a6ff}
 #btn-close-about{margin-top:12px;padding:5px 14px;font-size:12px;background:#21262d;border:1px solid #30363d;border-radius:5px;color:#c9d1d9;cursor:pointer}
@@ -347,7 +347,7 @@ details.learn-clinical-details summary:hover{color:#ffa657}
 
 /* ── mastery map legend (F7) — now inside Progress pane, always-block ── */
 #mastery-legend{padding:0 0 8px}
-#mastery-legend h2{font-size:11px;font-weight:600;color:#8b949e;text-transform:uppercase;
+#mastery-legend h2{font-size:11px;font-weight:600;color:#8b949e;text-transform:none;
   letter-spacing:.05em;margin-bottom:5px}
 .mleg-row{display:flex;align-items:center;gap:5px;font-size:11px;color:#c9d1d9;margin-bottom:3px}
 .mleg-swatch{width:12px;height:12px;border-radius:2px;flex-shrink:0}
@@ -355,7 +355,7 @@ details.learn-clinical-details summary:hover{color:#ffa657}
 /* ── progress panel (F8) — now a pane; legacy .visible kept as no-op ── */
 #progress-panel{display:block;padding:0}
 #progress-panel.visible{display:block}
-#progress-panel h2{font-size:11px;font-weight:600;color:#8b949e;text-transform:uppercase;
+#progress-panel h2{font-size:11px;font-weight:600;color:#8b949e;text-transform:none;
   letter-spacing:.05em;margin-bottom:6px}
 .prog-row{display:flex;justify-content:space-between;font-size:11px;color:#c9d1d9;margin-bottom:3px}
 .prog-row span:first-child{color:#8b949e}
@@ -393,7 +393,7 @@ details.learn-clinical-details summary:hover{color:#ffa657}
 /* ── focus mode sub-tabs (Tier 4 Section 2) ── */
 /* Fix 3: wrap onto two rows so all 6 tabs fit in 270px */
 #focus-subtabs{display:flex;flex-shrink:0;flex-wrap:wrap;border-bottom:1px solid #21262d;background:#0d1117}
-.stab{padding:4px 6px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.03em;
+.stab{padding:4px 6px;font-size:10px;font-weight:600;text-transform:none;
   white-space:nowrap;background:transparent;border:none;color:#57606a;cursor:pointer;border-bottom:2px solid transparent}
 .stab:hover{color:#c9d1d9}
 .stab.active{color:#58a6ff;border-bottom-color:#58a6ff}
@@ -417,6 +417,211 @@ details.learn-clinical-details summary:hover{color:#ffa657}
 .parts-row-name{color:#58a6ff;font-weight:600;flex:1}
 .parts-row-short{color:#8b949e;font-size:11px;flex:2}
 .parts-row-count{color:#57606a;font-size:10px;white-space:nowrap}
+
+/* ══ THEME ══ */
+@font-face{font-family:"Inter";src:url("./vendor/fonts/inter-var.woff2") format("woff2");font-weight:100 900;font-display:swap}
+@font-face{font-family:"Space Grotesk";src:url("./vendor/fonts/space-grotesk-var.woff2") format("woff2");font-weight:300 700;font-display:swap}
+
+:root{
+  --bg-0:#060912; --bg-1:#0b1120; --bg-2:#111a2e;
+  --surface:rgba(16,24,42,.72); --surface-solid:#121b30; --border:rgba(148,163,209,.16);
+  --text:#e8ecf6; --muted:#9aa5bd; --faint:#6b7590;
+  --violet:#8b6cff; --cyan:#22d3ee; --pink:#f472b6; --green:#34d399; --amber:#fbbf24; --red:#f87171;
+  --grad:linear-gradient(135deg,#8b6cff 0%,#22d3ee 100%);
+  --radius:14px; --radius-sm:10px; --shadow:0 10px 40px rgba(0,0,0,.45);
+}
+
+/* ── body & canvas background ── */
+body{
+  font-family:"Inter",system-ui,sans-serif;
+  background:var(--bg-0);
+  color:var(--text);
+}
+
+#canvas-wrap{
+  background:radial-gradient(ellipse at 50% 42%,#18234a 0%,#0b1120 48%,#060912 100%);
+  background-image:
+    radial-gradient(ellipse at 50% 42%,#18234a 0%,#0b1120 48%,#060912 100%),
+    radial-gradient(rgba(255,255,255,.03) 1px,transparent 1px);
+  background-size:100% 100%, 24px 24px;
+}
+
+/* ── panel ── */
+#panel{
+  background:var(--surface)!important;
+  backdrop-filter:blur(16px)!important;
+  -webkit-backdrop-filter:blur(16px)!important;
+  border-right:1px solid var(--border)!important;
+}
+
+/* ── panel header ── */
+#panel-top{background:transparent}
+#panel-top h1{display:flex;align-items:center;gap:8px;font-family:"Space Grotesk",sans-serif;font-size:13px;font-weight:600;color:var(--text);text-transform:none;letter-spacing:0}
+.home-link{margin-left:auto;font-size:10px;color:var(--muted);text-decoration:none;display:flex;align-items:center;gap:3px;padding:2px 6px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface-solid)}
+.home-link:hover{color:var(--text);border-color:rgba(139,108,255,.45)}
+
+/* ── tabs ── */
+#panel-tabs{background:var(--surface-solid);border-bottom:1px solid var(--border)}
+.ptab{
+  font-family:"Inter",sans-serif;font-size:10px;font-weight:500;
+  text-transform:none;letter-spacing:0;
+  color:var(--muted);
+  border-bottom:2px solid transparent;
+}
+.ptab:hover{color:var(--text)}
+.ptab.active{
+  color:var(--text);
+  border-bottom:2px solid transparent;
+  border-image:var(--grad) 1;
+}
+
+/* ── focus sub-tabs ── */
+#focus-subtabs{background:var(--surface-solid)}
+.stab{
+  font-family:"Inter",sans-serif;font-size:10px;font-weight:500;
+  text-transform:none;letter-spacing:0;
+  color:var(--muted);
+}
+.stab:hover{color:var(--text)}
+.stab.active{
+  color:var(--text);
+  border-bottom:2px solid transparent;
+  border-image:var(--grad) 1;
+}
+
+/* ── shared small button style ── */
+.tog-btn,.preset-btn,.foc-btn,.iso-btn,.stab,.summ-btn,.tour-nav-btn,.conf-btn,.qopt-btn{
+  background:var(--surface-solid);
+  border:1px solid var(--border);
+  border-radius:var(--radius-sm);
+  color:var(--text);
+  transition:border-color .15s;
+}
+.tog-btn:hover,.preset-btn:hover,.foc-btn:hover,.iso-btn:hover,
+.summ-btn:hover,.tour-nav-btn:hover,.conf-btn:hover,
+.qopt-btn:hover:not(:disabled){
+  border-color:rgba(139,108,255,.55);
+  background:var(--surface-solid);
+}
+.tog-btn.active{border-color:var(--violet);color:var(--cyan)}
+
+/* primary variants */
+.tour-nav-btn.primary{background:rgba(139,108,255,.18);border-color:var(--violet);color:var(--text)}
+.summ-btn.primary{background:rgba(52,211,153,.18);border-color:var(--green);color:var(--green)}
+
+/* ── inputs & selects ── */
+#search,#group-filter,.qs-sel,#learner-level-sel,select{
+  background:var(--surface-solid);
+  border:1px solid var(--border);
+  color:var(--text);
+}
+#search:focus,#group-filter:focus,.qs-sel:focus,#learner-level-sel:focus,select:focus{
+  border-color:var(--violet);
+  outline:none;
+  box-shadow:0 0 0 3px rgba(139,108,255,.25);
+}
+
+/* ── quiz cards ── */
+.quiz-card{
+  background:var(--surface-solid);
+  border:1px solid var(--border);
+  border-radius:var(--radius-sm);
+  transition:border-color .15s;
+}
+.quiz-card:hover:not(:disabled):not([disabled]){
+  border-color:var(--violet);
+  background:var(--surface-solid);
+}
+.quiz-card-title{color:var(--text)}
+.quiz-card-desc{color:var(--muted)}
+
+/* ── quiz HUD ── */
+#quiz-hud{
+  background:var(--surface);
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+}
+.qopt-btn.correct{background:rgba(52,211,153,.18);border-color:var(--green);color:var(--green)}
+.qopt-btn.wrong{background:rgba(248,113,113,.18);border-color:var(--red);color:var(--red)}
+#qhud-progress{color:var(--muted)}
+#qhud-prompt{color:var(--text)}
+#qhud-bar{background:var(--violet)}
+#qhud-bar-wrap{background:var(--surface-solid)}
+
+/* ── tour HUD ── */
+#tour-hud{
+  background:var(--surface);
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+}
+#tour-hud-predict{background:rgba(139,108,255,.12);border-color:var(--violet);color:var(--muted)}
+#tour-hud-text{color:var(--text)}
+
+/* ── modal overlays ── */
+#shortcuts-box,#tour-list-box,#learn-card-box,#about-box,#quiz-summary-box{
+  background:var(--surface);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  color:var(--text);
+}
+#shortcuts-box h2,#tour-list-box h2,#about-box h2,#quiz-summary-box h2{color:var(--text)}
+.sc-key{background:var(--surface-solid);border-color:var(--border);color:var(--text)}
+
+/* ── section headings inside panel (sentence case, no uppercase) ── */
+#hemi-section h2,#clip-section h2,#group-section h2,#progress-panel h2,
+#mastery-legend h2,#learn-panel h3,.learn-sources-title,.about-sources-title{
+  text-transform:none;letter-spacing:0;color:var(--muted)
+}
+
+/* ── #loader overlay ── */
+#loader{
+  position:fixed;inset:0;z-index:200;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:20px;
+  background:var(--bg-0);
+  transition:opacity .4s ease;
+}
+#loader.fade-out{opacity:0;pointer-events:none}
+#loader-brand{display:flex;align-items:center;gap:10px;font-family:"Space Grotesk",sans-serif;font-size:1.25rem;font-weight:600;color:var(--text)}
+#loader-brand svg{animation:pulse-brand 2s ease-in-out infinite}
+@keyframes pulse-brand{0%,100%{opacity:1}50%{opacity:.45}}
+@media(prefers-reduced-motion:reduce){#loader-brand svg{animation:none}}
+#loader-bar-wrap{width:260px;height:4px;background:var(--surface-solid);border-radius:2px;overflow:hidden}
+#loader-bar{height:100%;width:0%;background:var(--grad);border-radius:2px;transition:width .2s}
+#loader-status{font-size:.78rem;color:var(--muted);min-height:1.2em;text-align:center}
+#loader-wait-card{
+  background:var(--surface);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  border:1px solid var(--border);
+  border-radius:var(--radius-sm);
+  padding:14px 18px;
+  max-width:320px;width:calc(100vw - 48px);
+  font-size:.82rem;color:var(--muted);line-height:1.6;
+  display:none;
+}
+#loader-wait-card.visible{display:block}
+#loader-wait-title{font-family:"Space Grotesk",sans-serif;font-size:.9rem;font-weight:600;color:var(--text);margin-bottom:4px}
+
+/* ── quiz streak ── */
+#qhud-streak{font-size:.75rem;color:var(--amber);min-height:1.2em;text-align:center;margin-bottom:2px;display:none}
+#qhud-streak.visible{display:block}
+@keyframes glow-correct{
+  0%{box-shadow:none}
+  30%{box-shadow:0 0 0 4px rgba(52,211,153,.4)}
+  100%{box-shadow:none}
+}
+#quiz-hud.glow-correct{animation:glow-correct .6s ease-out}
+@media(prefers-reduced-motion:reduce){#quiz-hud.glow-correct{animation:none}}
 
 /* ══ MOBILE LAYOUT (≤760px): the side panel becomes a bottom sheet ══ */
 #sheet-handle{display:none}
@@ -501,7 +706,31 @@ details.learn-clinical-details summary:hover{color:#ffa657}
   <div id="sheet-handle" role="button" aria-label="Resize panel" tabindex="0"></div>
   <!-- ── header row ── -->
   <div id="panel-top" style="padding:8px 12px 0">
-    <h1>Brain Atlas</h1>
+    <h1>
+      <!-- Neuron brand mark -->
+      <svg width="22" height="22" viewBox="0 0 30 30" aria-hidden="true" focusable="false">
+        <defs>
+          <linearGradient id="ng-v" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#8b6cff"/>
+            <stop offset="100%" stop-color="#22d3ee"/>
+          </linearGradient>
+        </defs>
+        <circle cx="15" cy="15" r="4.5" stroke="url(#ng-v)" stroke-width="1.8" fill="none"/>
+        <path d="M15 10.5 C14 6, 10 4, 8 2" stroke="url(#ng-v)" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+        <path d="M15 10.5 C16.5 7, 20 5.5, 22 3.5" stroke="url(#ng-v)" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+        <path d="M18.9 13 C22 12, 25.5 10, 28 9" stroke="url(#ng-v)" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+        <path d="M18.9 17 C22 19, 26 20.5, 28 22" stroke="url(#ng-v)" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+        <path d="M15 19.5 C14 23, 11 26, 9 28" stroke="url(#ng-v)" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+        <path d="M11.1 17 C8 18.5, 5 20, 2 21" stroke="url(#ng-v)" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+      </svg>
+      NeuroApp
+      <a href="./index.html" class="home-link" aria-label="Back to home">
+        <svg width="11" height="11" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M8 1L1 7h2v7h4v-4h2v4h4V7h2L8 1z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+        </svg>
+        Home
+      </a>
+    </h1>
     <!-- legacy invisible mode-switcher; Tier-2 JS references tab-explore / tab-quiz -->
     <div id="mode-switcher" aria-hidden="true">
       <button class="mode-tab active" id="tab-explore"></button>
@@ -636,7 +865,7 @@ details.learn-clinical-details summary:hover{color:#ffa657}
       <!-- Glossary list panel -->
       <div id="glossary-panel" style="display:none">
         <details>
-          <summary style="font-size:11px;font-weight:600;color:#8b949e;text-transform:uppercase;letter-spacing:.05em;padding:0 0 4px;cursor:pointer;user-select:none;list-style:none">Glossary</summary>
+          <summary style="font-size:11px;font-weight:600;color:#8b949e;text-transform:none;letter-spacing:0;padding:0 0 4px;cursor:pointer;user-select:none;list-style:none">Glossary</summary>
           <div id="glossary-panel-inner">
             <div id="glossary-list"></div>
           </div>
@@ -778,6 +1007,15 @@ details.learn-clinical-details summary:hover{color:#ffa657}
         <h2>Filter by Group</h2>
         <select id="group-filter"><option value="">— All structures —</option></select>
       </div>
+      <!-- Home link for mobile (panel-top is hidden on phones) -->
+      <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--border)">
+        <a href="./index.html" class="home-link" style="display:inline-flex" aria-label="Back to home">
+          <svg width="11" height="11" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M8 1L1 7h2v7h4v-4h2v4h4V7h2L8 1z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+          </svg>
+          Home
+        </a>
+      </div>
     </div>
   </div>
 
@@ -810,6 +1048,7 @@ details.learn-clinical-details summary:hover{color:#ffa657}
 
 <!-- F3/F4: quiz HUD -->
 <div id="quiz-hud">
+  <div id="qhud-streak" aria-live="polite"></div>
   <div id="qhud-progress"></div>
   <div id="qhud-bar-wrap"><div id="qhud-bar" style="width:0%"></div></div>
   <div id="qhud-prompt"></div>
@@ -840,6 +1079,34 @@ details.learn-clinical-details summary:hover{color:#ffa657}
 </div>
 
 <div id="status">Loading manifest…</div>
+
+<!-- ── Loading overlay (item 5) ── -->
+<div id="loader" role="status" aria-label="Loading NeuroApp">
+  <div id="loader-brand">
+    <svg width="36" height="36" viewBox="0 0 30 30" aria-hidden="true" focusable="false">
+      <defs>
+        <linearGradient id="ng-l" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#8b6cff"/>
+          <stop offset="100%" stop-color="#22d3ee"/>
+        </linearGradient>
+      </defs>
+      <circle cx="15" cy="15" r="4.5" stroke="url(#ng-l)" stroke-width="1.8" fill="none"/>
+      <path d="M15 10.5 C14 6, 10 4, 8 2" stroke="url(#ng-l)" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+      <path d="M15 10.5 C16.5 7, 20 5.5, 22 3.5" stroke="url(#ng-l)" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+      <path d="M18.9 13 C22 12, 25.5 10, 28 9" stroke="url(#ng-l)" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+      <path d="M18.9 17 C22 19, 26 20.5, 28 22" stroke="url(#ng-l)" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+      <path d="M15 19.5 C14 23, 11 26, 9 28" stroke="url(#ng-l)" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+      <path d="M11.1 17 C8 18.5, 5 20, 2 21" stroke="url(#ng-l)" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+    </svg>
+    NeuroApp
+  </div>
+  <div id="loader-bar-wrap"><div id="loader-bar"></div></div>
+  <div id="loader-status">Loading 3D brain…</div>
+  <div id="loader-wait-card">
+    <div id="loader-wait-title"></div>
+    <div id="loader-wait-short"></div>
+  </div>
+</div>
 
 <!-- onboarding welcome card (injected via JS into panel-top) -->
 <div id="onboard-card" style="display:none">
@@ -921,11 +1188,11 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 // ── renderer ─────────────────────────────────────────────────────────────────
 const canvas   = document.getElementById('c');
-const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
 renderer.localClippingEnabled = true;
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.outputColorSpace = THREE.SRGBColorSpace;
-renderer.setClearColor(0x0d1117);
+renderer.setClearColor(0x000000, 0);
 
 const scene  = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 3000);
@@ -1087,6 +1354,7 @@ let srsData       = {};
 let srsInMemory   = false;
 
 // ── Tier 3 state ──────────────────────────────────────────────────────────────
+let   modelsReady   = false;
 const PROFILE_KEY   = 'neuroapp.profile.v1';
 let   learnerProfile = { level: 'beginner', onboarded: false, seen: {} };
 let   profileInMemory = false;
@@ -1315,6 +1583,7 @@ async function startLoading(models) {
   setupRaycaster();
   setupHover();
   checkDeepLink();
+  modelsReady = true;   // every model has loaded (or failed); start links may run
 }
 
 function rgbaToRgb(rgba) {
@@ -4148,7 +4417,7 @@ function renderFocusModel(mod) {
     const anatPts = pts.filter(p => p.tab === 'anatomy');
     if (anatPts.length) {
       const anatHdr = document.createElement('div');
-      anatHdr.style.cssText = 'font-size:11px;font-weight:600;color:#8b949e;text-transform:uppercase;letter-spacing:.04em;margin:8px 0 4px';
+      anatHdr.style.cssText = 'font-size:11px;font-weight:600;color:#8b949e;text-transform:none;margin:8px 0 4px';
       anatHdr.textContent = 'Anatomy';
       overviewEl.appendChild(anatHdr);
       _renderPointsList(overviewEl, anatPts, sources);
@@ -4402,7 +4671,7 @@ function renderFocusGroup(g, groupId) {
     const anatPts = pts.filter(p => p.tab === 'anatomy');
     if (anatPts.length) {
       const anatHdr = document.createElement('div');
-      anatHdr.style.cssText = 'font-size:11px;font-weight:600;color:#8b949e;text-transform:uppercase;letter-spacing:.04em;margin:8px 0 4px';
+      anatHdr.style.cssText = 'font-size:11px;font-weight:600;color:#8b949e;text-transform:none;margin:8px 0 4px';
       anatHdr.textContent = 'Anatomy';
       overviewEl.appendChild(anatHdr);
       _renderPointsList(overviewEl, anatPts, sources);
@@ -5031,6 +5300,196 @@ function onLayoutChange() {
 MOBILE_QUERY.addEventListener('change', onLayoutChange);
 window.addEventListener('resize', () => { if (isMobile()) setSheet(sheetState); });
 onLayoutChange();
+
+// ══════════════════════════════════════════════════════════════════════════════
+// TIER 5 — ITEM 5: Loading overlay
+// ══════════════════════════════════════════════════════════════════════════════
+(function initLoader() {
+  const loaderEl     = document.getElementById('loader');
+  const loaderBarEl  = document.getElementById('loader-bar');
+  const loaderStatEl = document.getElementById('loader-status');
+  const waitCard     = document.getElementById('loader-wait-card');
+  const waitTitle    = document.getElementById('loader-wait-title');
+  const waitShort    = document.getElementById('loader-wait-short');
+
+  if (!loaderEl) return;
+
+  // Populate "while you wait" card once learningData is ready
+  function populateWaitCard() {
+    const topics = learningData.topics || [];
+    if (!topics.length) return;
+    const t = topics[Math.floor(Math.random() * topics.length)];
+    if (!t) return;
+    waitTitle.textContent = t.title || '';
+    waitShort.textContent = t.short  || '';
+    if (waitTitle.textContent || waitShort.textContent) {
+      waitCard.classList.add('visible');
+    }
+  }
+
+  // Patch startLoading to drive the bar and dismiss loader when done
+  const _origStartLoading = startLoading;
+  startLoading = async function(models) {
+    const total = models.length;
+    // Intercept the setStatus calls to update bar
+    const _origSetStatus = setStatus;
+    let loaderDone = false;
+    setStatus = function(msg, persist) {
+      _origSetStatus(msg, persist);
+      if (!loaderDone) {
+        // parse "Loaded N / T" or "Loading N / T"
+        const m = msg.match(/(\d+)\s*\/\s*(\d+)/);
+        if (m) {
+          const loaded = parseInt(m[1], 10);
+          const t2     = parseInt(m[2], 10) || total;
+          const pct    = Math.round((loaded / t2) * 100);
+          loaderBarEl.style.width = pct + '%';
+          loaderStatEl.textContent = 'Loading 3D brain\u2026 ' + loaded + ' / ' + t2;
+        }
+      }
+    };
+
+    // Show wait card after a short delay (give learningData time to load)
+    setTimeout(populateWaitCard, 600);
+
+    await _origStartLoading(models);
+
+    loaderDone = true;
+    setStatus = _origSetStatus;
+
+    // Dismiss loader
+    loaderBarEl.style.width = '100%';
+    loaderStatEl.textContent = 'Ready!';
+    setTimeout(() => {
+      loaderEl.classList.add('fade-out');
+      setTimeout(() => { loaderEl.remove(); }, 420);
+    }, 300);
+  };
+
+  // If loading fails (manifest fetch error), keep existing failure UI and remove loader
+  const _origManifestFetch = fetch;  // already called above; watch for status error
+  // Fallback: if loader still exists after 60s, remove it to avoid blocking the UI
+  setTimeout(() => {
+    if (document.getElementById('loader')) {
+      const l = document.getElementById('loader');
+      if (l) { l.classList.add('fade-out'); setTimeout(() => l.remove(), 420); }
+    }
+  }, 60000);
+})();
+
+// ══════════════════════════════════════════════════════════════════════════════
+// TIER 5 — ITEM 6: URL query-param start links
+// Runs once after models AND learningData are ready.
+// ══════════════════════════════════════════════════════════════════════════════
+(function handleStartParams() {
+  const params = new URLSearchParams(window.location.search);
+  const level  = params.get('level');
+  const start  = params.get('start');
+
+  // Valid values only
+  const validLevels = new Set(['beginner', 'some', 'expert']);
+  const validStarts = new Set(['tour', 'quiz', 'explore']);
+
+  if (level && validLevels.has(level)) {
+    // Apply level immediately (onboarding may not have run yet)
+    learnerProfile.level     = level;
+    learnerProfile.onboarded = true;
+    saveProfile();
+    // Update the level select if visible
+    const sel = document.getElementById('learner-level-sel');
+    if (sel) sel.value = level;
+    applyProfileToQuizScope();
+  }
+
+  if (!start || !validStarts.has(start) || start === 'explore') return;
+
+  // Wait until every model and the lesson content have loaded before acting
+  function tryStart() {
+    if (!modelsReady || !learningData) {
+      setTimeout(tryStart, 400);
+      return;
+    }
+    if (start === 'tour') {
+      const tour101 = (learningData.tours || []).find(t => t.id === 'brain-101');
+      if (tour101) {
+        // Ensure we're onboarded so the Tours button is visible
+        if (!learnerProfile.onboarded) {
+          learnerProfile.level     = level || 'beginner';
+          learnerProfile.onboarded = true;
+          saveProfile();
+          showLevelSwitch();
+          applyProfileToQuizScope();
+        }
+        startTour(tour101);
+      }
+    } else if (start === 'quiz') {
+      // Switch to Quiz pane and start Quick 10
+      document.querySelector('.ptab[data-pane="pane-quiz"]').click();
+      setTimeout(() => { document.getElementById('qcard-quick').click(); }, 80);
+    }
+  }
+
+  setTimeout(tryStart, 300);
+})();
+
+// ══════════════════════════════════════════════════════════════════════════════
+// TIER 5 — ITEM 7: Quiz streak
+// ══════════════════════════════════════════════════════════════════════════════
+(function initQuizStreak() {
+  const streakEl  = document.getElementById('qhud-streak');
+  const quizHudEl2 = document.getElementById('quiz-hud');
+  let   streakCount = 0;
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function onCorrect() {
+    streakCount++;
+    if (!reducedMotion) {
+      quizHudEl2.classList.remove('glow-correct');
+      // Force reflow to restart animation
+      void quizHudEl2.offsetWidth;
+      quizHudEl2.classList.add('glow-correct');
+      quizHudEl2.addEventListener('animationend', () => quizHudEl2.classList.remove('glow-correct'), { once: true });
+    }
+    if (streakCount >= 3) {
+      streakEl.textContent = '\uD83D\uDD25 ' + streakCount + ' in a row';
+      streakEl.classList.add('visible');
+    } else {
+      streakEl.classList.remove('visible');
+    }
+  }
+
+  function onWrong() {
+    streakCount = 0;
+    streakEl.classList.remove('visible');
+  }
+
+  function resetStreak() {
+    streakCount = 0;
+    streakEl.classList.remove('visible');
+  }
+
+  // Patch answer handlers to track streak
+  // We need to intercept the final resolved answer handlers (after all patches).
+  // Use a MutationObserver on qhud-feedback to detect correct/wrong CSS colour.
+  const feedbackEl = document.getElementById('qhud-feedback');
+  const feedObs = new MutationObserver(() => {
+    const col = feedbackEl.style.color;
+    // '#56d364' = correct green used throughout
+    if (col === 'rgb(86, 211, 100)' || col === '#56d364' || feedbackEl.textContent.startsWith('✓')) {
+      onCorrect();
+    } else if (col === 'rgb(248, 81, 73)' || col === '#f85149' || feedbackEl.textContent.startsWith('✗')) {
+      onWrong();
+    }
+  });
+  feedObs.observe(feedbackEl, { attributes: true, attributeFilter: ['style'], childList: true, subtree: false });
+
+  // Reset streak at start of each new quiz session
+  const _origEnterQuiz = enterQuizMode;
+  enterQuizMode = function() {
+    _origEnterQuiz();
+    resetStreak();
+  };
+})();
 </script>
 </body>
 </html>

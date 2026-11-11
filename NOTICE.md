@@ -35,6 +35,13 @@ Original download: https://www.openanatomy.org/atlases/nac/brain-2017-01.zip (no
 integrity `sha512-Bgl2wPJypDOZ1stAxwfWAcJ0WQf7QzlptsxkjYiURPz+n5k4RBDLsq+6f9Y75TYxn6aHLcWz+JNmwTOXWrQTBQ==`),
 MIT License, copyright 2010-2023 three.js authors. See `viewer/public/vendor/three/LICENSE`.
 
+## Fonts
+
+`viewer/public/vendor/fonts/` contains the Inter and Space Grotesk variable fonts (latin subset,
+from the Fontsource npm packages `@fontsource-variable/inter` and
+`@fontsource-variable/space-grotesk` 5.3.0), licensed under the SIL Open Font License 1.1.
+The license texts are in the same folder.
+
 ## Learning content sources
 
 `viewer/public/content/learning.json` contains original summaries written for this project.

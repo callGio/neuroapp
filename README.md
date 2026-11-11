@@ -29,7 +29,9 @@ the first load downloads about 55 MB of 3D models).
   orientation compass.
 - Sagittal, coronal and axial cutting planes; left/right/midline hemisphere toggles;
   isolate a structure or a whole group such as a lobe.
-- Shareable deep links, e.g. `atlas-viewer.html#left_hippocampus`.
+- Shareable deep links, e.g. `atlas-viewer.html#left_hippocampus`, plus start links:
+  `?start=tour` opens the Brain 101 tour, `?start=quiz` starts a quick quiz, and
+  `?level=beginner|some|expert` sets the lesson depth.
 
 **Learn**
 - Lessons at beginner or expert depth, each point with numbered citations.
@@ -74,7 +76,8 @@ cd neuroapp/viewer/public
 python3 -m http.server 8080 --bind 127.0.0.1
 ```
 
-Then open http://127.0.0.1:8080/atlas-viewer.html in Chrome, Edge, Firefox or Safari.
+Then open http://127.0.0.1:8080/ in Chrome, Edge, Firefox or Safari. The welcome page links into the
+atlas; you can also open http://127.0.0.1:8080/atlas-viewer.html directly.
 (Opening the HTML file directly from disk will not work; browsers block loading the 3D
 models from `file://`.)
 
@@ -98,6 +101,7 @@ unmapped, or failed), keeps the atlas's original coordinates, and writes
 ```
 scripts/convert_atlas.py         VTK -> glTF converter and manifest builder
 scripts/check_atlas_samples.py   3-mesh sanity check (shared reader/writer)
+viewer/public/index.html         the welcome page
 viewer/public/atlas-viewer.html  the app (Three.js, no build step)
 viewer/public/atlas-manifest.json  structure names, hierarchy, colors, RadLex IDs
 viewer/public/models/            328 binary glTF meshes

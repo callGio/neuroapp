@@ -2,18 +2,870 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; base-uri 'none'; form-action 'none'">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="NeuroApp: a free interactive 3D brain atlas for learning neuroanatomy, with cited lessons, guided tours and adaptive quizzes.">
-<meta http-equiv="refresh" content="0; url=./atlas-viewer.html">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy"
+  content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="description" content="Spin, slice and click through 300+ structures. Learn what each part does with cited lessons, take a guided tour, and quiz yourself with questions that adapt to you.">
+<meta property="og:title" content="NeuroApp: explore the human brain in 3D">
+<meta property="og:description" content="Spin, slice and click through 300+ structures. Learn what each part does with cited lessons, take a guided tour, and quiz yourself with questions that adapt to you.">
+<meta property="og:image" content="./assets/og-card.png">
+<link rel="icon" href="./assets/favicon.svg">
 <title>NeuroApp — learn the human brain in 3D</title>
 <style>
-  body { background:#0d1117; color:#e6edf3; font-family:-apple-system,"Segoe UI",system-ui,sans-serif;
-         display:flex; align-items:center; justify-content:center; height:100vh; margin:0; }
-  a { color:#58a6ff; }
+/* ── Fonts ── */
+@font-face{font-family:"Inter";src:url("./vendor/fonts/inter-var.woff2") format("woff2");font-weight:100 900;font-display:swap}
+@font-face{font-family:"Space Grotesk";src:url("./vendor/fonts/space-grotesk-var.woff2") format("woff2");font-weight:300 700;font-display:swap}
+
+/* ── Tokens ── */
+:root{
+  --bg-0:#060912; --bg-1:#0b1120; --bg-2:#111a2e;
+  --surface:rgba(16,24,42,.72); --surface-solid:#121b30; --border:rgba(148,163,209,.16);
+  --text:#e8ecf6; --muted:#9aa5bd; --faint:#6b7590;
+  --violet:#8b6cff; --cyan:#22d3ee; --pink:#f472b6; --green:#34d399; --amber:#fbbf24; --red:#f87171;
+  --grad:linear-gradient(135deg,#8b6cff 0%,#22d3ee 100%);
+  --radius:14px; --radius-sm:10px; --shadow:0 10px 40px rgba(0,0,0,.45);
+}
+
+/* ── Reset / base ── */
+*,::before,::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  background:var(--bg-0);
+  color:var(--text);
+  font-family:"Inter",system-ui,sans-serif;
+  font-size:15px;
+  line-height:1.65;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* Dot grid + blobs background */
+body::before{
+  content:"";
+  position:fixed;inset:0;
+  background-image:radial-gradient(rgba(255,255,255,.035) 1px,transparent 1px);
+  background-size:24px 24px;
+  pointer-events:none;
+  z-index:0;
+}
+body::after{
+  content:"";
+  position:fixed;inset:0;
+  background:
+    radial-gradient(ellipse 60vw 60vw at 0% 0%,rgba(139,108,255,.25) 0%,transparent 65%),
+    radial-gradient(ellipse 55vw 55vw at 100% 100%,rgba(34,211,238,.25) 0%,transparent 65%);
+  filter:blur(120px);
+  pointer-events:none;
+  z-index:0;
+}
+
+/* Focus rings */
+:focus-visible{outline:2px solid var(--violet);outline-offset:3px;border-radius:4px}
+
+/* ── Buttons ── */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  border:none;cursor:pointer;text-decoration:none;
+  font-family:inherit;font-weight:600;font-size:.9rem;
+  border-radius:999px;padding:12px 24px;
+  transition:transform .15s,box-shadow .15s,background .15s;
+  white-space:nowrap;
+}
+.btn-primary{
+  background:var(--grad);
+  color:#060912;
+}
+.btn-primary:hover{
+  transform:translateY(-1px);
+  box-shadow:0 8px 30px rgba(139,108,255,.35);
+}
+.btn-secondary{
+  background:transparent;
+  border:1px solid var(--border);
+  color:var(--text);
+}
+.btn-secondary:hover{
+  background:rgba(255,255,255,.05);
+  transform:translateY(-1px);
+}
+
+/* ── Top bar ── */
+#topbar{
+  position:sticky;top:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 clamp(16px,4vw,48px);
+  height:60px;
+  background:var(--surface);
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border);
+}
+.brand{
+  display:flex;align-items:center;gap:9px;
+  text-decoration:none;
+  font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:1.1rem;
+  color:var(--text);
+}
+.nav-links{display:flex;align-items:center;gap:20px}
+.nav-links a.nav-link{
+  color:var(--muted);font-size:.88rem;text-decoration:none;
+  transition:color .15s;
+}
+.nav-links a.nav-link:hover{color:var(--text)}
+.nav-links .btn{font-size:.82rem;padding:8px 16px}
+
+/* ── Hero ── */
+#hero{
+  position:relative;
+  min-height:88vh;
+  display:flex;align-items:center;
+  padding:80px clamp(20px,5vw,80px) 60px;
+  overflow:hidden;
+}
+#neural-bg{
+  position:absolute;inset:0;width:100%;height:100%;
+  z-index:0;pointer-events:none;
+}
+.hero-inner{
+  position:relative;z-index:1;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:48px;
+  align-items:center;
+  max-width:1120px;
+  margin:0 auto;
+  width:100%;
+}
+.hero-text{display:flex;flex-direction:column;gap:20px}
+.hero-note{font-size:.875rem;color:var(--muted);margin:0}
+.hero-heading{
+  font-family:"Space Grotesk",sans-serif;
+  font-size:clamp(2.4rem,6vw,4.4rem);
+  font-weight:700;
+  line-height:1.1;
+  letter-spacing:-.02em;
+  color:var(--text);
+}
+.hero-heading .grad-text{
+  background:var(--grad);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.hero-subtitle{
+  font-size:clamp(1rem,2vw,1.15rem);
+  color:var(--muted);
+  max-width:520px;
+}
+
+/* Level picker */
+.level-picker{display:flex;flex-direction:column;gap:10px}
+.level-label{font-size:.83rem;color:var(--muted)}
+.level-pills{display:flex;flex-wrap:wrap;gap:8px}
+.pill-btn{
+  background:var(--surface-solid);
+  border:1px solid var(--border);
+  color:var(--muted);
+  border-radius:999px;
+  padding:6px 16px;
+  font-size:.83rem;font-weight:500;
+  cursor:pointer;
+  transition:border-color .15s,color .15s,background .15s;
+  font-family:inherit;
+}
+.pill-btn:hover{border-color:rgba(139,108,255,.55);color:var(--text)}
+.pill-btn[aria-pressed="true"]{
+  background:var(--grad);
+  color:#060912;
+  border-color:transparent;
+  font-weight:600;
+}
+
+.hero-cta{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:4px}
+
+/* Hero image column */
+.hero-image-wrap{
+  display:flex;align-items:center;justify-content:center;
+  position:relative;
+}
+.hero-glow{
+  position:absolute;
+  width:70%;height:70%;
+  background:radial-gradient(ellipse,rgba(139,108,255,.38) 0%,transparent 70%);
+  border-radius:50%;
+  pointer-events:none;
+}
+.hero-brain-img{
+  position:relative;z-index:1;
+  max-width:100%;width:460px;
+  border-radius:12px;
+  animation:float 6s ease-in-out infinite;
+}
+@keyframes float{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-8px)}
+}
+@media(prefers-reduced-motion:reduce){
+  .hero-brain-img{animation:none}
+}
+
+/* ── Stats strip ── */
+#stats-strip{
+  position:relative;z-index:1;
+  display:flex;justify-content:center;gap:clamp(32px,6vw,96px);
+  flex-wrap:wrap;
+  padding:40px clamp(20px,5vw,80px);
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  background:var(--surface);
+}
+.stat-item{display:flex;flex-direction:column;align-items:center;gap:4px}
+.stat-number{
+  font-family:"Space Grotesk",sans-serif;
+  font-size:clamp(2rem,4vw,2.8rem);
+  font-weight:700;
+  background:var(--grad);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.stat-label{font-size:.82rem;color:var(--muted);text-align:center}
+#stats-strip.hidden{display:none}
+
+/* ── Features ── */
+#features{
+  position:relative;z-index:1;
+  padding:80px clamp(20px,5vw,80px);
+  max-width:1120px;margin:0 auto;
+}
+.section-heading{
+  font-family:"Space Grotesk",sans-serif;
+  font-size:clamp(1.6rem,3.5vw,2.4rem);
+  font-weight:700;letter-spacing:-.02em;
+  color:var(--text);
+  text-align:center;margin-bottom:48px;
+}
+.features-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:24px;
+}
+.feature-card{
+  background:var(--surface);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:28px 24px;
+  display:flex;gap:20px;
+  opacity:0;transform:translateY(20px);
+  transition:opacity .4s ease,transform .4s ease;
+}
+.feature-card.visible{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){
+  .feature-card{opacity:1;transform:none;transition:none}
+}
+.icon-wrap{
+  flex-shrink:0;
+  width:44px;height:44px;
+  border-radius:50%;
+  background:var(--grad);
+  display:flex;align-items:center;justify-content:center;
+}
+.icon-wrap svg{width:22px;height:22px}
+.feature-body h3{
+  font-family:"Space Grotesk",sans-serif;
+  font-size:1rem;font-weight:600;margin-bottom:6px;
+  color:var(--text);
+}
+.feature-body p{font-size:.87rem;color:var(--muted);line-height:1.6}
+
+/* ── How it works ── */
+#how-it-works{
+  position:relative;z-index:1;
+  padding:80px clamp(20px,5vw,80px);
+  background:linear-gradient(var(--bg-1),var(--bg-0));
+}
+.how-inner{max-width:900px;margin:0 auto}
+.steps-row{
+  display:flex;
+  align-items:flex-start;
+  gap:0;
+  margin-top:8px;
+  position:relative;
+}
+.steps-row::before{
+  content:"";
+  position:absolute;
+  top:28px;left:40px;right:40px;
+  height:1px;
+  background:var(--grad);
+  opacity:.45;
+  pointer-events:none;
+}
+.step{
+  flex:1;
+  display:flex;flex-direction:column;align-items:center;
+  text-align:center;
+  padding:0 16px;
+  position:relative;
+}
+.step-num{
+  width:56px;height:56px;
+  border-radius:50%;
+  background:var(--grad);
+  display:flex;align-items:center;justify-content:center;
+  font-family:"Space Grotesk",sans-serif;font-size:1.35rem;font-weight:700;
+  color:#060912;
+  margin-bottom:16px;
+  flex-shrink:0;
+  z-index:1;
+}
+.step h3{
+  font-family:"Space Grotesk",sans-serif;
+  font-size:.97rem;font-weight:600;color:var(--text);margin-bottom:6px;
+}
+.step p{font-size:.85rem;color:var(--muted);line-height:1.55}
+
+/* ── Final CTA ── */
+#final-cta{
+  position:relative;z-index:1;
+  padding:80px clamp(20px,5vw,80px);
+  display:flex;justify-content:center;
+}
+.cta-panel{
+  background:var(--surface);
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:clamp(36px,5vw,56px) clamp(32px,6vw,72px);
+  text-align:center;
+  max-width:640px;width:100%;
+  box-shadow:var(--shadow);
+}
+.cta-panel h2{
+  font-family:"Space Grotesk",sans-serif;
+  font-size:clamp(1.5rem,3vw,2rem);
+  font-weight:700;letter-spacing:-.02em;
+  margin-bottom:24px;
+}
+
+/* ── Footer ── */
+footer{
+  position:relative;z-index:1;
+  border-top:1px solid var(--border);
+  padding:28px clamp(20px,5vw,80px);
+  display:flex;flex-wrap:wrap;align-items:center;justify-content:center;
+  gap:6px 20px;
+  font-size:.8rem;color:var(--muted);
+  text-align:center;
+}
+footer a{color:var(--muted);text-decoration:underline;text-underline-offset:3px}
+footer a:hover{color:var(--text)}
+.footer-sep::before{content:"·";margin-right:20px;color:var(--faint)}
+
+/* ── Responsive ── */
+@media(max-width:760px){
+  .hero-inner{
+    grid-template-columns:1fr;
+    text-align:center;
+  }
+  .hero-image-wrap{order:-1}
+  .hero-brain-img{width:52%;max-width:220px}
+  #hero{min-height:auto;padding-top:28px}
+  #neural-bg{opacity:.45}
+  .hero-subtitle{max-width:100%}
+  .hero-cta{justify-content:center}
+  .level-pills{justify-content:center}
+  .features-grid{grid-template-columns:1fr}
+  .steps-row{flex-direction:column;align-items:center;gap:32px}
+  .steps-row::before{display:none}
+  .nav-links a.nav-link{display:none}
+}
+@media(max-width:480px){
+  #topbar .btn{font-size:.78rem;padding:7px 13px}
+}
 </style>
 </head>
 <body>
-  <p>Loading NeuroApp… If nothing happens, <a href="./atlas-viewer.html">open the 3D brain atlas</a>.</p>
+
+<!-- ══ TOP BAR ══ -->
+<header id="topbar" role="banner">
+  <a href="./index.html" class="brand" aria-label="NeuroApp home">
+    <!-- Neuron SVG brand mark -->
+    <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true" focusable="false">
+      <defs>
+        <linearGradient id="ng" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#8b6cff"/>
+          <stop offset="100%" stop-color="#22d3ee"/>
+        </linearGradient>
+      </defs>
+      <!-- soma -->
+      <circle cx="15" cy="15" r="4.5" stroke="url(#ng)" stroke-width="1.8" fill="none"/>
+      <!-- dendrites / axon branches -->
+      <path d="M15 10.5 C14 6, 10 4, 8 2" stroke="url(#ng)" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+      <path d="M15 10.5 C16.5 7, 20 5.5, 22 3.5" stroke="url(#ng)" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+      <path d="M18.9 13 C22 12, 25.5 10, 28 9" stroke="url(#ng)" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+      <path d="M18.9 17 C22 19, 26 20.5, 28 22" stroke="url(#ng)" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+      <path d="M15 19.5 C14 23, 11 26, 9 28" stroke="url(#ng)" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+      <path d="M11.1 17 C8 18.5, 5 20, 2 21" stroke="url(#ng)" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+    </svg>
+    NeuroApp
+  </a>
+  <nav class="nav-links" aria-label="Site navigation">
+    <a href="#features" class="nav-link">Features</a>
+    <a href="#how-it-works" class="nav-link">How it works</a>
+    <a href="./atlas-viewer.html" class="btn btn-secondary">Open the atlas</a>
+  </nav>
+</header>
+
+<!-- ══ HERO ══ -->
+<main>
+<section id="hero" aria-label="Hero">
+  <canvas id="neural-bg" aria-hidden="true"></canvas>
+  <div class="hero-inner">
+    <div class="hero-text">
+      <h1 class="hero-heading">
+        Explore the human brain in 3D
+      </h1>
+      <p class="hero-subtitle">
+        Spin, slice and click through 300+ structures. Learn what each part does
+        with cited lessons, take a guided tour, and quiz yourself with questions
+        that adapt to you.
+      </p>
+
+      <!-- Level picker -->
+      <div class="level-picker" aria-label="Experience level picker">
+        <span class="level-label" id="level-label">How familiar are you with neuroscience?</span>
+        <div class="level-pills" role="group" aria-labelledby="level-label">
+          <button type="button" class="pill-btn" aria-pressed="false" data-level="beginner">New to it</button>
+          <button type="button" class="pill-btn" aria-pressed="false" data-level="some">Some background</button>
+          <button type="button" class="pill-btn" aria-pressed="false" data-level="expert">Expert</button>
+        </div>
+      </div>
+
+      <div class="hero-cta">
+        <a href="./atlas-viewer.html" class="btn btn-primary" id="cta-explore">Start exploring</a>
+        <a href="./atlas-viewer.html?start=tour" class="btn btn-secondary" id="cta-tour">Take the 5-minute tour</a>
+        <a href="./atlas-viewer.html?start=quiz" class="btn btn-secondary" id="cta-quiz">Quiz me</a>
+      </div>
+      <p class="hero-note">Free. No account. Works on your phone.</p>
+    </div>
+
+    <div class="hero-image-wrap" aria-hidden="true">
+      <div class="hero-glow"></div>
+      <img
+        src="./assets/brain-lateral.webp"
+        alt="3D model of the human brain seen from the left side, each region a different colour"
+        class="hero-brain-img"
+        width="460"
+        loading="eager"
+      >
+    </div>
+  </div>
+</section>
+
+<!-- ══ STATS STRIP ══ -->
+<section id="stats-strip" aria-label="At a glance statistics">
+  <div class="stat-item">
+    <span class="stat-number" id="stat-structures" aria-label="Number of 3D structures">—</span>
+    <span class="stat-label">3D structures</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-number" id="stat-lessons" aria-label="Number of cited lessons">—</span>
+    <span class="stat-label">cited lessons</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-number" id="stat-tours" aria-label="Number of guided tours">—</span>
+    <span class="stat-label">guided tours</span>
+  </div>
+</section>
+
+<!-- ══ FEATURES ══ -->
+<section id="features" aria-labelledby="features-heading">
+  <h2 class="section-heading" id="features-heading">
+    Everything you need to learn neuroanatomy
+  </h2>
+  <div class="features-grid">
+
+    <article class="feature-card" aria-label="Feature: Explore in 3D">
+      <div class="icon-wrap" aria-hidden="true">
+        <!-- Rotate / cube icon -->
+        <svg viewBox="0 0 22 22" fill="none" stroke="#060912" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M11 2 L19 6.5V15.5L11 20L3 15.5V6.5Z"/>
+          <path d="M11 2V20M3 6.5L11 11L19 6.5"/>
+        </svg>
+      </div>
+      <div class="feature-body">
+        <h3>Explore in 3D</h3>
+        <p>Rotate, zoom and slice the brain. Isolate any region and see the smaller parts inside it.</p>
+      </div>
+    </article>
+
+    <article class="feature-card" aria-label="Feature: Learn at your level">
+      <div class="icon-wrap" aria-hidden="true">
+        <!-- Book / open book icon -->
+        <svg viewBox="0 0 22 22" fill="none" stroke="#060912" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M2 4.5C2 4.5 5.5 3 11 3s9 1.5 9 1.5v14S17.5 16.5 11 16.5 2 18.5 2 18.5V4.5Z"/>
+          <line x1="11" y1="3" x2="11" y2="16.5"/>
+        </svg>
+      </div>
+      <div class="feature-body">
+        <h3>Learn at your level</h3>
+        <p>Beginner and expert lessons for each structure, with every claim linked to its source.</p>
+      </div>
+    </article>
+
+    <article class="feature-card" aria-label="Feature: Practice that sticks">
+      <div class="icon-wrap" aria-hidden="true">
+        <!-- Brain / quiz icon -->
+        <svg viewBox="0 0 22 22" fill="none" stroke="#060912" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"/>
+          <path d="M8 11c0-1.66 1.34-3 3-3s3 1.34 3 3c0 1.1-.6 2.06-1.5 2.6"/>
+          <circle cx="11" cy="16" r=".8" fill="#060912"/>
+        </svg>
+      </div>
+      <div class="feature-body">
+        <h3>Practice that sticks</h3>
+        <p>Find-it and name-it quizzes with spaced review, so you revisit what you are about to forget.</p>
+      </div>
+    </article>
+
+    <article class="feature-card" aria-label="Feature: Anywhere, free">
+      <div class="icon-wrap" aria-hidden="true">
+        <!-- Phone / globe icon -->
+        <svg viewBox="0 0 22 22" fill="none" stroke="#060912" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="7" y="2" width="8" height="18" rx="2"/>
+          <line x1="10" y1="17.5" x2="12" y2="17.5"/>
+        </svg>
+      </div>
+      <div class="feature-body">
+        <h3>Anywhere, free</h3>
+        <p>Runs in your browser on a laptop or phone. No account, no download, no tracking.</p>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ══ HOW IT WORKS ══ -->
+<section id="how-it-works" aria-labelledby="how-heading">
+  <div class="how-inner">
+    <h2 class="section-heading" id="how-heading">Three steps</h2>
+    <div class="steps-row" role="list">
+      <div class="step" role="listitem">
+        <div class="step-num" aria-hidden="true">1</div>
+        <h3>Pick a region</h3>
+        <p>Tap any part of the brain or search for it by name.</p>
+      </div>
+      <div class="step" role="listitem">
+        <div class="step-num" aria-hidden="true">2</div>
+        <h3>Read its story</h3>
+        <p>See what it does, what it connects to and what happens when it is damaged.</p>
+      </div>
+      <div class="step" role="listitem">
+        <div class="step-num" aria-hidden="true">3</div>
+        <h3>Test yourself</h3>
+        <p>Quick quizzes bring back what you missed until it sticks.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FINAL CTA ══ -->
+<section id="final-cta" aria-label="Final call to action">
+  <div class="cta-panel">
+    <h2>Ready to look inside?</h2>
+    <a href="./atlas-viewer.html" class="btn btn-primary" id="cta-final">Start exploring</a>
+  </div>
+</section>
+</main>
+
+<!-- ══ FOOTER ══ -->
+<footer role="contentinfo">
+  <span>Built by <a href="https://callgio.github.io/" target="_blank" rel="noopener noreferrer">Giovanni Callahan</a></span>
+  <span class="footer-sep"></span>
+  <a href="https://github.com/callGio/neuroapp" target="_blank" rel="noopener noreferrer">Source code</a>
+  <span class="footer-sep"></span>
+  <a id="notice-link" href="https://github.com/callGio/neuroapp/blob/main/NOTICE.md" target="_blank" rel="noopener noreferrer">3D models: SPL/NAC Brain Atlas (Halle et al., 2017)</a>
+  <span class="footer-sep"></span>
+  <span>For learning only. Not for medical use.</span>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ──────────────────────────────────────────
+     1.  Neural-field canvas animation
+  ────────────────────────────────────────── */
+  const canvas = document.getElementById("neural-bg");
+  const ctx = canvas.getContext("2d");
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const MAX_DPR = 2;
+  let W, H, nodes, animId, spikes = [];
+  let spikeTimer = null;
+
+  function resize() {
+    const dpr = Math.min(window.devicePixelRatio || 1, MAX_DPR);
+    W = canvas.offsetWidth;
+    H = canvas.offsetHeight;
+    canvas.width  = W * dpr;
+    canvas.height = H * dpr;
+    ctx.scale(dpr, dpr);
+    buildNodes();
+  }
+
+  function buildNodes() {
+    const count = W < 700 ? 35 : 70;
+    nodes = Array.from({length: count}, () => ({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      vx: (Math.random() - 0.5) * 0.28,
+      vy: (Math.random() - 0.5) * 0.28,
+      flash: 0
+    }));
+  }
+
+  function drawFrame() {
+    ctx.clearRect(0, 0, W, H);
+    const LINK_DIST = 140;
+    const LINK_DIST_SQ = LINK_DIST * LINK_DIST;
+
+    // lines
+    for (let i = 0; i < nodes.length; i++) {
+      for (let j = i + 1; j < nodes.length; j++) {
+        const dx = nodes[i].x - nodes[j].x;
+        const dy = nodes[i].y - nodes[j].y;
+        const dSq = dx * dx + dy * dy;
+        if (dSq < LINK_DIST_SQ) {
+          const alpha = (1 - dSq / LINK_DIST_SQ) * 0.18;
+          ctx.strokeStyle = `rgba(139,108,255,${alpha.toFixed(3)})`;
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(nodes[i].x, nodes[i].y);
+          ctx.lineTo(nodes[j].x, nodes[j].y);
+          ctx.stroke();
+        }
+      }
+    }
+
+    // spikes (trail + dot)
+    for (const sp of spikes) {
+      const tx = sp.ax + (sp.bx - sp.ax) * sp.t;
+      const ty = sp.ay + (sp.by - sp.ay) * sp.t;
+      // fading trail
+      const trailLen = 0.12;
+      const t0 = Math.max(0, sp.t - trailLen);
+      const tx0 = sp.ax + (sp.bx - sp.ax) * t0;
+      const ty0 = sp.ay + (sp.by - sp.ay) * t0;
+      const grad = ctx.createLinearGradient(tx0, ty0, tx, ty);
+      grad.addColorStop(0, "rgba(34,211,238,0)");
+      grad.addColorStop(1, `rgba(34,211,238,${(0.75 * (1 - Math.abs(sp.t - 0.5) * 1.2)).toFixed(3)})`);
+      ctx.strokeStyle = grad;
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(tx0, ty0);
+      ctx.lineTo(tx, ty);
+      ctx.stroke();
+      // head dot
+      ctx.beginPath();
+      ctx.arc(tx, ty, 2.5, 0, Math.PI * 2);
+      ctx.fillStyle = "#22d3ee";
+      ctx.fill();
+    }
+
+    // nodes
+    for (const n of nodes) {
+      const alpha = 0.70 + (n.flash > 0 ? n.flash * 0.30 : 0);
+      const r = 3 + (n.flash > 0 ? n.flash * 2 : 0);
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(139,108,255,${alpha.toFixed(2)})`;
+      ctx.fill();
+    }
+  }
+
+  let lastTime = 0;
+  function tick(ts) {
+    if (document.hidden) { animId = requestAnimationFrame(tick); return; }
+    const dt = Math.min(ts - lastTime, 50);
+    lastTime = ts;
+
+    // move nodes
+    for (const n of nodes) {
+      n.x += n.vx * dt * 0.06;
+      n.y += n.vy * dt * 0.06;
+      if (n.x < 0) { n.x = 0; n.vx *= -1; }
+      if (n.x > W) { n.x = W; n.vx *= -1; }
+      if (n.y < 0) { n.y = 0; n.vy *= -1; }
+      if (n.y > H) { n.y = H; n.vy *= -1; }
+      if (n.flash > 0) n.flash = Math.max(0, n.flash - dt * 0.004);
+    }
+
+    // advance spikes
+    const SPIKE_DUR = 900;
+    spikes = spikes.filter(sp => {
+      sp.t += dt / SPIKE_DUR;
+      if (sp.t >= 1) {
+        // flash target node
+        const tgt = nodes[sp.nodeB];
+        if (tgt) tgt.flash = 1;
+        return false;
+      }
+      return true;
+    });
+
+    drawFrame();
+    animId = requestAnimationFrame(tick);
+  }
+
+  function launchSpike() {
+    if (reducedMotion) return;
+    // find a connected edge
+    const LINK_DIST_SQ = 140 * 140;
+    let tries = 0;
+    while (tries++ < 30) {
+      const i = (Math.random() * nodes.length) | 0;
+      const j = (Math.random() * nodes.length) | 0;
+      if (i === j) continue;
+      const dx = nodes[i].x - nodes[j].x;
+      const dy = nodes[i].y - nodes[j].y;
+      if (dx * dx + dy * dy < LINK_DIST_SQ) {
+        spikes.push({ ax: nodes[i].x, ay: nodes[i].y,
+                      bx: nodes[j].x, by: nodes[j].y,
+                      nodeB: j, t: 0 });
+        break;
+      }
+    }
+  }
+
+  // init
+  resize();
+  window.addEventListener("resize", () => { cancelAnimationFrame(animId); resize(); if (!reducedMotion) animId = requestAnimationFrame(tick); else { buildNodes(); drawFrame(); } });
+
+  if (reducedMotion) {
+    drawFrame();
+  } else {
+    animId = requestAnimationFrame(tick);
+    spikeTimer = setInterval(launchSpike, 400);
+  }
+
+  /* ──────────────────────────────────────────
+     2.  Level picker → append ?level= to CTA URLs
+  ────────────────────────────────────────── */
+  const pills = document.querySelectorAll(".pill-btn");
+  const ctaLinks = [
+    document.getElementById("cta-explore"),
+    document.getElementById("cta-tour"),
+    document.getElementById("cta-quiz"),
+    document.getElementById("cta-final")
+  ];
+
+  function baseUrl(el) {
+    // strip any previous level param
+    const u = el.dataset.base || el.getAttribute("href");
+    el.dataset.base = u;
+    return u;
+  }
+
+  pills.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const active = btn.getAttribute("aria-pressed") === "true";
+      pills.forEach(p => p.setAttribute("aria-pressed", "false"));
+      if (!active) {
+        btn.setAttribute("aria-pressed", "true");
+        const level = btn.dataset.level;
+        ctaLinks.forEach(a => {
+          if (a) {
+            const base = baseUrl(a);
+            const sep = base.includes("?") ? "&" : "?";
+            a.href = base + sep + "level=" + level;
+          }
+        });
+      } else {
+        // deselected — restore base URLs
+        ctaLinks.forEach(a => {
+          if (a) a.href = baseUrl(a);
+        });
+      }
+    });
+  });
+
+  /* ──────────────────────────────────────────
+     3.  Stats strip: fetch + count-up animation
+  ────────────────────────────────────────── */
+  const strip = document.getElementById("stats-strip");
+  const elStructures = document.getElementById("stat-structures");
+  const elLessons    = document.getElementById("stat-lessons");
+  const elTours      = document.getElementById("stat-tours");
+
+  let statsData = null;
+
+  async function loadStats() {
+    try {
+      const [manifestRes, learningRes] = await Promise.all([
+        fetch("./atlas-manifest.json"),
+        fetch("./content/learning.json")
+      ]);
+      if (!manifestRes.ok || !learningRes.ok) throw new Error("fetch failed");
+      const manifest = await manifestRes.json();
+      const learning = await learningRes.json();
+      const structures = Array.isArray(manifest.models) ? manifest.models.length : 0;
+      const lessons    = Array.isArray(learning.topics) ? learning.topics.length : 0;
+      const tours      = Array.isArray(learning.tours)  ? learning.tours.length  : 0;
+      statsData = { structures, lessons, tours };
+    } catch (_) {
+      strip.classList.add("hidden");
+    }
+  }
+
+  function countUp(el, target, duration) {
+    if (reducedMotion) { el.textContent = target; return; }
+    const start = performance.now();
+    function frame(now) {
+      const p = Math.min((now - start) / duration, 1);
+      // ease out
+      const v = Math.round(p < 1 ? target * (1 - Math.pow(1 - p, 3)) : target);
+      el.textContent = v;
+      if (p < 1) requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  }
+
+  let statsAnimated = false;
+  const statsObserver = new IntersectionObserver(entries => {
+    if (entries[0].isIntersecting && statsData && !statsAnimated) {
+      statsAnimated = true;
+      countUp(elStructures, statsData.structures, 1000);
+      countUp(elLessons,    statsData.lessons,    1000);
+      countUp(elTours,      statsData.tours,      1000);
+      statsObserver.disconnect();
+    }
+  }, { threshold: 0.2 });
+
+  loadStats().then(() => {
+    if (statsData) statsObserver.observe(strip);
+  });
+
+  /* ──────────────────────────────────────────
+     4.  Feature card scroll-in animation
+  ────────────────────────────────────────── */
+  const cards = document.querySelectorAll(".feature-card");
+  if (!reducedMotion) {
+    const cardObserver = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add("visible");
+          cardObserver.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    cards.forEach(c => cardObserver.observe(c));
+  }
+
+
+})();
+</script>
 </body>
 </html>
