@@ -45,6 +45,12 @@ the first load downloads about 55 MB of 3D models).
   confident mistakes are re-taught immediately.
 - A mastery map colors the brain by how well you know each part.
 
+**Works on phones**
+- On screens up to 760 px wide the panel becomes a bottom sheet: drag or tap its handle to
+  show just the tabs, half the screen, or nearly all of it.
+- One finger rotates, two fingers pinch to zoom, a tap selects; the brain re-centres in the
+  space above the sheet, and quiz questions sit below the brain so it stays visible.
+
 ## Why it works this way
 
 The practice design follows two well-replicated findings: retrieving information beats

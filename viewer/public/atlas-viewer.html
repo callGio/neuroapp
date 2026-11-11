@@ -4,8 +4,9 @@
 <meta charset="UTF-8">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self' blob: data:; worker-src 'self' blob:; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Brain Atlas Viewer</title>
+<link rel="icon" href="data:,">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{background:#0d1117;color:#e6edf3;font-family:-apple-system,"Segoe UI",system-ui,sans-serif;overflow:hidden;font-size:13px}
@@ -416,6 +417,80 @@ details.learn-clinical-details summary:hover{color:#ffa657}
 .parts-row-name{color:#58a6ff;font-weight:600;flex:1}
 .parts-row-short{color:#8b949e;font-size:11px;flex:2}
 .parts-row-count{color:#57606a;font-size:10px;white-space:nowrap}
+
+/* ══ MOBILE LAYOUT (≤760px): the side panel becomes a bottom sheet ══ */
+#sheet-handle{display:none}
+@media (max-width:760px){
+  body{font-size:14px}
+  #canvas-wrap{left:0}
+  #panel{top:auto;left:0;right:0;bottom:0;width:100%;height:var(--sheet-h,64px);
+    border-right:none;border-top:1px solid #30363d;border-radius:14px 14px 0 0;
+    background:rgba(13,17,23,0.97);padding-bottom:env(safe-area-inset-bottom);
+    transition:height .25s ease;box-shadow:0 -6px 24px rgba(0,0,0,.45)}
+  #panel.dragging{transition:none}
+  #sheet-handle{display:flex;align-items:center;justify-content:center;height:24px;flex-shrink:0;
+    cursor:grab;touch-action:none;-webkit-user-select:none;user-select:none}
+  #sheet-handle::before{content:"";width:42px;height:5px;border-radius:3px;background:#484f58}
+  #panel-top{display:none}
+  .panel-pane,.pane-scroll,#focus-subpane,#info{overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+  #pane-explore{overflow-y:auto}
+  #pane-explore > *{flex-shrink:0}
+  #focus-page{flex:none!important;overflow:visible!important}
+  #focus-subpane{flex:none;overflow:visible}
+
+  /* bigger tap targets */
+  .ptab{padding:11px 2px;font-size:11px}
+  .stab{padding:9px 9px;font-size:11px}
+  .foc-btn,.iso-btn{padding:9px 12px;font-size:13px}
+  .tog-btn{padding:9px 4px;font-size:12px}
+  .preset-btn{padding:9px 2px;font-size:12px}
+  .sr-item{padding:11px 12px;font-size:14px}
+  .parts-row{padding:10px 0;font-size:14px}
+  .parts-row-short{font-size:12px}
+  .quiz-card{padding:14px 16px}
+  .quiz-card-title{font-size:15px}
+  .quiz-card-desc{font-size:13px}
+  #focus-header-name{font-size:16px}
+  #focus-breadcrumb{font-size:12px}
+  .bc-link{display:inline-block;padding:3px 0}
+  #focus-back-btn{font-size:13px;padding:2px 0 8px}
+  #custom-quiz-toggle{padding:12px 0}
+  .clip-row{margin-bottom:10px}
+  .clip-flip{padding:6px 10px;font-size:12px}
+  /* 16px text stops iOS Safari from zooming in when a field is focused */
+  #search,.qs-sel,#group-filter,#learner-level-sel,select,input[type=text]{font-size:16px}
+  #search{padding:10px 12px}
+
+  /* overlays that were centred inside the 270px-offset viewport */
+  #status{left:0;bottom:calc(var(--sheet-h,64px) + 10px);max-width:calc(100vw - 24px);
+    overflow:hidden;text-overflow:ellipsis}
+  #quiz-hud{left:8px;right:8px;top:auto;bottom:calc(var(--sheet-h,64px) + 8px);width:auto;
+    min-width:0;max-width:none;padding:10px 12px;max-height:calc(100dvh - var(--sheet-h,64px) - 70px);
+    overflow-y:auto}
+  #qhud-prompt{font-size:16px;margin-bottom:6px}
+  #qhud-options{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+  .qopt-btn{padding:10px 10px;font-size:14px;line-height:1.3;min-height:48px}
+  .conf-btn{padding:10px 14px;font-size:14px}
+  #qhud-next,#btn-show-me{padding:10px 18px;font-size:14px}
+  #btn-quit-quiz,#btn-close-tour{top:calc(env(safe-area-inset-top) + 10px);bottom:auto;right:10px;
+    padding:9px 14px;font-size:13px}
+  #tour-hud{left:8px;right:8px;width:auto;min-width:0;max-width:none;padding:12px 14px;
+    bottom:calc(var(--sheet-h,64px) + 10px);max-height:55dvh;overflow-y:auto}
+  #tour-hud-text{font-size:14px}
+  .tour-nav-btn{padding:10px 16px;font-size:14px}
+  #gizmo{top:calc(env(safe-area-inset-top) + 8px);left:8px;bottom:auto;right:auto;width:60px;height:60px}
+  #gizmo canvas{width:60px!important;height:60px!important}
+
+  /* modal boxes fit the screen */
+  #tour-list-box,#learn-card-box,#about-box,#quiz-summary-box,#shortcuts-box{
+    min-width:0;width:calc(100vw - 24px);max-width:none;max-height:85dvh;overflow-y:auto;padding:18px}
+  .tour-list-item{padding:12px}
+  .summ-btn,.tour-list-close,#btn-close-about,#btn-learn-card-continue{padding:10px 16px;font-size:14px}
+  #learn-card-summary,#about-box p{font-size:14px}
+}
+/* touch screens have no hover: the hover tooltip would only get stuck */
+@media (hover:none){ #tooltip{display:none!important} }
+@media (prefers-reduced-motion:reduce){ #panel{transition:none!important} }
 </style>
 </head>
 <body>
@@ -423,6 +498,7 @@ details.learn-clinical-details summary:hover{color:#ffa657}
 <div id="canvas-wrap"><canvas id="c"></canvas></div>
 
 <div id="panel">
+  <div id="sheet-handle" role="button" aria-label="Resize panel" tabindex="0"></div>
   <!-- ── header row ── -->
   <div id="panel-top" style="padding:8px 12px 0">
     <h1>Brain Atlas</h1>
@@ -487,7 +563,7 @@ details.learn-clinical-details summary:hover{color:#ffa657}
 
     <!-- placeholder (no selection) -->
     <div id="explore-placeholder" style="padding:0 12px;margin-top:8px;flex-shrink:0">
-      <div id="info-placeholder" style="color:#8b949e;font-size:12px;line-height:1.6;text-align:center;margin-top:24px">Click a structure to inspect it, or use the search box.</div>
+      <div id="info-placeholder" style="color:#8b949e;font-size:12px;line-height:1.6;text-align:center;margin-top:24px">Tap or click a structure on the brain, or use the search box.</div>
     </div>
 
     <!-- legacy info-content hidden (JS still populates it; focus-page replaces it visually) -->
@@ -893,12 +969,29 @@ let hoverMouse   = null;
 let hoverPending = false;
 
 // ── resize ──────────────────────────────────────────────────────────────────
-const PANEL_W = 270;  // must match #panel width in CSS
+const PANEL_W = 270;  // must match #panel width in CSS (desktop)
+const MOBILE_QUERY = window.matchMedia('(max-width: 760px)');
+function isMobile() { return MOBILE_QUERY.matches; }
 
 function onResize() {
-  const w = window.innerWidth - PANEL_W, h = window.innerHeight;
+  const w = window.innerWidth - (isMobile() ? 0 : PANEL_W), h = window.innerHeight;
   renderer.setSize(w, h, false);
   camera.aspect = w / h;
+  // On phones the bottom sheet covers part of the canvas; shift the rendered
+  // image up by half the sheet height so the brain sits in the visible area.
+  // Raycasting stays correct because the offset lives in the projection matrix.
+  let covered = 0;   // height of the screen's bottom part hidden by the sheet or a bottom box
+  if (isMobile()) {
+    ['panel', 'quiz-hud', 'tour-hud'].forEach(id => {
+      const el = document.getElementById(id);
+      if (!el || getComputedStyle(el).display === 'none') return;
+      const top = el.getBoundingClientRect().top;
+      if (top > 0 && top < h) covered = Math.max(covered, h - top);
+    });
+  }
+  const shift = Math.min(covered, h * 0.6) / 2;
+  if (shift > 0) camera.setViewOffset(w, h, 0, shift, w, h);
+  else camera.clearViewOffset();
   camera.updateProjectionMatrix();
 }
 window.addEventListener('resize', onResize);
@@ -1603,8 +1696,21 @@ function setupRaycaster() {
   raycaster = new THREE.Raycaster();
   mouseVec  = new THREE.Vector2();
 
-  renderer.domElement.addEventListener('pointerdown', () => { pointerMoved = false; });
-  renderer.domElement.addEventListener('pointermove', () => { pointerMoved = true; });
+  // A tap may wobble a few pixels on a touch screen; only real drags count as moves.
+  const activePointers = new Map();
+  renderer.domElement.addEventListener('pointerdown', e => {
+    activePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    pointerMoved = activePointers.size > 1;   // pinch / two-finger pan
+  });
+  renderer.domElement.addEventListener('pointermove', e => {
+    const start = activePointers.get(e.pointerId);
+    if (!start) return;
+    const slop = e.pointerType === 'touch' ? 10 : 4;
+    if (Math.hypot(e.clientX - start.x, e.clientY - start.y) > slop) pointerMoved = true;
+  });
+  const endPointer = e => { activePointers.delete(e.pointerId); };
+  window.addEventListener('pointerup', endPointer);
+  window.addEventListener('pointercancel', e => { endPointer(e); pointerMoved = true; });
   renderer.domElement.addEventListener('pointerup', e => {
     if (pointerMoved) return;  // was a drag
     if (quizCurrentQ) return;  // quiz handler takes over during active quiz
@@ -2129,6 +2235,12 @@ const qhudNext    = document.getElementById('qhud-next');
 const btnQuitQuiz = document.getElementById('btn-quit-quiz');
 
 function enterQuizMode() {
+  // Start every quiz from the whole-brain view, not wherever the last selection zoomed in.
+  if (defaultCamPos) {
+    camera.position.copy(defaultCamPos);
+    controls.target.copy(defaultTarget);
+    controls.update();
+  }
   // Hide explore-only UI
   document.getElementById('search-wrap').style.display    = 'none';
   document.getElementById('info').style.display           = 'none';
@@ -4805,6 +4917,120 @@ showNextQuestion = function() {
 // TIER 4 — SECTION 4 — hash suppression already exists; confirmed.
 // quiz HUD / tour HUD positioning done in CSS above.
 // ══════════════════════════════════════════════════════════════════════════════
+
+// ══════════════════════════════════════════════════════════════════════════════
+// MOBILE LAYOUT — bottom sheet with three heights (peek / half / full)
+// ══════════════════════════════════════════════════════════════════════════════
+const sheetPanel  = document.getElementById('panel');
+const sheetHandle = document.getElementById('sheet-handle');
+let sheetState = 'peek';
+
+function sheetHeights() {
+  const vh = window.innerHeight;
+  const tabs = document.getElementById('panel-tabs').getBoundingClientRect().height || 40;
+  const peek = Math.round(24 + tabs + 2);   // handle + tab bar
+  return { peek, half: Math.round(vh * 0.5), full: Math.round(vh - 56) };
+}
+
+function applySheetHeight(px) {
+  sheetPanel.style.setProperty('--sheet-h', px + 'px');
+  document.documentElement.style.setProperty('--sheet-h', px + 'px');
+}
+
+function setSheet(state) {
+  if (!isMobile()) return;
+  sheetState = state;
+  applySheetHeight(sheetHeights()[state]);
+  sheetPanel.dataset.sheet = state;
+  requestAnimationFrame(onResize);
+}
+
+// Re-centre on every size change of the sheet or the quiz/tour boxes (fires during animation too).
+const sheetRO = new ResizeObserver(() => { if (isMobile()) onResize(); });
+['panel', 'quiz-hud', 'tour-hud'].forEach(id => { const el = document.getElementById(id); if (el) sheetRO.observe(el); });
+
+// Drag the handle to resize; a short tap steps peek → half → full → peek.
+(function initSheetDrag() {
+  let startY = 0, startH = 0, moved = false, dragging = false;
+  sheetHandle.addEventListener('pointerdown', e => {
+    if (!isMobile()) return;
+    dragging = true; moved = false;
+    startY = e.clientY;
+    startH = sheetPanel.getBoundingClientRect().height;
+    sheetPanel.classList.add('dragging');
+    sheetHandle.setPointerCapture(e.pointerId);
+  });
+  sheetHandle.addEventListener('pointermove', e => {
+    if (!dragging) return;
+    const dy = e.clientY - startY;
+    if (Math.abs(dy) > 6) moved = true;
+    const { peek, full } = sheetHeights();
+    applySheetHeight(Math.max(peek, Math.min(full, startH - dy)));
+    onResize();
+  });
+  const finish = e => {
+    if (!dragging) return;
+    dragging = false;
+    sheetPanel.classList.remove('dragging');
+    if (!moved) {
+      setSheet({ peek: 'half', half: 'full', full: 'peek' }[sheetState]);
+    } else {
+      const h = sheetPanel.getBoundingClientRect().height;
+      const hs = sheetHeights();
+      const nearest = Object.keys(hs).reduce((a, b) => Math.abs(hs[a] - h) <= Math.abs(hs[b] - h) ? a : b);
+      setSheet(nearest);
+    }
+    setTimeout(onResize, 280);
+  };
+  sheetHandle.addEventListener('pointerup', finish);
+  sheetHandle.addEventListener('pointercancel', finish);
+  sheetHandle.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setSheet({ peek: 'half', half: 'full', full: 'peek' }[sheetState]); }
+  });
+})();
+
+// Opening a tab from the collapsed sheet shows its content.
+document.querySelectorAll('.ptab').forEach(btn => btn.addEventListener('click', () => {
+  if (isMobile() && sheetState === 'peek') setSheet('half');
+}));
+
+// Tapping a structure on the brain opens the sheet to show its page.
+(function openSheetOnSelect() {
+  let before = null;
+  renderer.domElement.addEventListener('pointerdown', () => { before = selectedModelId; });
+  renderer.domElement.addEventListener('pointerup', () => {
+    setTimeout(() => {
+      if (isMobile() && !quizCurrentQ && sheetState === 'peek' &&
+          selectedModelId && selectedModelId !== before) setSheet('half');
+    }, 0);
+  });
+})();
+
+// Quizzes and tours need the brain, so collapse the sheet when one starts.
+(function collapseForOverlays() {
+  const watch = (id, cls) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    new MutationObserver(() => {
+      if (isMobile() && el.classList.contains(cls)) setSheet('peek');
+      if (isMobile()) requestAnimationFrame(onResize);
+    }).observe(el, { attributes: true, attributeFilter: ['class'] });
+  };
+  watch('quiz-hud', 'visible');
+  watch('tour-hud', 'visible');
+})();
+
+function onLayoutChange() {
+  if (isMobile()) setSheet(sheetState);
+  else {
+    sheetPanel.style.removeProperty('--sheet-h');
+    document.documentElement.style.removeProperty('--sheet-h');
+  }
+  onResize();
+}
+MOBILE_QUERY.addEventListener('change', onLayoutChange);
+window.addEventListener('resize', () => { if (isMobile()) setSheet(sheetState); });
+onLayoutChange();
 </script>
 </body>
 </html>
