@@ -14,7 +14,7 @@ It is designed for two kinds of learners at once:
 
 Every factual statement in the lessons cites an open, checkable source.
 
-**Live demo:** https://callgio.github.io/neuroapp/ (works in any modern desktop browser;
+**Live demo:** https://giovannicallahan.github.io/neuroapp/ (works in any modern desktop browser;
 the first load downloads about 55 MB of 3D models).
 
 > Educational use only. Not medical advice. The underlying atlas is not FDA-reviewed and
@@ -71,7 +71,7 @@ You need Python 3 (already on macOS and most Linux systems). No accounts, no API
 nothing to install.
 
 ```bash
-git clone https://github.com/callGio/neuroapp.git
+git clone https://github.com/giovannicallahan/neuroapp.git
 cd neuroapp/viewer/public
 python3 -m http.server 8080 --bind 127.0.0.1
 ```

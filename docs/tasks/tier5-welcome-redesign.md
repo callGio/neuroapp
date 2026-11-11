@@ -120,9 +120,9 @@ Sections, top to bottom:
    primary "Start exploring" button (same URL rule as the hero, including `level`).
 
 7. **Footer** (small, `--muted`): "Built by Giovanni Callahan" linking to
-   `https://callgio.github.io/`; "Source code" → `https://github.com/callGio/neuroapp`;
+   `https://giovannicallahan.github.io/`; "Source code" → `https://github.com/giovannicallahan/neuroapp`;
    "3D models: SPL/NAC Brain Atlas (Halle et al., 2017)" → `./NOTICE.html` if it exists,
-   otherwise the GitHub NOTICE.md URL `https://github.com/callGio/neuroapp/blob/main/NOTICE.md`;
+   otherwise the GitHub NOTICE.md URL `https://github.com/giovannicallahan/neuroapp/blob/main/NOTICE.md`;
    and the line "For learning only. Not for medical use." All external links get
    `rel="noopener noreferrer"` and `target="_blank"`.
 
