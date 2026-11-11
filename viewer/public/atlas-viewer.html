@@ -1,0 +1,3633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self' blob: data:; worker-src 'self' blob:; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brain Atlas Viewer</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:#0d1117;color:#e6edf3;font-family:-apple-system,"Segoe UI",system-ui,sans-serif;overflow:hidden;font-size:13px}
+#canvas-wrap{position:fixed;top:0;left:270px;right:0;bottom:0}
+canvas{display:block;width:100%!important;height:100%!important}
+
+/* ── left panel ── */
+#panel{position:fixed;top:0;left:0;bottom:0;width:270px;z-index:10;
+  background:rgba(13,17,23,0.92);border-right:1px solid #21262d;
+  display:flex;flex-direction:column;overflow:hidden;backdrop-filter:blur(4px)}
+#panel-top{padding:12px 12px 0}
+#panel-top h1{font-size:12px;font-weight:600;letter-spacing:.06em;
+  color:#8b949e;text-transform:uppercase;margin-bottom:10px}
+
+/* search */
+#search-wrap{position:relative;margin-bottom:8px}
+#search{width:100%;padding:6px 8px;background:#161b22;border:1px solid #30363d;
+  border-radius:6px;color:#e6edf3;font-size:12px;outline:none}
+#search:focus{border-color:#388bfd}
+#search-results{position:absolute;top:100%;left:0;right:0;z-index:20;
+  background:#161b22;border:1px solid #30363d;border-top:none;border-radius:0 0 6px 6px;
+  max-height:220px;overflow-y:auto;display:none}
+#search-results.open{display:block}
+.sr-item{padding:6px 10px;cursor:pointer;font-size:12px;line-height:1.4;color:#c9d1d9;
+  border-bottom:1px solid #21262d}
+.sr-item:last-child{border-bottom:none}
+.sr-item:hover,.sr-item.active{background:#1f2937;color:#e6edf3}
+.sr-item small{color:#8b949e;font-size:11px;display:block}
+
+/* toggles */
+#toggle-bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.tog-btn{flex:1;min-width:56px;padding:5px 4px;font-size:11px;background:#161b22;
+  border:1px solid #30363d;border-radius:5px;color:#c9d1d9;cursor:pointer;text-align:center}
+.tog-btn:hover{background:#21262d}
+.tog-btn.active{border-color:#388bfd;color:#58a6ff}
+
+/* view presets */
+#preset-bar{display:flex;gap:4px;margin-bottom:8px}
+.preset-btn{flex:1;padding:4px 2px;font-size:10px;background:#161b22;
+  border:1px solid #30363d;border-radius:4px;color:#8b949e;cursor:pointer;text-align:center}
+.preset-btn:hover{background:#21262d;color:#c9d1d9}
+
+/* hemisphere toggles */
+#hemi-section{padding:0 12px 8px;border-bottom:1px solid #21262d}
+#hemi-section h2{font-size:11px;font-weight:600;color:#8b949e;text-transform:uppercase;
+  letter-spacing:.05em;margin-bottom:5px}
+#hemi-bar{display:flex;gap:6px}
+.hemi-label{display:flex;align-items:center;gap:4px;font-size:12px;color:#c9d1d9;cursor:pointer}
+.hemi-label input{accent-color:#388bfd}
+
+/* cutting planes */
+#clip-section{padding:6px 12px 6px;border-bottom:1px solid #21262d}
+#clip-section h2{font-size:11px;font-weight:600;color:#8b949e;text-transform:uppercase;
+  letter-spacing:.05em;margin-bottom:5px}
+.clip-row{display:flex;align-items:center;gap:5px;margin-bottom:4px;font-size:11px}
+.clip-row input[type=checkbox]{accent-color:#388bfd;flex-shrink:0}
+.clip-row label{color:#c9d1d9;min-width:52px;flex-shrink:0}
+.clip-row input[type=range]{flex:1;accent-color:#388bfd;min-width:0}
+.clip-flip{font-size:10px;color:#8b949e;background:#161b22;border:1px solid #30363d;
+  border-radius:3px;padding:1px 4px;cursor:pointer;flex-shrink:0}
+.clip-flip:hover{color:#c9d1d9}
+
+/* context opacity */
+#ctx-section{padding:6px 12px 6px;border-bottom:1px solid #21262d;display:flex;
+  align-items:center;gap:6px;font-size:11px;color:#8b949e}
+#ctx-section label{flex-shrink:0}
+#ctx-opacity{flex:1;accent-color:#388bfd}
+
+/* group filter */
+#group-section{padding:6px 12px 4px;border-bottom:1px solid #21262d}
+#group-section h2{font-size:11px;font-weight:600;color:#8b949e;text-transform:uppercase;
+  letter-spacing:.05em;margin-bottom:5px}
+#group-filter{background:#161b22;border:1px solid #30363d;border-radius:6px;
+  padding:4px 8px;font-size:12px;color:#e6edf3;width:100%;outline:none;
+  -webkit-appearance:none}
+#group-filter:focus{border-color:#388bfd}
+
+/* failures */
+#fail-section{border-top:1px solid #21262d;padding:6px 12px;display:none}
+#fail-section h2{font-size:11px;color:#f85149;font-weight:600;margin-bottom:4px}
+.fail-item{font-size:11px;color:#f85149;word-break:break-all}
+
+/* info panel */
+#info{flex:1;overflow-y:auto;padding:10px 12px}
+#info-placeholder{color:#8b949e;font-size:12px;line-height:1.6;text-align:center;margin-top:24px}
+#info-content{display:none}
+#info-name{font-size:14px;font-weight:600;color:#e6edf3;margin-bottom:4px;line-height:1.4}
+#info-swatch{display:inline-block;width:12px;height:12px;border-radius:2px;
+  vertical-align:middle;margin-right:6px;flex-shrink:0}
+.info-row{display:flex;gap:6px;margin-bottom:5px;font-size:12px}
+.info-label{color:#8b949e;min-width:96px;flex-shrink:0}
+.info-val{color:#c9d1d9;word-break:break-word}
+.info-placeholder-field{color:#57606a;font-style:italic}
+.isolate-bar{display:flex;gap:6px;margin-top:10px}
+.iso-btn{flex:1;padding:5px;font-size:11px;background:#161b22;border:1px solid #30363d;
+  border-radius:5px;color:#c9d1d9;cursor:pointer}
+.iso-btn:hover{background:#21262d}
+.iso-btn.danger{border-color:#f85149;color:#f85149}
+
+/* breadcrumb */
+#inf-breadcrumb{font-size:11px;color:#8b949e;margin-bottom:8px;line-height:1.6;word-break:break-word}
+.bc-sep{color:#444;margin:0 3px}
+.bc-link{color:#58a6ff;cursor:pointer;text-decoration:none}
+.bc-link:hover{text-decoration:underline}
+
+/* footer */
+#footer{padding:7px 12px;border-top:1px solid #21262d;font-size:10px;color:#57606a;flex-shrink:0;line-height:1.5}
+#footer a{color:#57606a;text-decoration:underline}
+
+/* status bar */
+#status{position:fixed;bottom:14px;left:calc(135px + 50%);transform:translateX(-50%);
+  font-size:11px;color:#8b949e;background:rgba(13,17,23,0.8);
+  padding:4px 14px;border-radius:12px;z-index:10;pointer-events:none;
+  transition:opacity 1.5s;white-space:nowrap}
+
+/* hover tooltip */
+#tooltip{position:fixed;pointer-events:none;z-index:30;background:rgba(13,17,23,0.88);
+  border:1px solid #30363d;border-radius:5px;padding:4px 9px;font-size:11px;
+  color:#c9d1d9;display:none;white-space:nowrap;backdrop-filter:blur(3px)}
+
+/* gizmo */
+#gizmo{position:fixed;bottom:20px;right:20px;width:80px;height:80px;z-index:10;pointer-events:none}
+#gizmo canvas{width:80px!important;height:80px!important}
+
+/* shortcuts overlay */
+#shortcuts-overlay{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,0.7);
+  display:none;align-items:center;justify-content:center}
+#shortcuts-overlay.open{display:flex}
+#shortcuts-box{background:#161b22;border:1px solid #30363d;border-radius:10px;
+  padding:20px 28px;min-width:300px;max-width:420px}
+#shortcuts-box h2{font-size:13px;font-weight:600;color:#e6edf3;margin-bottom:12px}
+.sc-row{display:flex;gap:10px;margin-bottom:6px;font-size:12px}
+.sc-key{background:#21262d;border:1px solid #30363d;border-radius:4px;
+  padding:1px 7px;font-family:monospace;font-size:11px;color:#e6edf3;white-space:nowrap}
+.sc-desc{color:#c9d1d9}
+#shortcuts-box p{font-size:11px;color:#8b949e;margin-top:10px}
+
+/* scrollbar */
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:#30363d;border-radius:3px}
+
+/* ── mode switcher (F1) ── */
+#mode-switcher{display:flex;gap:0;margin-bottom:10px;border:1px solid #30363d;border-radius:6px;overflow:hidden}
+.mode-tab{flex:1;padding:5px 0;font-size:11px;background:#161b22;border:none;color:#8b949e;cursor:pointer;text-align:center}
+.mode-tab:hover{background:#21262d;color:#c9d1d9}
+.mode-tab.active{background:#238636;color:#fff;font-weight:600}
+
+/* ── onboarding welcome card ── */
+#onboard-card{background:#161b22;border:1px solid #388bfd;border-radius:8px;padding:14px 14px 10px;margin:0 12px 10px;font-size:12px;color:#c9d1d9}
+#onboard-card h3{font-size:12px;font-weight:600;color:#e6edf3;margin-bottom:8px}
+#onboard-card p{margin-bottom:8px;line-height:1.5}
+.onboard-level-btn{display:block;width:100%;margin-bottom:5px;padding:6px 8px;background:#21262d;border:1px solid #30363d;border-radius:5px;color:#c9d1d9;cursor:pointer;font-size:12px;text-align:left}
+.onboard-level-btn:hover{background:#2d333b;border-color:#388bfd}
+#onboard-orientation{margin-top:8px;padding:8px;background:#0d1117;border-radius:5px;font-size:11px;color:#8b949e;line-height:1.6}
+#onboard-orientation p{margin-bottom:4px}
+#btn-start-brain101{margin-top:6px;padding:5px 10px;font-size:11px;background:#1a4a6a;border:1px solid #388bfd;border-radius:5px;color:#58a6ff;cursor:pointer}
+#btn-start-brain101:hover{background:#1f5a82}
+
+/* ── level switch ── */
+#level-switch-row{display:flex;align-items:center;gap:6px;padding:4px 12px 6px;border-bottom:1px solid #21262d;font-size:11px;color:#8b949e}
+#level-switch-row label{flex-shrink:0}
+#learner-level-sel{background:#161b22;border:1px solid #30363d;border-radius:4px;padding:2px 5px;font-size:11px;color:#e6edf3;outline:none;-webkit-appearance:none}
+#learner-level-sel:focus{border-color:#388bfd}
+
+/* ── learn panel ── */
+#learn-panel{border-top:1px solid #30363d;padding:10px 12px;font-size:12px}
+#learn-panel h3{font-size:11px;font-weight:600;color:#8b949e;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+#learn-panel-body{color:#c9d1d9;line-height:1.6}
+.learn-summary{margin-bottom:8px;font-size:12px;color:#c9d1d9}
+.learn-points{margin:0;padding-left:0;list-style:none}
+.learn-point{display:flex;gap:5px;margin-bottom:5px;font-size:12px;line-height:1.5}
+.learn-point-bullet{color:#8b949e;flex-shrink:0}
+.cite-sup{font-size:9px;color:#58a6ff;cursor:pointer;vertical-align:super;margin-left:1px}
+.cite-sup:hover{text-decoration:underline}
+.learn-sources{margin-top:8px;border-top:1px solid #21262d;padding-top:6px}
+.learn-sources-title{font-size:10px;color:#8b949e;margin-bottom:4px;font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+.learn-source-item{font-size:10px;color:#8b949e;margin-bottom:3px}
+.learn-source-item a{color:#58a6ff}
+.learn-connections{margin-bottom:8px}
+.learn-connections-title{font-size:11px;color:#8b949e;margin-bottom:4px;font-weight:600}
+.conn-chip{display:inline-block;margin:2px;padding:2px 7px;background:#1a2433;border:1px solid #388bfd;border-radius:10px;font-size:11px;color:#58a6ff;cursor:pointer}
+.conn-chip:hover{background:#1f5a82}
+.learn-clinical{margin-bottom:8px}
+details.learn-clinical-details summary{font-size:11px;color:#f0883e;cursor:pointer;font-weight:600;user-select:none}
+details.learn-clinical-details summary:hover{color:#ffa657}
+.learn-clinical-note{font-size:11px;color:#c9d1d9;margin-top:4px;padding:4px 0}
+.learn-clinical-disclaimer{font-size:10px;color:#8b949e;font-style:italic;margin-top:4px}
+.learn-expert-toggle{font-size:10px;color:#58a6ff;cursor:pointer;margin-left:6px}
+.learn-expert-toggle:hover{text-decoration:underline}
+.learn-no-content{color:#57606a;font-style:italic;font-size:12px;margin-top:6px}
+/* glossary term inline */
+.gloss-term{border-bottom:1px dotted #8b949e;cursor:help;position:relative}
+
+/* ── glossary list panel ── */
+#glossary-panel{border-bottom:1px solid #21262d;display:none}
+#glossary-panel.visible{display:block}
+#glossary-panel details summary{font-size:11px;font-weight:600;color:#8b949e;text-transform:uppercase;letter-spacing:.05em;padding:6px 12px 4px;cursor:pointer;user-select:none;list-style:none}
+#glossary-panel details summary::-webkit-details-marker{display:none}
+#glossary-panel details summary::before{content:'▸ ';font-size:9px}
+#glossary-panel details[open] summary::before{content:'▾ '}
+#glossary-panel-inner{padding:0 12px 8px}
+.gloss-entry{margin-bottom:6px;font-size:11px}
+.gloss-entry-term{color:#e6edf3;font-weight:600}
+.gloss-entry-def{color:#8b949e;margin-top:1px;line-height:1.5}
+
+/* ── glossary tooltip ── */
+#gloss-tooltip{position:fixed;pointer-events:none;z-index:40;background:#161b22;border:1px solid #388bfd;border-radius:6px;padding:6px 10px;font-size:11px;color:#c9d1d9;max-width:220px;white-space:normal;display:none;line-height:1.5}
+
+/* ── tours UI ── */
+#tour-btn-wrap{padding:4px 12px 6px;border-bottom:1px solid #21262d;display:none}
+#tour-btn-wrap.visible{display:block}
+#btn-tours{width:100%;padding:5px;font-size:11px;background:#161b22;border:1px solid #30363d;border-radius:5px;color:#c9d1d9;cursor:pointer}
+#btn-tours:hover{background:#21262d}
+#tour-list-overlay{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,0.7);display:none;align-items:center;justify-content:center}
+#tour-list-overlay.open{display:flex}
+#tour-list-box{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:20px 24px;min-width:300px;max-width:420px}
+#tour-list-box h2{font-size:13px;font-weight:600;color:#e6edf3;margin-bottom:10px}
+.tour-list-item{padding:8px;border:1px solid #30363d;border-radius:6px;margin-bottom:6px;cursor:pointer}
+.tour-list-item:hover{border-color:#388bfd;background:#1a2433}
+.tour-list-title{font-size:12px;font-weight:600;color:#e6edf3}
+.tour-list-badge{font-size:10px;padding:1px 6px;border-radius:8px;margin-left:6px;vertical-align:middle}
+.badge-beginner{background:#1a4a2a;color:#56d364}
+.badge-expert{background:#1a2a4a;color:#58a6ff}
+.tour-list-close{margin-top:10px;padding:5px 14px;font-size:12px;background:#21262d;border:1px solid #30363d;border-radius:5px;color:#c9d1d9;cursor:pointer}
+.tour-list-close:hover{background:#30363d}
+/* Tour HUD */
+#tour-hud{position:fixed;bottom:20px;left:calc(135px + 50%);transform:translateX(-50%);z-index:20;background:rgba(13,17,23,0.94);border:1px solid #388bfd;border-radius:10px;padding:14px 20px;min-width:320px;max-width:540px;display:none;backdrop-filter:blur(4px)}
+#tour-hud.visible{display:block}
+#tour-hud-progress{font-size:10px;color:#8b949e;margin-bottom:6px}
+#tour-hud-predict{background:#1a2a3a;border:1px solid #388bfd;border-radius:6px;padding:8px 10px;margin-bottom:8px;font-size:12px;color:#58a6ff;display:none}
+#tour-hud-predict.visible{display:block}
+#tour-hud-text{font-size:12px;color:#c9d1d9;line-height:1.6;margin-bottom:8px}
+#tour-hud-nav{display:flex;align-items:center;gap:8px}
+.tour-nav-btn{padding:4px 12px;font-size:11px;background:#21262d;border:1px solid #30363d;border-radius:5px;color:#c9d1d9;cursor:pointer}
+.tour-nav-btn:hover{background:#30363d}
+.tour-nav-btn.primary{background:#1a4a6a;border-color:#388bfd;color:#58a6ff}
+#btn-close-tour{position:fixed;bottom:20px;right:12px;z-index:21;font-size:11px;background:#21262d;border:1px solid #30363d;border-radius:5px;padding:4px 10px;color:#8b949e;cursor:pointer;display:none}
+#btn-close-tour.visible{display:block}
+#btn-close-tour:hover{color:#f85149;border-color:#f85149}
+
+/* ── learn card overlay (teach-before-test) ── */
+#learn-card-overlay{position:fixed;inset:0;z-index:46;background:rgba(0,0,0,0.78);display:none;align-items:center;justify-content:center}
+#learn-card-overlay.visible{display:flex}
+#learn-card-box{background:#161b22;border:1px solid #388bfd;border-radius:10px;padding:22px 26px;min-width:300px;max-width:440px}
+#learn-card-box h3{font-size:14px;font-weight:600;color:#58a6ff;margin-bottom:6px}
+#learn-card-summary{font-size:12px;color:#c9d1d9;line-height:1.6;margin-bottom:14px}
+#learn-card-timer{font-size:11px;color:#8b949e;margin-bottom:10px}
+#btn-learn-card-continue{padding:6px 18px;font-size:12px;background:#238636;border:1px solid #2ea043;border-radius:5px;color:#fff;cursor:pointer;font-weight:600}
+#btn-learn-card-continue:hover{background:#2ea043}
+
+/* ── confidence buttons ── */
+#confidence-row{display:flex;gap:6px;justify-content:center;margin-top:6px;display:none}
+#confidence-row.visible{display:flex}
+.conf-btn{padding:4px 10px;font-size:11px;border-radius:5px;cursor:pointer;border:1px solid #30363d;background:#161b22;color:#c9d1d9}
+.conf-btn:hover{background:#21262d}
+#conf-label{font-size:11px;color:#8b949e;text-align:center;margin-top:4px;display:none}
+#conf-label.visible{display:block}
+
+/* ── about overlay ── */
+#about-overlay{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,0.75);display:none;align-items:center;justify-content:center}
+#about-overlay.open{display:flex}
+#about-box{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:22px 26px;min-width:300px;max-width:500px;max-height:80vh;overflow-y:auto}
+#about-box h2{font-size:14px;font-weight:600;color:#e6edf3;margin-bottom:10px}
+#about-box p{font-size:12px;color:#c9d1d9;margin-bottom:8px;line-height:1.6}
+#about-box a{color:#58a6ff}
+.about-sources-title{font-size:11px;font-weight:600;color:#8b949e;text-transform:uppercase;letter-spacing:.04em;margin:10px 0 5px}
+.about-source-item{font-size:11px;color:#8b949e;margin-bottom:5px;line-height:1.5}
+.about-source-item a{color:#58a6ff}
+#btn-close-about{margin-top:12px;padding:5px 14px;font-size:12px;background:#21262d;border:1px solid #30363d;border-radius:5px;color:#c9d1d9;cursor:pointer}
+#btn-close-about:hover{background:#30363d}
+#btn-about{padding:3px 8px;font-size:10px;background:#161b22;border:1px solid #30363d;border-radius:4px;color:#8b949e;cursor:pointer;margin-left:4px}
+#btn-about:hover{color:#c9d1d9;border-color:#8b949e}
+
+/* ── quiz setup panel (F2) ── */
+#quiz-setup{padding:10px 12px;border-bottom:1px solid #21262d;display:none;flex-direction:column;gap:7px}
+#quiz-setup.visible{display:flex}
+.qs-label{font-size:11px;color:#8b949e;margin-bottom:2px}
+.qs-sel{background:#161b22;border:1px solid #30363d;border-radius:5px;padding:4px 7px;
+  font-size:12px;color:#e6edf3;width:100%;outline:none;-webkit-appearance:none}
+.qs-sel:focus{border-color:#388bfd}
+#btn-start-quiz{padding:6px;font-size:12px;background:#238636;border:1px solid #2ea043;
+  border-radius:6px;color:#fff;cursor:pointer;font-weight:600}
+#btn-start-quiz:hover{background:#2ea043}
+
+/* ── quiz active overlay (F3/F4) ── */
+#quiz-hud{position:fixed;top:12px;left:calc(135px + 50%);transform:translateX(-50%);z-index:20;
+  background:rgba(13,17,23,0.92);border:1px solid #30363d;border-radius:10px;
+  padding:12px 20px;min-width:320px;max-width:520px;text-align:center;display:none;
+  backdrop-filter:blur(4px)}
+#quiz-hud.visible{display:block}
+#qhud-progress{font-size:10px;color:#8b949e;margin-bottom:6px}
+#qhud-prompt{font-size:14px;font-weight:600;color:#e6edf3;margin-bottom:8px;line-height:1.4}
+#qhud-feedback{font-size:12px;min-height:18px;margin-bottom:6px;color:#c9d1d9}
+#qhud-options{display:flex;flex-direction:column;gap:5px;margin-bottom:8px}
+.qopt-btn{padding:6px 12px;font-size:12px;background:#161b22;border:1px solid #30363d;
+  border-radius:5px;color:#c9d1d9;cursor:pointer;text-align:left}
+.qopt-btn:hover:not(:disabled){background:#21262d}
+.qopt-btn.correct{background:#1a4a2a;border-color:#2ea043;color:#56d364}
+.qopt-btn.wrong{background:#4a1a1a;border-color:#f85149;color:#f85149}
+.qopt-btn:disabled{cursor:default;opacity:.85}
+#qhud-next{padding:5px 18px;font-size:12px;background:#21262d;border:1px solid #30363d;
+  border-radius:5px;color:#c9d1d9;cursor:pointer;display:none}
+#qhud-next.visible{display:inline-block}
+#qhud-next:hover{background:#30363d}
+#btn-quit-quiz{position:fixed;top:12px;right:12px;z-index:21;font-size:11px;
+  background:#21262d;border:1px solid #30363d;border-radius:5px;padding:4px 10px;
+  color:#8b949e;cursor:pointer;display:none}
+#btn-quit-quiz.visible{display:block}
+#btn-quit-quiz:hover{color:#f85149;border-color:#f85149}
+
+/* ── session summary (F6) ── */
+#quiz-summary{position:fixed;inset:0;z-index:45;background:rgba(0,0,0,0.75);
+  display:none;align-items:center;justify-content:center}
+#quiz-summary.visible{display:flex}
+#quiz-summary-box{background:#161b22;border:1px solid #30363d;border-radius:10px;
+  padding:24px 28px;min-width:320px;max-width:480px;max-height:80vh;overflow-y:auto}
+#quiz-summary-box h2{font-size:14px;font-weight:600;color:#e6edf3;margin-bottom:12px}
+.summ-stat{font-size:13px;color:#c9d1d9;margin-bottom:6px}
+.summ-stat strong{color:#58a6ff}
+#summ-missed-list{margin-top:10px}
+.summ-missed-item{font-size:12px;color:#f85149;cursor:pointer;padding:3px 0;border-bottom:1px solid #21262d}
+.summ-missed-item:hover{color:#ff8080;text-decoration:underline}
+.summ-btn{margin-top:10px;margin-right:6px;padding:6px 14px;font-size:12px;background:#21262d;
+  border:1px solid #30363d;border-radius:5px;color:#c9d1d9;cursor:pointer}
+.summ-btn:hover{background:#30363d}
+.summ-btn.primary{background:#238636;border-color:#2ea043;color:#fff}
+.summ-btn.primary:hover{background:#2ea043}
+
+/* ── mastery map legend (F7) ── */
+#mastery-legend{padding:6px 12px 4px;border-bottom:1px solid #21262d;display:none}
+#mastery-legend.visible{display:block}
+#mastery-legend h2{font-size:11px;font-weight:600;color:#8b949e;text-transform:uppercase;
+  letter-spacing:.05em;margin-bottom:5px}
+.mleg-row{display:flex;align-items:center;gap:5px;font-size:11px;color:#c9d1d9;margin-bottom:3px}
+.mleg-swatch{width:12px;height:12px;border-radius:2px;flex-shrink:0}
+
+/* ── progress panel (F8) ── */
+#progress-panel{padding:6px 12px 6px;border-bottom:1px solid #21262d;display:none}
+#progress-panel.visible{display:block}
+#progress-panel h2{font-size:11px;font-weight:600;color:#8b949e;text-transform:uppercase;
+  letter-spacing:.05em;margin-bottom:6px}
+.prog-row{display:flex;justify-content:space-between;font-size:11px;color:#c9d1d9;margin-bottom:3px}
+.prog-row span:first-child{color:#8b949e}
+#btn-reset-progress{margin-top:7px;padding:4px 10px;font-size:11px;background:#161b22;
+  border:1px solid #f85149;border-radius:5px;color:#f85149;cursor:pointer}
+#btn-reset-progress:hover{background:#4a1a1a}
+#reset-confirm{margin-top:5px;font-size:11px;color:#c9d1d9;display:none}
+#reset-confirm.visible{display:flex;gap:6px;align-items:center}
+.rc-btn{padding:3px 10px;font-size:11px;border-radius:4px;cursor:pointer;border:1px solid #30363d;background:#161b22;color:#c9d1d9}
+.rc-btn.danger{border-color:#f85149;color:#f85149}
+.rc-btn.danger:hover{background:#4a1a1a}
+</style>
+</head>
+<body>
+
+<div id="canvas-wrap"><canvas id="c"></canvas></div>
+
+<div id="panel">
+  <div id="panel-top">
+    <h1>Brain Atlas</h1>
+    <!-- F1: mode switcher -->
+    <div id="mode-switcher">
+      <button class="mode-tab active" id="tab-explore">Explore</button>
+      <button class="mode-tab" id="tab-quiz">Quiz</button>
+    </div>
+    <div id="search-wrap">
+      <input id="search" type="text" placeholder="Search structures…" autocomplete="off" spellcheck="false">
+      <div id="search-results"></div>
+    </div>
+    <div id="toggle-bar">
+      <button class="tog-btn" id="btn-skin">Skin</button>
+      <button class="tog-btn" id="btn-hnm">Muscles</button>
+      <button class="tog-btn active" id="btn-reset-view">Reset View</button>
+      <button class="tog-btn" id="btn-mastery-map">Mastery</button>
+    </div>
+    <div id="preset-bar">
+      <button class="preset-btn" data-preset="anterior">Ant</button>
+      <button class="preset-btn" data-preset="posterior">Post</button>
+      <button class="preset-btn" data-preset="left">Left</button>
+      <button class="preset-btn" data-preset="right">Right</button>
+      <button class="preset-btn" data-preset="superior">Sup</button>
+      <button class="preset-btn" data-preset="inferior">Inf</button>
+    </div>
+  </div>
+
+  <!-- F2: quiz setup -->
+  <div id="quiz-setup">
+    <div>
+      <div class="qs-label">Scope</div>
+      <select class="qs-sel" id="qs-scope">
+        <option value="all">All brain structures</option>
+        <option value="core">Core structures (beginner)</option>
+        <option value="studied">Only structures I've studied</option>
+        <option value="group">Current group filter</option>
+      </select>
+    </div>
+    <div>
+      <div class="qs-label">Question type</div>
+      <select class="qs-sel" id="qs-type">
+        <option value="mixed">Mixed</option>
+        <option value="findit">Find it</option>
+        <option value="nameit">Name it</option>
+        <option value="function">Function (from topics)</option>
+      </select>
+    </div>
+    <div>
+      <div class="qs-label">Session length</div>
+      <select class="qs-sel" id="qs-length">
+        <option value="10">10 questions</option>
+        <option value="20">20 questions</option>
+        <option value="30">30 questions</option>
+      </select>
+    </div>
+    <button id="btn-start-quiz">Start Quiz</button>
+  </div>
+
+  <!-- F7: mastery legend (shown in Explore when mastery map is on) -->
+  <div id="mastery-legend">
+    <h2>Mastery Map</h2>
+    <div class="mleg-row"><span class="mleg-swatch" style="background:#555"></span>Unseen</div>
+    <div class="mleg-row"><span class="mleg-swatch" style="background:#c62828"></span>Box 1</div>
+    <div class="mleg-row"><span class="mleg-swatch" style="background:#e65100"></span>Box 2</div>
+    <div class="mleg-row"><span class="mleg-swatch" style="background:#f9a825"></span>Box 3</div>
+    <div class="mleg-row"><span class="mleg-swatch" style="background:#558b2f"></span>Box 4</div>
+    <div class="mleg-row"><span class="mleg-swatch" style="background:#1b5e20"></span>Box 5</div>
+  </div>
+
+  <!-- F8: progress panel -->
+  <div id="progress-panel">
+    <h2>Progress</h2>
+    <div id="prog-rows"></div>
+    <div class="prog-row"><span>Due today</span><span id="prog-due">0</span></div>
+    <button id="btn-reset-progress">Reset progress…</button>
+    <div id="reset-confirm">
+      <span>Sure?</span>
+      <button class="rc-btn danger" id="rc-yes">Yes, reset</button>
+      <button class="rc-btn" id="rc-no">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Level switch row (always visible after onboarding) -->
+  <div id="level-switch-row" style="display:none">
+    <label for="learner-level-sel">Level:</label>
+    <select id="learner-level-sel">
+      <option value="beginner">New to it</option>
+      <option value="some">Some background</option>
+      <option value="expert">Expert</option>
+    </select>
+    <button id="btn-about">About</button>
+  </div>
+
+  <!-- Tour button (shown in explore mode) -->
+  <div id="tour-btn-wrap">
+    <button id="btn-tours">🗺 Guided Tours</button>
+  </div>
+
+  <!-- Glossary list panel -->
+  <div id="glossary-panel">
+    <details>
+      <summary>Glossary</summary>
+      <div id="glossary-panel-inner">
+        <div id="glossary-list"></div>
+      </div>
+    </details>
+  </div>
+
+  <div id="hemi-section">
+    <h2>Hemisphere</h2>
+    <div id="hemi-bar">
+      <label class="hemi-label"><input type="checkbox" id="hemi-left" checked> Left</label>
+      <label class="hemi-label"><input type="checkbox" id="hemi-right" checked> Right</label>
+      <label class="hemi-label"><input type="checkbox" id="hemi-mid" checked> Midline</label>
+    </div>
+  </div>
+
+  <div id="clip-section">
+    <h2>Cutting Planes</h2>
+    <div class="clip-row">
+      <input type="checkbox" id="clip-sag-en">
+      <label for="clip-sag-en">Sagittal</label>
+      <input type="range" id="clip-sag-sl" min="0" max="100" value="50">
+      <button class="clip-flip" data-plane="sag">flip</button>
+    </div>
+    <div class="clip-row">
+      <input type="checkbox" id="clip-cor-en">
+      <label for="clip-cor-en">Coronal</label>
+      <input type="range" id="clip-cor-sl" min="0" max="100" value="50">
+      <button class="clip-flip" data-plane="cor">flip</button>
+    </div>
+    <div class="clip-row">
+      <input type="checkbox" id="clip-axi-en">
+      <label for="clip-axi-en">Axial</label>
+      <input type="range" id="clip-axi-sl" min="0" max="100" value="50">
+      <button class="clip-flip" data-plane="axi">flip</button>
+    </div>
+  </div>
+
+  <div id="ctx-section">
+    <label for="ctx-opacity">Context opacity</label>
+    <input type="range" id="ctx-opacity" min="0" max="30" value="8">
+  </div>
+
+  <div id="group-section">
+    <h2>Filter by Group</h2>
+    <select id="group-filter"><option value="">— All structures —</option></select>
+  </div>
+
+  <div id="fail-section">
+    <h2>Load failures</h2>
+    <div id="fail-list"></div>
+  </div>
+
+  <div id="info">
+    <div id="info-placeholder">Click a structure to inspect it, or use the search box.</div>
+    <div id="info-content">
+      <div id="inf-breadcrumb"></div>
+      <div style="display:flex;align-items:flex-start;gap:6px;margin-bottom:8px">
+        <span id="info-swatch"></span>
+        <div id="info-name"></div>
+      </div>
+      <div class="info-row"><span class="info-label">Hemisphere</span><span class="info-val" id="inf-hemi"></span></div>
+      <div class="info-row"><span class="info-label">Atlas ID(s)</span><span class="info-val" id="inf-aids"></span></div>
+      <div class="info-row"><span class="info-label">Label value</span><span class="info-val" id="inf-lbl"></span></div>
+      <div class="info-row"><span class="info-label">Parent groups</span><span class="info-val" id="inf-parents"></span></div>
+      <div class="info-row" id="inf-radlex-row"><span class="info-label">RadLex ID</span><span class="info-val" id="inf-radlex"></span></div>
+      <div id="learn-panel">
+        <h3>Learn <span id="learn-panel-level-badge"></span></h3>
+        <div id="learn-panel-body"></div>
+      </div>
+      <div class="isolate-bar">
+        <button class="iso-btn" id="btn-isolate">Isolate</button>
+        <button class="iso-btn" id="btn-show-all">Show All</button>
+        <button class="iso-btn danger" id="btn-deselect">Deselect</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="footer"><!-- filled from manifest --></div>
+</div>
+
+<!-- hover tooltip -->
+<div id="tooltip"></div>
+
+<!-- gizmo canvas -->
+<div id="gizmo"><canvas id="gizmo-c" width="80" height="80"></canvas></div>
+
+<!-- shortcuts overlay -->
+<div id="shortcuts-overlay">
+  <div id="shortcuts-box">
+    <h2>Keyboard shortcuts</h2>
+    <div class="sc-row"><span class="sc-key">/</span><span class="sc-desc">Focus search</span></div>
+    <div class="sc-row"><span class="sc-key">Esc</span><span class="sc-desc">Deselect / close</span></div>
+    <div class="sc-row"><span class="sc-key">I</span><span class="sc-desc">Isolate selected</span></div>
+    <div class="sc-row"><span class="sc-key">A</span><span class="sc-desc">Show all</span></div>
+    <div class="sc-row"><span class="sc-key">1</span><span class="sc-desc">Anterior view</span></div>
+    <div class="sc-row"><span class="sc-key">2</span><span class="sc-desc">Posterior view</span></div>
+    <div class="sc-row"><span class="sc-key">3</span><span class="sc-desc">Left view</span></div>
+    <div class="sc-row"><span class="sc-key">4</span><span class="sc-desc">Right view</span></div>
+    <div class="sc-row"><span class="sc-key">5</span><span class="sc-desc">Superior view</span></div>
+    <div class="sc-row"><span class="sc-key">6</span><span class="sc-desc">Inferior view</span></div>
+    <div class="sc-row"><span class="sc-key">?</span><span class="sc-desc">Show this overlay</span></div>
+    <p>Click anywhere to close.</p>
+  </div>
+</div>
+
+<!-- F3/F4: quiz HUD -->
+<div id="quiz-hud">
+  <div id="qhud-progress"></div>
+  <div id="qhud-prompt"></div>
+  <div id="qhud-feedback"></div>
+  <div id="qhud-options"></div>
+  <div id="conf-label">How confident were you?</div>
+  <div id="confidence-row">
+    <button class="conf-btn" data-conf="guessed">Guessed</button>
+    <button class="conf-btn" data-conf="unsure">Unsure</button>
+    <button class="conf-btn" data-conf="knew">Knew it</button>
+  </div>
+  <button id="qhud-next">Next →</button>
+</div>
+<button id="btn-quit-quiz">✕ Quit Quiz</button>
+
+<!-- F6: session summary -->
+<div id="quiz-summary">
+  <div id="quiz-summary-box">
+    <h2>Session Complete</h2>
+    <div id="summ-stats"></div>
+    <div id="summ-missed-list"></div>
+    <div>
+      <button class="summ-btn primary" id="summ-review-btn">Review missed now</button>
+      <button class="summ-btn" id="summ-explore-btn">Back to Explore</button>
+    </div>
+  </div>
+</div>
+
+<div id="status">Loading manifest…</div>
+
+<!-- onboarding welcome card (injected via JS into panel-top) -->
+<div id="onboard-card" style="display:none">
+  <h3>Welcome to Brain Atlas</h3>
+  <p>How familiar are you with neuroscience?</p>
+  <button class="onboard-level-btn" data-level="beginner">🟢 New to it — I'm just getting started</button>
+  <button class="onboard-level-btn" data-level="some">🟡 Some background — I know the basics</button>
+  <button class="onboard-level-btn" data-level="expert">🔵 Expert — I have neuroscience training</button>
+  <div id="onboard-orientation" style="display:none">
+    <p><strong>Quick start:</strong></p>
+    <p>🖱 <strong>Rotate</strong> — drag the canvas</p>
+    <p>🔍 <strong>Zoom</strong> — scroll wheel</p>
+    <p>👆 <strong>Select</strong> — click any structure</p>
+    <p>🔎 <strong>Search</strong> — use the search box above</p>
+    <button id="btn-start-brain101">Start the Brain 101 tour →</button>
+  </div>
+</div>
+
+<!-- Tour list overlay -->
+<div id="tour-list-overlay">
+  <div id="tour-list-box">
+    <h2>Guided Tours</h2>
+    <div id="tour-list-items"></div>
+    <button class="tour-list-close" id="btn-close-tour-list">Close</button>
+  </div>
+</div>
+
+<!-- Tour HUD -->
+<div id="tour-hud">
+  <div id="tour-hud-progress"></div>
+  <div id="tour-hud-predict"></div>
+  <div id="tour-hud-text"></div>
+  <div id="tour-hud-nav">
+    <button class="tour-nav-btn" id="tour-btn-back">← Back</button>
+    <button class="tour-nav-btn primary" id="tour-btn-reveal" style="display:none">Reveal →</button>
+    <button class="tour-nav-btn primary" id="tour-btn-next">Next →</button>
+  </div>
+</div>
+<button id="btn-close-tour">✕ End Tour</button>
+
+<!-- Learn card overlay (teach-before-test) -->
+<div id="learn-card-overlay">
+  <div id="learn-card-box">
+    <h3 id="learn-card-name"></h3>
+    <div id="learn-card-summary"></div>
+    <div id="learn-card-timer"></div>
+    <button id="btn-learn-card-continue">Got it — start quiz →</button>
+  </div>
+</div>
+
+<!-- Glossary tooltip -->
+<div id="gloss-tooltip"></div>
+
+<!-- About overlay -->
+<div id="about-overlay">
+  <div id="about-box">
+    <h2>About &amp; Sources</h2>
+    <div id="about-atlas-info"></div>
+    <p style="color:#f85149;font-size:11px;margin-top:6px">For research and education only — not for clinical use.</p>
+    <div class="about-sources-title">Content Sources</div>
+    <div id="about-sources-list"></div>
+    <button id="btn-close-about">Close</button>
+  </div>
+</div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "./vendor/three/build/three.module.js",
+    "three/addons/": "./vendor/three/examples/jsm/"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE        from 'three';
+import { GLTFLoader }    from 'three/addons/loaders/GLTFLoader.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+// ── renderer ─────────────────────────────────────────────────────────────────
+const canvas   = document.getElementById('c');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+renderer.localClippingEnabled = true;
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.setClearColor(0x0d1117);
+
+const scene  = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 3000);
+
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping   = true;
+controls.dampingFactor   = 0.08;
+controls.screenSpacePanning = false;
+controls.minDistance     = 5;
+controls.maxDistance     = 1200;
+
+// ── lights ─────────────────────────────────────────────────────────────────
+scene.add(new THREE.AmbientLight(0xffffff, 0.55));
+const key = new THREE.DirectionalLight(0xffffff, 1.1);
+key.position.set(1, 2, 1.5); scene.add(key);
+const fill = new THREE.DirectionalLight(0xffffff, 0.3);
+fill.position.set(-1, -0.5, -1); scene.add(fill);
+
+// ── shared group (RAS → Three.js: rotate -90° around X) ────────────────────
+const group = new THREE.Group();
+group.rotation.x = -Math.PI / 2;
+scene.add(group);
+
+// ── gizmo canvas — declared here so animate() can reference it ──────────────
+const gizmoCanvas = document.getElementById('gizmo-c');
+const gizmoCtx    = gizmoCanvas.getContext('2d');
+// Directions in RAS space; transformed to world space at draw time via group.matrixWorld.
+// RAS: +X = subject's right, +Y = anterior, +Z = superior.
+// "Left view" = camera on subject's left = RAS -X side looking right.
+const GIZMO_LABELS = [
+  { rasDir: new THREE.Vector3( 0, 1, 0), label: 'A', pos: true  },  // Anterior
+  { rasDir: new THREE.Vector3( 0,-1, 0), label: 'P', pos: false },  // Posterior
+  { rasDir: new THREE.Vector3(-1, 0, 0), label: 'L', pos: true  },  // subject's Left
+  { rasDir: new THREE.Vector3( 1, 0, 0), label: 'R', pos: false },  // subject's Right
+  { rasDir: new THREE.Vector3( 0, 0, 1), label: 'S', pos: true  },  // Superior
+  { rasDir: new THREE.Vector3( 0, 0,-1), label: 'I', pos: false },  // Inferior
+];
+
+// ── hover state — declared here so tickHover() in animate() is never in TDZ ─
+let hoverMouse   = null;
+let hoverPending = false;
+
+// ── resize ──────────────────────────────────────────────────────────────────
+const PANEL_W = 270;  // must match #panel width in CSS
+
+function onResize() {
+  const w = window.innerWidth - PANEL_W, h = window.innerHeight;
+  renderer.setSize(w, h, false);
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+}
+window.addEventListener('resize', onResize);
+onResize();
+
+// ── render loop ──────────────────────────────────────────────────────────────
+(function animate() {
+  requestAnimationFrame(animate);
+  controls.update();
+  renderer.render(scene, camera);
+  updateGizmo();
+  tickHover();
+})();
+
+// ══════════════════════════════════════════════════════════════════════════════
+// FEATURE 1 — Camera framing (fixed: no double-transform; direction-preserving)
+// ══════════════════════════════════════════════════════════════════════════════
+let defaultCamPos, defaultTarget;
+
+function fitAll() {
+  // setFromObject gives world-space box — pass directly to applyCameraToBox
+  const box = new THREE.Box3();
+  group.traverse(c => { if (c.isMesh && c.visible) box.expandByObject(c); });
+  if (box.isEmpty()) return;
+  applyCameraToBox(box, 1.15);
+  defaultCamPos = camera.position.clone();
+  defaultTarget = controls.target.clone();
+}
+
+// selectModel calls this with the world-space box from setFromObject
+function fitBoxWorld(worldBox) {
+  applyCameraToBox(worldBox, 1.8);
+}
+
+function applyCameraToBox(worldBox, paddingFactor) {
+  const sphere = new THREE.Sphere();
+  worldBox.getBoundingSphere(sphere);
+  const dist = (sphere.radius / Math.sin(THREE.MathUtils.degToRad(camera.fov / 2))) * paddingFactor;
+
+  // Move camera along the EXISTING view direction so we don't snap orientation
+  const dir = new THREE.Vector3()
+    .subVectors(camera.position, controls.target)
+    .normalize();
+  camera.position.copy(sphere.center).addScaledVector(dir, dist);
+  controls.target.copy(sphere.center);
+  controls.update();
+}
+
+// ── status bar ──────────────────────────────────────────────────────────────
+const statusEl = document.getElementById('status');
+let statusTimer = null;
+function setStatus(msg, persist = false) {
+  statusEl.style.opacity = '1';
+  statusEl.textContent   = msg;
+  clearTimeout(statusTimer);
+  if (!persist) statusTimer = setTimeout(() => { statusEl.style.opacity = '0'; }, 4000);
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════════════════════════════════════
+let manifest = null;
+const meshMap          = new Map();   // model.id → entry
+const atlasIdToModelId = new Map();   // atlas_id → model.id
+const defaultHiddenIds = new Set();   // model.ids hidden by default (skin+HNM)
+let selectedModelId    = null;
+let isIsolated         = false;
+let contextOpacity     = 0.08;        // controlled by slider
+
+// Hemisphere visibility (all true = show all)
+const hemiVisible = { left: true, right: true, mid: true };
+
+// Cutting plane state per axis
+const clipState = {
+  sag: { enabled: false, value: 50, flipped: false, plane: null },
+  cor: { enabled: false, value: 50, flipped: false, plane: null },
+  axi: { enabled: false, value: 50, flipped: false, plane: null },
+};
+// Global RAS bounds computed after loading
+let rasBounds = null;  // { min: [x,y,z], max: [x,y,z] }
+
+// ── Tier 2 state — declared here so keyboard handler never hits TDZ ──────────
+let quizCurrentQ  = null;   // { type:'findit'|'nameit'|'function', modelId } — null when not quizzing
+let quizAnswered  = false;
+let quizQueue     = [];
+let quizIdx       = 0;
+let quizType      = 'mixed';
+let quizMissed    = [];
+let quizCorrect   = 0;
+let masteryMapOn  = false;
+let currentMode   = 'explore';
+let srsData       = {};
+let srsInMemory   = false;
+
+// ── Tier 3 state ──────────────────────────────────────────────────────────────
+const PROFILE_KEY   = 'neuroapp.profile.v1';
+let   learnerProfile = { level: 'beginner', onboarded: false, seen: {} };
+let   profileInMemory = false;
+let   learningData  = { version: 1, sources: {}, glossary: [], topics: [], tours: [] };
+// Tour state
+let   activeTour     = null;   // { tour, stepIdx, revealed }
+// Quiz confidence tracking
+let   quizConfidentWrong = 0;  // count of confident errors in session
+let   pendingConfCallback = null; // called with confidence level after user picks
+
+// ══════════════════════════════════════════════════════════════════════════════
+// MANIFEST LOAD
+// ══════════════════════════════════════════════════════════════════════════════
+fetch('./atlas-manifest.json')
+  .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
+  .then(m => {
+    manifest = m;
+    setupFooter(m.atlas);
+    buildGroupTree(m.groups);
+    identifyHiddenModels(m);
+    startLoading(m.models);
+  })
+  .catch(err => setStatus(`ERROR loading manifest: ${err.message}`, true));
+
+// ── Learning data load ────────────────────────────────────────────────────────
+fetch('./content/learning.json')
+  .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
+  .then(d => {
+    learningData = d;
+    buildGlossaryPanel();
+    buildAboutSources();
+  })
+  .catch(() => { /* leave learningData as empty skeleton */ });
+
+// ── footer ──────────────────────────────────────────────────────────────────
+function setupFooter(atlas) {
+  const f = document.getElementById('footer');
+  f.textContent = '';
+  const strong = document.createElement('strong');
+  strong.textContent = atlas.name || 'Atlas';
+  f.appendChild(strong);
+  [['License', atlas.license_url], ['Citation', atlas.citation_url]].forEach(([label, url]) => {
+    const href = safeUrl(url);
+    if (!href) return;
+    f.appendChild(document.createTextNode(' · '));
+    const a = document.createElement('a');
+    a.href = href; a.target = '_blank'; a.rel = 'noopener noreferrer';
+    a.textContent = label;
+    f.appendChild(a);
+  });
+}
+
+// ── group tree ──────────────────────────────────────────────────────────────
+const groupToModelIds = new Map();
+const groupIndex      = new Map();
+
+function buildGroupTree(groups) {
+  groups.forEach(g => groupIndex.set(g.id, g));
+
+  const sel   = document.getElementById('group-filter');
+  const roots = ['Brain', 'Head_and_Neck_Muscles'];
+
+  function addOption(gid, depth) {
+    const g = groupIndex.get(gid);
+    if (!g) return;
+    const opt = document.createElement('option');
+    opt.value       = gid;
+    opt.textContent = '\u00a0'.repeat(depth * 3) + g.name;
+    sel.appendChild(opt);
+    (g.members || []).forEach(mid => {
+      if (groupIndex.has(mid)) addOption(mid, depth + 1);
+    });
+  }
+
+  roots.forEach(r => { if (groupIndex.has(r)) addOption(r, 0); });
+  sel.addEventListener('change', onGroupFilter);
+}
+
+function getModelIdsForGroup(gid) {
+  if (groupToModelIds.has(gid)) return groupToModelIds.get(gid);
+  const result = new Set();
+  const g      = groupIndex.get(gid);
+  if (!g) { groupToModelIds.set(gid, result); return result; }
+  (g.members || []).forEach(mid => {
+    if (groupIndex.has(mid)) {
+      getModelIdsForGroup(mid).forEach(id => result.add(id));
+    } else {
+      const mId = atlasIdToModelId.get(mid);
+      if (mId) result.add(mId);
+    }
+  });
+  groupToModelIds.set(gid, result);
+  return result;
+}
+
+function onGroupFilter() {
+  const gid = document.getElementById('group-filter').value;
+  if (!gid) { showAll(); return; }
+  const allowed = getModelIdsForGroup(gid);
+  meshMap.forEach((entry, modelId) => {
+    const vis = allowed.has(modelId) && isModelVisibleByToggles(modelId);
+    setMeshVisible(entry.mesh, vis);
+  });
+  clearSelection();
+}
+
+// ── identify hidden-by-default models ───────────────────────────────────────
+function identifyHiddenModels(m) {
+  const skinLeafs = new Set(['skin']);
+  const hnmLeafs  = new Set();
+  function collectLeafs(gid, out) {
+    const g = groupIndex.get(gid);
+    if (!g) { out.add(gid); return; }
+    (g.members || []).forEach(mid => collectLeafs(mid, out));
+  }
+  collectLeafs('Head_and_Neck_Muscles', hnmLeafs);
+
+  m.models.forEach(mod => {
+    const s0 = (mod.structures || [])[0];
+    if (!s0) return;
+    if (skinLeafs.has(s0.atlas_id) || hnmLeafs.has(s0.atlas_id)) {
+      defaultHiddenIds.add(mod.id);
+    }
+  });
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// LOADING (parallel, 8 concurrent)
+// ══════════════════════════════════════════════════════════════════════════════
+let skinVisible = false;
+let hnmVisible  = false;
+
+async function startLoading(models) {
+  const loader   = new GLTFLoader();
+  const total    = models.length;
+  let   loaded   = 0;
+  const failures = [];
+  setStatus(`Loading 0 / ${total}…`, true);
+
+  const CONCURRENCY = 8;
+  let nextIdx = 0;
+
+  async function loadOne(mod) {
+    return new Promise(resolve => {
+      loader.load(mod.glb, gltf => {
+        const s0    = (mod.structures || [])[0];
+        const color = s0 ? s0.color : 'rgb(136,136,136)';
+        const mat   = new THREE.MeshPhongMaterial({
+          color:       new THREE.Color(color.startsWith('rgba') ? rgbaToRgb(color) : color),
+          shininess:   35,
+          specular:    0x1a1a1a,
+          side:        THREE.DoubleSide,
+          transparent: false,
+          opacity:     1,
+          clippingPlanes: [],
+          clipIntersection: false,
+        });
+        if (color.startsWith('rgba')) {
+          const parts = color.match(/[\d.]+/g);
+          if (parts && parts.length >= 4) {
+            const a = parseFloat(parts[3]);
+            if (!isNaN(a) && a < 1) { mat.transparent = true; mat.opacity = a; }
+          }
+        }
+
+        const meshes = [];
+        gltf.scene.traverse(child => {
+          if (child.isMesh) {
+            child.material = mat;
+            child.geometry.computeVertexNormals();
+            child.userData.modelId = mod.id;
+            meshes.push(child);
+          }
+        });
+        group.add(gltf.scene);
+
+        const baseOpacity     = mat.opacity;
+        const baseTransparent = mat.transparent;
+        meshMap.set(mod.id, {
+          mesh: gltf.scene, modelDef: mod, mat, meshes,
+          _baseOpacity: baseOpacity, _baseTransparent: baseTransparent,
+        });
+        (mod.structures || []).forEach(s => atlasIdToModelId.set(s.atlas_id, mod.id));
+
+        if (defaultHiddenIds.has(mod.id)) gltf.scene.visible = false;
+
+        loaded++;
+        setStatus(`Loaded ${loaded} / ${total}`, true);
+        resolve(null);
+      }, undefined, err => {
+        failures.push({ id: mod.id, err: err.message || String(err) });
+        loaded++;
+        setStatus(`Loaded ${loaded} / ${total}`, true);
+        resolve(null);
+      });
+    });
+  }
+
+  async function worker() {
+    while (nextIdx < models.length) { const idx = nextIdx++; await loadOne(models[idx]); }
+  }
+
+  await Promise.all(Array.from({ length: CONCURRENCY }, () => worker()));
+
+  // Compute global RAS bounds from manifest for clip sliders
+  computeRasBounds(models);
+  setupClipPlanes();
+
+  const failCount = failures.length;
+  if (failCount) {
+    document.getElementById('fail-section').style.display = 'block';
+    const list = document.getElementById('fail-list');
+    failures.forEach(f => {
+      const d = document.createElement('div');
+      d.className = 'fail-item';
+      d.textContent = f.id;
+      list.appendChild(d);
+    });
+    setStatus(`Done: ${loaded - failCount} loaded, ${failCount} failed`, true);
+  } else {
+    setStatus(`All ${loaded} meshes loaded`, false);
+  }
+
+  fitAll();
+  buildSearchIndex();
+  setupRaycaster();
+  setupHover();
+  checkDeepLink();
+}
+
+function rgbaToRgb(rgba) {
+  const m = rgba.match(/[\d.]+/g);
+  if (!m || m.length < 3) return '#888888';
+  return `rgb(${m[0]},${m[1]},${m[2]})`;
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// VISIBILITY HELPERS
+// ══════════════════════════════════════════════════════════════════════════════
+function setMeshVisible(scene3d, visible) {
+  if (scene3d) scene3d.visible = visible;
+}
+
+function isSkin(modelId) {
+  const entry = meshMap.get(modelId);
+  if (!entry) return false;
+  return (entry.modelDef.structures || [])[0]?.atlas_id === 'skin';
+}
+function isHnm(modelId) {
+  return defaultHiddenIds.has(modelId) && !isSkin(modelId);
+}
+
+// Returns true if this model should be visible given current toggle state
+// (skin/hnm + hemisphere), ignoring selection/isolation
+function isModelVisibleByToggles(modelId) {
+  // skin / hnm default-hidden check
+  if (defaultHiddenIds.has(modelId)) {
+    if (!(isSkin(modelId) ? skinVisible : hnmVisible)) return false;
+  }
+  // hemisphere check
+  const entry = meshMap.get(modelId);
+  if (!entry) return true;
+  const hemi = entry.modelDef.hemisphere;
+  if (hemi === 'left'  && !hemiVisible.left)  return false;
+  if (hemi === 'right' && !hemiVisible.right) return false;
+  if (hemi === null    && !hemiVisible.mid)   return false;
+  return true;
+}
+
+function showAll() {
+  isIsolated = false;
+  meshMap.forEach((entry, modelId) => {
+    setMeshVisible(entry.mesh, isModelVisibleByToggles(modelId));
+    entry.meshes.forEach(m => {
+      m.material.opacity     = entry._baseOpacity ?? 1;
+      m.material.transparent = entry._baseTransparent ?? false;
+      m.material.emissive && m.material.emissive.setHex(0x000000);
+    });
+  });
+  if (selectedModelId) highlightSelected(selectedModelId);
+}
+
+function applyDefaultVisibility() {
+  if (isIsolated) return;
+  meshMap.forEach((entry, modelId) => {
+    setMeshVisible(entry.mesh, isModelVisibleByToggles(modelId));
+  });
+  if (selectedModelId) highlightSelected(selectedModelId);
+}
+
+// ── skin / hnm toggles ──────────────────────────────────────────────────────
+document.getElementById('btn-skin').addEventListener('click', () => {
+  skinVisible = !skinVisible;
+  document.getElementById('btn-skin').classList.toggle('active', skinVisible);
+  applyDefaultVisibility();
+});
+document.getElementById('btn-hnm').addEventListener('click', () => {
+  hnmVisible = !hnmVisible;
+  document.getElementById('btn-hnm').classList.toggle('active', hnmVisible);
+  applyDefaultVisibility();
+});
+
+// Reset View
+document.getElementById('btn-reset-view').addEventListener('click', () => {
+  clearSelection();
+  showAll();
+  if (defaultCamPos) {
+    camera.position.copy(defaultCamPos);
+    controls.target.copy(defaultTarget);
+    controls.update();
+  }
+});
+
+// ══════════════════════════════════════════════════════════════════════════════
+// FEATURE 3 — View presets (~400 ms animated, bounding-sphere distance)
+// ══════════════════════════════════════════════════════════════════════════════
+// Presets defined in RAS space (+X right, +Y anterior, +Z superior).
+// Camera is placed on the named side, i.e. "Anterior" = looking from the front
+// = camera in the +Y_RAS direction from the brain centre.
+// "Left" view = camera on subject's LEFT = RAS -X side.
+// Each RAS vector is transformed to world space via group.matrixWorld.
+// Superior/Inferior need a non-parallel camera.up (use RAS anterior = +Y).
+
+const PRESET_RAS = {
+  anterior:  { camDir: new THREE.Vector3( 0, 1, 0), up: new THREE.Vector3(0, 0, 1) },
+  posterior: { camDir: new THREE.Vector3( 0,-1, 0), up: new THREE.Vector3(0, 0, 1) },
+  left:      { camDir: new THREE.Vector3(-1, 0, 0), up: new THREE.Vector3(0, 0, 1) },
+  right:     { camDir: new THREE.Vector3( 1, 0, 0), up: new THREE.Vector3(0, 0, 1) },
+  superior:  { camDir: new THREE.Vector3( 0, 0, 1), up: new THREE.Vector3(0, 1, 0) },
+  inferior:  { camDir: new THREE.Vector3( 0, 0,-1), up: new THREE.Vector3(0, 1, 0) },
+};
+
+let presetAnim = null;
+
+function animateToPreset(presetName) {
+  const preset = PRESET_RAS[presetName];
+  if (!preset) return;
+
+  // Convert RAS camera direction and up to world space
+  const worldDir = preset.camDir.clone().transformDirection(group.matrixWorld).normalize();
+  const worldUp  = preset.up.clone().transformDirection(group.matrixWorld).normalize();
+
+  // Bounding sphere of all visible meshes
+  const box = new THREE.Box3();
+  group.traverse(c => { if (c.isMesh && c.visible) box.expandByObject(c); });
+  const sphere = new THREE.Sphere();
+  if (!box.isEmpty()) box.getBoundingSphere(sphere);
+  else sphere.center.copy(controls.target);
+
+  // Distance to fit the bounding sphere fully in view
+  const dist = (sphere.radius / Math.sin(THREE.MathUtils.degToRad(camera.fov / 2))) * 1.5;
+
+  const startPos = camera.position.clone();
+  const endPos   = sphere.center.clone().addScaledVector(worldDir, dist);
+  const startTgt = controls.target.clone();
+  const endTgt   = sphere.center.clone();
+  const startUp  = camera.up.clone();
+
+  const duration = 400;
+  const t0       = performance.now();
+  if (presetAnim) cancelAnimationFrame(presetAnim);
+
+  function step() {
+    const t = Math.min((performance.now() - t0) / duration, 1);
+    const e = t < 0.5 ? 2*t*t : -1+(4-2*t)*t;  // ease-in-out quad
+    camera.position.lerpVectors(startPos, endPos, e);
+    controls.target.lerpVectors(startTgt, endTgt, e);
+    camera.up.lerpVectors(startUp, worldUp, e).normalize();
+    controls.update();
+    if (t < 1) presetAnim = requestAnimationFrame(step);
+    else { presetAnim = null; camera.up.copy(worldUp); controls.update(); }
+  }
+  presetAnim = requestAnimationFrame(step);
+}
+
+document.querySelectorAll('.preset-btn').forEach(btn => {
+  btn.addEventListener('click', () => animateToPreset(btn.dataset.preset));
+});
+
+// ══════════════════════════════════════════════════════════════════════════════
+// FEATURE 4 — Orientation gizmo (canvas/context/labels declared near top)
+// ══════════════════════════════════════════════════════════════════════════════
+function updateGizmo() {
+  const w = 80, h = 80, cx = w/2, cy = h/2, r = 28;
+  gizmoCtx.clearRect(0, 0, w, h);
+
+  // Background circle
+  gizmoCtx.beginPath();
+  gizmoCtx.arc(cx, cy, r + 8, 0, Math.PI*2);
+  gizmoCtx.fillStyle = 'rgba(13,17,23,0.65)';
+  gizmoCtx.fill();
+
+  // Convert each RAS axis direction to world space, then to camera space.
+  // camera.quaternion rotates camera-local → world; its inverse rotates world → camera-local.
+  // In camera space: +X = screen right, +Y = screen up, -Z = toward viewer (front-facing).
+  const camInv = camera.quaternion.clone().invert();
+  const items = GIZMO_LABELS.map(ax => {
+    const v = ax.rasDir.clone()
+      .transformDirection(group.matrixWorld)
+      .applyQuaternion(camInv);
+    return { ...ax, sx: cx + v.x * r, sy: cy - v.y * r, z: v.z };
+  });
+
+  // Draw back-facing first (camera looks down -Z so z < 0 means toward viewer)
+  items.sort((a, b) => b.z - a.z);
+  items.forEach(({ sx, sy, z, label, pos }) => {
+    const front = z < 0;
+    gizmoCtx.beginPath();
+    gizmoCtx.moveTo(cx, cy);
+    gizmoCtx.lineTo(sx, sy);
+    gizmoCtx.strokeStyle = front
+      ? (pos ? '#58a6ff' : '#8b949e')
+      : 'rgba(100,100,100,0.3)';
+    gizmoCtx.lineWidth = front ? 1.5 : 1;
+    gizmoCtx.stroke();
+
+    gizmoCtx.font = `bold ${front ? 10 : 9}px system-ui,sans-serif`;
+    gizmoCtx.fillStyle = front
+      ? (pos ? '#c9d1d9' : '#8b949e')
+      : 'rgba(100,100,100,0.3)';
+    gizmoCtx.textAlign = 'center';
+    gizmoCtx.textBaseline = 'middle';
+    const lx = cx + (sx - cx) * 1.35;
+    const ly = cy + (sy - cy) * 1.35;
+    gizmoCtx.fillText(label, lx, ly);
+  });
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// FEATURE 5 — Cutting planes
+// ══════════════════════════════════════════════════════════════════════════════
+function computeRasBounds(models) {
+  let minX=Infinity, minY=Infinity, minZ=Infinity;
+  let maxX=-Infinity, maxY=-Infinity, maxZ=-Infinity;
+  models.forEach(mod => {
+    if (!mod.bounds_ras) return;
+    const [lo, hi] = mod.bounds_ras;
+    minX=Math.min(minX,lo[0]); minY=Math.min(minY,lo[1]); minZ=Math.min(minZ,lo[2]);
+    maxX=Math.max(maxX,hi[0]); maxY=Math.max(maxY,hi[1]); maxZ=Math.max(maxZ,hi[2]);
+  });
+  rasBounds = { min:[minX,minY,minZ], max:[maxX,maxY,maxZ] };
+}
+
+// Three PlaneObjects in RAS world space (before group rotation).
+// The group has rotation.x = -PI/2, so we work in the group's local frame
+// and let the group's matrixWorld handle the rest.
+// Sagittal  = cuts along RAS X  → normal [1,0,0] in RAS = [1,0,0] in group-local
+// Coronal   = cuts along RAS Y  → normal [0,1,0] in RAS = [0,1,0] in group-local
+// Axial     = cuts along RAS Z  → normal [0,0,1] in RAS = [0,0,1] in group-local
+// Each THREE.Plane is in world space; we derive it from the group's matrixWorld.
+
+const THREE_PLANES = {
+  sag: new THREE.Plane(new THREE.Vector3(1,0,0), 0),
+  cor: new THREE.Plane(new THREE.Vector3(0,1,0), 0),
+  axi: new THREE.Plane(new THREE.Vector3(0,0,1), 0),
+};
+
+function setupClipPlanes() {
+  // Wire up UI controls
+  ['sag','cor','axi'].forEach(axis => {
+    const enEl = document.getElementById(`clip-${axis}-en`);
+    const slEl = document.getElementById(`clip-${axis}-sl`);
+    enEl.addEventListener('change', () => {
+      clipState[axis].enabled = enEl.checked;
+      applyClipPlanes();
+    });
+    slEl.addEventListener('input', () => {
+      clipState[axis].value = parseFloat(slEl.value);
+      applyClipPlanes();
+    });
+  });
+  document.querySelectorAll('.clip-flip').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const axis = btn.dataset.plane;
+      clipState[axis].flipped = !clipState[axis].flipped;
+      applyClipPlanes();
+    });
+  });
+}
+
+function applyClipPlanes() {
+  if (!rasBounds) return;
+  const activePlanes = [];
+
+  ['sag','cor','axi'].forEach((axis, idx) => {
+    const cs  = clipState[axis];
+    if (!cs.enabled) return;
+
+    const lo  = rasBounds.min[idx];
+    const hi  = rasBounds.max[idx];
+    const val = lo + (cs.value / 100) * (hi - lo);
+
+    // Normal in group-local space (RAS axes)
+    const normals = [
+      new THREE.Vector3(1,0,0),
+      new THREE.Vector3(0,1,0),
+      new THREE.Vector3(0,0,1),
+    ];
+    const nLocal = normals[idx].clone();
+    if (cs.flipped) nLocal.negate();
+
+    // Transform normal to world space
+    const nWorld = nLocal.clone().transformDirection(group.matrixWorld);
+    // A point on the plane in group-local RAS space
+    const pLocal = new THREE.Vector3();
+    pLocal.setComponent(idx, val);
+    const pWorld = pLocal.clone().applyMatrix4(group.matrixWorld);
+
+    const plane = THREE_PLANES[axis];
+    plane.setFromNormalAndCoplanarPoint(nWorld, pWorld);
+    // nLocal already negated for flip — do NOT call plane.negate() again
+    activePlanes.push(plane);
+  });
+
+  // Apply to all brain materials
+  meshMap.forEach(entry => {
+    entry.mat.clippingPlanes = activePlanes.slice();
+    entry.mat.needsUpdate    = true;
+  });
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// FEATURE 6 — Hemisphere toggles
+// ══════════════════════════════════════════════════════════════════════════════
+['left','right','mid'].forEach(side => {
+  document.getElementById(`hemi-${side}`).addEventListener('change', e => {
+    hemiVisible[side] = e.target.checked;
+    applyDefaultVisibility();
+  });
+});
+
+// ══════════════════════════════════════════════════════════════════════════════
+// FEATURE 7 — Context opacity slider
+// ══════════════════════════════════════════════════════════════════════════════
+document.getElementById('ctx-opacity').addEventListener('input', e => {
+  contextOpacity = parseInt(e.target.value, 10) / 100;
+  if (selectedModelId && !isIsolated) highlightSelected(selectedModelId);
+});
+
+// ══════════════════════════════════════════════════════════════════════════════
+// SEARCH
+// ══════════════════════════════════════════════════════════════════════════════
+let searchIndex = [];
+
+function buildSearchIndex() {
+  if (!manifest) return;
+  manifest.models.forEach(mod => {
+    (mod.structures || []).forEach(s => {
+      searchIndex.push({ modelId: mod.id, name: s.name, atlasId: s.atlas_id });
+    });
+  });
+}
+
+const searchEl  = document.getElementById('search');
+const resultsEl = document.getElementById('search-results');
+
+searchEl.addEventListener('input', () => {
+  const q = searchEl.value.trim().toLowerCase();
+  resultsEl.innerHTML = '';
+  if (q.length < 2) { resultsEl.classList.remove('open'); return; }
+  const hits = searchIndex.filter(e =>
+    e.name.toLowerCase().includes(q) || e.atlasId.toLowerCase().includes(q)
+  ).slice(0, 30);
+  if (!hits.length) { resultsEl.classList.remove('open'); return; }
+  hits.forEach(hit => {
+    const item = document.createElement('div');
+    item.className = 'sr-item';
+    item.innerHTML = `${escHtml(hit.name)}<small>${escHtml(hit.atlasId)}</small>`;
+    item.addEventListener('mousedown', e => {
+      e.preventDefault();
+      selectModel(hit.modelId);
+      searchEl.value = '';
+      resultsEl.classList.remove('open');
+    });
+    resultsEl.appendChild(item);
+  });
+  resultsEl.classList.add('open');
+});
+searchEl.addEventListener('blur', () => {
+  setTimeout(() => resultsEl.classList.remove('open'), 150);
+});
+
+// ══════════════════════════════════════════════════════════════════════════════
+// RAYCASTER (click to select)
+// ══════════════════════════════════════════════════════════════════════════════
+let raycaster, mouseVec;
+let pointerMoved = false;
+
+// Bug 5: return only hits whose world-space point is on the unclipped side of
+// every active clipping plane (distanceToPoint >= 0 means inside/on the plane).
+function filterClippedHits(hits) {
+  const planes = ['sag','cor','axi']
+    .filter(ax => clipState[ax].enabled)
+    .map(ax => THREE_PLANES[ax]);
+  if (!planes.length) return hits;
+  return hits.filter(hit => planes.every(p => p.distanceToPoint(hit.point) >= 0));
+}
+
+function setupRaycaster() {
+  raycaster = new THREE.Raycaster();
+  mouseVec  = new THREE.Vector2();
+
+  renderer.domElement.addEventListener('pointerdown', () => { pointerMoved = false; });
+  renderer.domElement.addEventListener('pointermove', () => { pointerMoved = true; });
+  renderer.domElement.addEventListener('pointerup', e => {
+    if (pointerMoved) return;  // was a drag
+    if (quizCurrentQ) return;  // quiz handler takes over during active quiz
+    const rect = canvas.getBoundingClientRect();
+    mouseVec.x =  ((e.clientX - rect.left) / rect.width)  * 2 - 1;
+    mouseVec.y = -((e.clientY - rect.top)  / rect.height) * 2 + 1;
+
+    raycaster.setFromCamera(mouseVec, camera);
+    const allMeshes = [];
+    group.traverse(c => { if (c.isMesh && c.visible) allMeshes.push(c); });
+    const hits = filterClippedHits(raycaster.intersectObjects(allMeshes, false));  // Bug 5
+    if (!hits.length) return;
+    const modelId = hits[0].object.userData.modelId;
+    if (modelId) selectModel(modelId);
+  });
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// FEATURE 2 — Hover tooltip (throttled to one raycast per frame)
+// ══════════════════════════════════════════════════════════════════════════════
+const tooltipEl = document.getElementById('tooltip');
+// hoverMouse and hoverPending declared near the top before animate()
+
+function setupHover() {
+  renderer.domElement.addEventListener('mousemove', e => {
+    hoverMouse   = { x: e.clientX, y: e.clientY };
+    hoverPending = true;
+  });
+  renderer.domElement.addEventListener('mouseleave', () => {
+    tooltipEl.style.display = 'none';
+    hoverMouse   = null;
+    hoverPending = false;
+  });
+}
+
+function tickHover() {
+  if (!hoverPending || !raycaster || !hoverMouse) return;
+  hoverPending = false;
+
+  const rect = canvas.getBoundingClientRect();
+  const hv   = new THREE.Vector2(
+     ((hoverMouse.x - rect.left) / rect.width)  * 2 - 1,
+    -((hoverMouse.y - rect.top)  / rect.height) * 2 + 1
+  );
+  raycaster.setFromCamera(hv, camera);
+  const allMeshes = [];
+  group.traverse(c => { if (c.isMesh && c.visible) allMeshes.push(c); });
+  const hits = filterClippedHits(raycaster.intersectObjects(allMeshes, false));  // Bug 5
+
+  if (!hits.length) { tooltipEl.style.display = 'none'; return; }
+  const modelId = hits[0].object.userData.modelId;
+  const entry   = meshMap.get(modelId);
+  if (!entry) { tooltipEl.style.display = 'none'; return; }
+
+  tooltipEl.textContent  = entry.modelDef.name;
+  tooltipEl.style.display = 'block';
+  tooltipEl.style.left   = (hoverMouse.x + 14) + 'px';
+  tooltipEl.style.top    = (hoverMouse.y - 6)  + 'px';
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// SELECTION
+// ══════════════════════════════════════════════════════════════════════════════
+function selectModel(modelId) {
+  const entry = meshMap.get(modelId);
+  if (!entry) return;
+  selectedModelId = modelId;
+  isIsolated      = false;
+
+  highlightSelected(modelId);
+  showInfoPanel(entry.modelDef);
+  updateHash(entry.modelDef);
+
+  // Feature 1 fix: setFromObject returns world-space box; pass directly
+  const worldBox = new THREE.Box3().setFromObject(entry.mesh);
+  fitBoxWorld(worldBox);
+}
+
+// Select a group (from breadcrumb click): highlight all members, frame them
+function selectGroup(groupId) {
+  const g = groupIndex.get(groupId);
+  if (!g) return;
+  selectedModelId = null;
+  isIsolated      = false;
+
+  const memberIds = getModelIdsForGroup(groupId);
+  // Dim everything except group members
+  meshMap.forEach((entry, mid) => {
+    if (!isModelVisibleByToggles(mid)) return;
+    if (memberIds.has(mid)) {
+      entry.meshes.forEach(m => {
+        m.material.emissive.setHex(0x112233);
+        m.material.opacity     = 1;
+        m.material.transparent = false;
+      });
+    } else {
+      entry.meshes.forEach(m => {
+        m.material.emissive.setHex(0x000000);
+        m.material.opacity     = contextOpacity;
+        m.material.transparent = true;
+      });
+    }
+  });
+
+  // Frame all members
+  const box = new THREE.Box3();
+  memberIds.forEach(mid => {
+    const e = meshMap.get(mid);
+    if (e && e.mesh.visible) box.expandByObject(e.mesh);
+  });
+  if (!box.isEmpty()) fitBoxWorld(box);
+
+  // Show group info panel
+  showGroupInfoPanel(g, memberIds.size);
+}
+
+function highlightSelected(modelId) {
+  meshMap.forEach((entry, mid) => {
+    if (!isModelVisibleByToggles(mid)) return;
+    if (mid === modelId) {
+      entry.meshes.forEach(m => {
+        m.material.emissive.setHex(0x223344);
+        m.material.opacity     = 1;
+        m.material.transparent = false;
+      });
+    } else {
+      entry.meshes.forEach(m => {
+        m.material.emissive.setHex(0x000000);
+        m.material.opacity     = contextOpacity;
+        m.material.transparent = true;
+      });
+    }
+  });
+}
+
+function clearSelection() {
+  selectedModelId = null;
+  isIsolated      = false;
+  meshMap.forEach((entry, modelId) => {
+    setMeshVisible(entry.mesh, isModelVisibleByToggles(modelId));
+    entry.meshes.forEach(m => {
+      m.material.emissive && m.material.emissive.setHex(0x000000);
+      m.material.opacity      = entry._baseOpacity ?? 1;
+      m.material.transparent  = entry._baseTransparent ?? false;
+      m.material.needsUpdate  = true;
+    });
+  });
+  document.getElementById('info-placeholder').style.display = '';
+  document.getElementById('info-content').style.display     = 'none';
+  history.replaceState(null, '', window.location.pathname + window.location.search);
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// INFO PANEL
+// ══════════════════════════════════════════════════════════════════════════════
+function showInfoPanel(mod) {
+  document.getElementById('info-placeholder').style.display = 'none';
+  document.getElementById('info-content').style.display     = 'block';
+
+  const s0 = (mod.structures || [])[0] || {};
+
+  // Feature 8 — breadcrumb
+  renderBreadcrumb(mod);
+
+  document.getElementById('info-name').textContent = mod.name;
+  document.getElementById('info-swatch').style.background =
+    s0.color ? (s0.color.startsWith('rgba') ? rgbaToRgb(s0.color) : s0.color) : '#888';
+
+  document.getElementById('inf-hemi').textContent =
+    mod.hemisphere === 'left'  ? 'Left'  :
+    mod.hemisphere === 'right' ? 'Right' : 'Midline / not lateralized';
+
+  document.getElementById('inf-aids').textContent =
+    (mod.structures || []).map(s => s.atlas_id).join(', ') || '—';
+
+  document.getElementById('inf-lbl').textContent =
+    (mod.structures || []).map(s => s.label_value).filter(v => v != null).join(', ') || '—';
+
+  const parents = [...new Set(
+    (mod.structures || []).flatMap(s => (s.parent_groups || []).map(p => p.name))
+  )];
+  document.getElementById('inf-parents').textContent = parents.join(' › ') || '—';
+
+  const radlex = (mod.structures || []).map(s => s.radlex_id).filter(Boolean).join(', ');
+  document.getElementById('inf-radlex').textContent = radlex || '—';
+  document.getElementById('inf-radlex-row').style.display = radlex ? '' : 'none';
+}
+
+function showGroupInfoPanel(g, memberCount) {
+  document.getElementById('info-placeholder').style.display = 'none';
+  document.getElementById('info-content').style.display     = 'block';
+
+  document.getElementById('inf-breadcrumb').innerHTML = '';
+  document.getElementById('info-name').textContent         = g.name;
+  document.getElementById('info-swatch').style.background  = g.color || '#888';
+  document.getElementById('inf-hemi').textContent          = '—';
+  document.getElementById('inf-aids').textContent          = g.id;
+  document.getElementById('inf-lbl').textContent           = `${memberCount} members`;
+  document.getElementById('inf-parents').textContent       = '—';
+  document.getElementById('inf-radlex').textContent        = '—';
+  document.getElementById('inf-radlex-row').style.display  = 'none';
+}
+
+// ── Feature 8 — Breadcrumb ───────────────────────────────────────────────────
+// Build the path: Brain > ... > parent group(s) > structure name
+// by walking groupIndex for ancestors.
+
+function buildAncestorPath(leafGroupId) {
+  // Build child→parent map on first use
+  if (!buildAncestorPath._parentOf) {
+    buildAncestorPath._parentOf = new Map();
+    groupIndex.forEach((g, gid) => {
+      (g.members || []).forEach(mid => {
+        if (!buildAncestorPath._parentOf.has(mid))
+          buildAncestorPath._parentOf.set(mid, gid);
+      });
+    });
+  }
+  const path = [];
+  let cur = leafGroupId;
+  while (cur && groupIndex.has(cur)) {
+    path.unshift(cur);
+    cur = buildAncestorPath._parentOf.get(cur);
+  }
+  return path;  // [rootGroup, ..., leafGroup]
+}
+
+function renderBreadcrumb(mod) {
+  const bc = document.getElementById('inf-breadcrumb');
+  bc.innerHTML = '';
+
+  // Use first structure's first parent_group as the anchor
+  const s0      = (mod.structures || [])[0];
+  const pgId    = s0?.parent_groups?.[0]?.id;
+  if (!pgId) return;
+
+  const path = buildAncestorPath(pgId);
+  path.forEach((gid, i) => {
+    const g    = groupIndex.get(gid);
+    if (!g) return;
+    if (i > 0) { const sep = document.createElement('span'); sep.className='bc-sep'; sep.textContent='›'; bc.appendChild(sep); }
+    const link = document.createElement('span');
+    link.className   = 'bc-link';
+    link.textContent = g.name;
+    link.addEventListener('click', () => selectGroup(gid));
+    bc.appendChild(link);
+  });
+  // Separator + structure name
+  const sep2 = document.createElement('span'); sep2.className='bc-sep'; sep2.textContent='›'; bc.appendChild(sep2);
+  const leaf  = document.createElement('span'); leaf.style.color='#e6edf3'; leaf.textContent = mod.name; bc.appendChild(leaf);
+}
+
+// ── isolate / show-all / deselect ────────────────────────────────────────────
+document.getElementById('btn-isolate').addEventListener('click', () => {
+  if (!selectedModelId) return;
+  isIsolated = true;
+  meshMap.forEach((entry, mid) => {
+    setMeshVisible(entry.mesh, mid === selectedModelId);
+    entry.meshes.forEach(m => {
+      m.material.emissive.setHex(mid === selectedModelId ? 0x112233 : 0x000000);
+      m.material.opacity     = 1;
+      m.material.transparent = false;
+    });
+  });
+});
+
+document.getElementById('btn-show-all').addEventListener('click', () => {
+  showAll();
+  if (defaultCamPos) {
+    camera.position.copy(defaultCamPos);
+    controls.target.copy(defaultTarget);
+    controls.update();
+  }
+});
+
+document.getElementById('btn-deselect').addEventListener('click', () => {
+  clearSelection();
+  showAll();
+});
+
+// ══════════════════════════════════════════════════════════════════════════════
+// FEATURE 9 — Deep links via location.hash
+// ══════════════════════════════════════════════════════════════════════════════
+function updateHash(mod) {
+  const s0 = (mod.structures || [])[0];
+  if (!s0) return;
+  history.replaceState(null, '', '#' + s0.atlas_id);
+}
+
+function checkDeepLink() {
+  const hash = window.location.hash.slice(1);  // strip '#'
+  if (!hash) return;
+  const modelId = atlasIdToModelId.get(hash);
+  if (modelId) {
+    // Small delay to let fitAll settle first
+    setTimeout(() => selectModel(modelId), 200);
+  }
+}
+
+window.addEventListener('hashchange', () => {
+  const hash = window.location.hash.slice(1);
+  if (!hash) return;
+  const modelId = atlasIdToModelId.get(hash);
+  if (modelId) selectModel(modelId);
+});
+
+// ══════════════════════════════════════════════════════════════════════════════
+// FEATURE 10 — Keyboard shortcuts
+// ══════════════════════════════════════════════════════════════════════════════
+const shortcutsOverlay = document.getElementById('shortcuts-overlay');
+shortcutsOverlay.addEventListener('click', () => shortcutsOverlay.classList.remove('open'));
+
+const PRESET_KEYS = { '1':'anterior','2':'posterior','3':'left','4':'right','5':'superior','6':'inferior' };
+
+document.addEventListener('keydown', e => {
+  // Don't intercept when typing in an input
+  if (document.activeElement === searchEl) {
+    if (e.key === 'Escape') { searchEl.blur(); resultsEl.classList.remove('open'); }
+    return;
+  }
+  // During an active quiz, let the quiz handler handle all keys
+  if (quizCurrentQ) return;
+  switch (e.key) {
+    case '/':
+      e.preventDefault();
+      searchEl.focus();
+      break;
+    case 'Escape':
+      if (shortcutsOverlay.classList.contains('open')) {
+        shortcutsOverlay.classList.remove('open');
+      } else {
+        clearSelection();
+        showAll();
+      }
+      break;
+    case 'i': case 'I':
+      if (selectedModelId) document.getElementById('btn-isolate').click();
+      break;
+    case 'a': case 'A':
+      document.getElementById('btn-show-all').click();
+      break;
+    case '?':
+      shortcutsOverlay.classList.add('open');
+      break;
+    default:
+      if (PRESET_KEYS[e.key]) animateToPreset(PRESET_KEYS[e.key]);
+  }
+});
+
+// ── utilities ────────────────────────────────────────────────────────────────
+function escHtml(s) {
+  return String(s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;');
+}
+
+// Only http(s) links may be built from data files (blocks javascript:, data:, etc.)
+function safeUrl(u) {
+  try {
+    const url = new URL(String(u), window.location.href);
+    return (url.protocol === 'https:' || url.protocol === 'http:') ? url.href : null;
+  } catch (e) { return null; }
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// TIER 2 — PRACTICE MODES
+// ══════════════════════════════════════════════════════════════════════════════
+
+// ── F5: SRS / Leitner storage ─────────────────────────────────────────────────
+// Key format: { [modelId]: { box:1-5, due:isoDateStr, seen:bool, correct:int } }
+const SRS_KEY     = 'neuroapp.srs.v1';
+// SRS_DAYS[box]: box 1=0 days (same session), 2=1 day, 3=3 days, 4=7 days, 5=21 days
+const SRS_DAYS    = [0, 0, 1, 3, 7, 21]; // index 0 unused; index 1-5 = intervals
+// srsData and srsInMemory declared in STATE section above
+
+(function loadSRS() {
+  try {
+    const raw = localStorage.getItem(SRS_KEY);
+    srsData = raw ? JSON.parse(raw) : {};
+    if (!srsData || typeof srsData !== 'object' || Array.isArray(srsData)) srsData = {};
+  } catch(e) {
+    srsData      = {};
+    srsInMemory  = true;
+  }
+})();
+
+function saveSRS() {
+  if (srsInMemory) return;
+  try { localStorage.setItem(SRS_KEY, JSON.stringify(srsData)); }
+  catch(e) { srsInMemory = true; }
+}
+
+function srsGet(modelId) {
+  return srsData[modelId] || { box:0, due:null, seen:false, correct:0, total:0 };
+}
+
+function srsRecord(modelId, wasCorrect) {
+  const rec = srsGet(modelId);
+  rec.seen    = true;
+  rec.total   = (rec.total || 0) + 1;
+  if (wasCorrect) {
+    rec.correct = (rec.correct || 0) + 1;
+    rec.box     = Math.min((rec.box || 0) + 1, 5);
+  } else {
+    rec.box = 1;
+  }
+  const daysAhead  = SRS_DAYS[rec.box] || 0;
+  const due        = new Date();
+  due.setHours(0,0,0,0);
+  due.setDate(due.getDate() + daysAhead);
+  rec.due          = due.toISOString().slice(0,10);
+  srsData[modelId] = rec;
+  saveSRS();
+}
+
+function srsIsDue(modelId) {
+  const rec = srsGet(modelId);
+  if (!rec.seen) return false;
+  if (!rec.due)  return true;
+  const today = new Date(); today.setHours(0,0,0,0);
+  return new Date(rec.due) <= today;
+}
+
+function srsResetAll() {
+  srsData = {};
+  if (!srsInMemory) {
+    try { localStorage.removeItem(SRS_KEY); } catch(e) {}
+  }
+}
+
+// ── F1: mode switch (Explore ↔ Quiz) ─────────────────────────────────────────
+// currentMode declared in STATE section above
+
+const tabExplore   = document.getElementById('tab-explore');
+const tabQuiz      = document.getElementById('tab-quiz');
+const quizSetupEl  = document.getElementById('quiz-setup');
+const progressPanelEl = document.getElementById('progress-panel');
+
+function setMode(m) {
+  currentMode = m;
+  tabExplore.classList.toggle('active', m === 'explore');
+  tabQuiz.classList.toggle('active', m === 'quiz');
+  quizSetupEl.classList.toggle('visible', m === 'quiz');
+  progressPanelEl.classList.toggle('visible', m === 'quiz');
+  if (m === 'quiz') {
+    refreshProgressPanel();
+    if (srsInMemory) setStatus('SRS: localStorage unavailable — progress stored in memory only', true);
+  }
+}
+
+tabExplore.addEventListener('click', () => setMode('explore'));
+tabQuiz.addEventListener('click', () => setMode('quiz'));
+
+// ── F2: quiz setup + session builder ─────────────────────────────────────────
+// "Brain structures" = everything NOT in defaultHiddenIds (skin+HNM excluded)
+// unless Muscles toggle is on for HNM.
+
+function buildQuizPool() {
+  const scopeEl = document.getElementById('qs-scope');
+  const scope   = scopeEl.value;
+  let   pool    = [];
+
+  meshMap.forEach((entry, modelId) => {
+    // Skip skin always; skip HNM unless hnmVisible
+    if (isSkin(modelId)) return;
+    if (isHnm(modelId) && !hnmVisible) return;
+    // group scope
+    if (scope === 'group') {
+      const gid = document.getElementById('group-filter').value;
+      if (gid) {
+        const allowed = getModelIdsForGroup(gid);
+        if (!allowed.has(modelId)) return;
+      }
+    }
+    pool.push(modelId);
+  });
+  return pool;
+}
+
+function buildSessionQueue(pool, sessionLen) {
+  // Due items first (seen & due today)
+  const due   = pool.filter(id => srsIsDue(id));
+  // New items (not yet seen), up to 10
+  const unseen = pool.filter(id => !srsGet(id).seen).slice(0, 10);
+
+  // Interleave: due first, then unseen, trim to sessionLen
+  const combined = [...shuffle(due), ...shuffle(unseen)];
+  // De-duplicate (due+unseen can overlap if all are new)
+  const seen = new Set();
+  const queue = [];
+  for (const id of combined) {
+    if (!seen.has(id)) { seen.add(id); queue.push(id); }
+    if (queue.length >= sessionLen) break;
+  }
+  // If still short, fill from rest of pool (shuffled)
+  if (queue.length < sessionLen) {
+    const rest = shuffle(pool.filter(id => !seen.has(id)));
+    for (const id of rest) {
+      queue.push(id);
+      if (queue.length >= sessionLen) break;
+    }
+  }
+  return queue;
+}
+
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i+1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// ── Quiz session state — all vars declared in STATE section above ────────────
+const quizHudEl   = document.getElementById('quiz-hud');
+const qhudProgress = document.getElementById('qhud-progress');
+const qhudPrompt  = document.getElementById('qhud-prompt');
+const qhudFeedback = document.getElementById('qhud-feedback');
+const qhudOptions = document.getElementById('qhud-options');
+const qhudNext    = document.getElementById('qhud-next');
+const btnQuitQuiz = document.getElementById('btn-quit-quiz');
+
+function enterQuizMode() {
+  // Hide explore-only UI
+  document.getElementById('search-wrap').style.display    = 'none';
+  document.getElementById('info').style.display           = 'none';
+  quizHudEl.classList.add('visible');
+  btnQuitQuiz.classList.add('visible');
+}
+
+function leaveQuizMode() {
+  restoreNameItMaterials();   // Bug 2: clean up depthTest/depthWrite/renderOrder
+  document.getElementById('search-wrap').style.display    = '';
+  document.getElementById('info').style.display           = '';
+  quizHudEl.classList.remove('visible');
+  btnQuitQuiz.classList.remove('visible');
+  tooltipEl.style.display = 'none';
+  quizCurrentQ = null;
+  showAll();
+  clearSelection();
+}
+
+document.getElementById('btn-start-quiz').addEventListener('click', e => {
+  e.currentTarget.blur();   // Bug 1: prevent Enter from re-clicking the button
+  const pool = buildQuizPool();
+  if (pool.length < 4) {
+    setStatus('Not enough structures in scope (need ≥ 4)', false);
+    return;
+  }
+  const len  = parseInt(document.getElementById('qs-length').value, 10);
+  quizType   = document.getElementById('qs-type').value;
+  quizQueue  = buildSessionQueue(pool, len);
+  quizIdx    = 0;
+  quizMissed = [];
+  quizCorrect = 0;
+  enterQuizMode();
+  showNextQuestion();
+});
+
+btnQuitQuiz.addEventListener('click', () => {
+  leaveQuizMode();
+  fitAll();     // Feature 6b: restore camera on quit
+  setMode('quiz');
+});
+
+// ── question renderer ─────────────────────────────────────────────────────────
+function showNextQuestion() {
+  restoreNameItMaterials();   // Bug 2: clean up before each new question
+
+  if (quizIdx >= quizQueue.length) {
+    endSession();
+    return;
+  }
+
+  const modelId = quizQueue[quizIdx];
+  const entry   = meshMap.get(modelId);
+  if (!entry) { quizIdx++; showNextQuestion(); return; }
+
+  // Decide type
+  let qtype = quizType;
+  if (qtype === 'mixed') qtype = Math.random() < 0.5 ? 'findit' : 'nameit';
+  quizCurrentQ = { type: qtype, modelId };
+
+  qhudProgress.textContent = `Question ${quizIdx + 1} / ${quizQueue.length}`;
+  qhudFeedback.textContent = '';
+  qhudOptions.innerHTML    = '';
+  qhudNext.classList.remove('visible');
+  quizAnswered = false;
+
+  if (qtype === 'findit') {
+    renderFindIt(modelId, entry);
+  } else {
+    renderNameIt(modelId, entry);
+  }
+}
+
+// ── F3: Find-it ───────────────────────────────────────────────────────────────
+function renderFindIt(modelId, entry) {
+  qhudPrompt.textContent = `Find: ${entry.modelDef.name}`;
+
+  // Bug 5 fix: show all structures at full opacity so it's a real spatial task;
+  // learners use cutting planes / hemisphere toggles to reach deep structures.
+  showAll();
+  clearSelection();
+}
+
+function onFindItClick(clickedModelId) {
+  if (quizAnswered) return;
+  quizAnswered = true;
+
+  const { modelId: targetId } = quizCurrentQ;
+  const correct = clickedModelId === targetId;
+
+  if (correct) {
+    quizCorrect++;
+    // Green flash on correct mesh
+    const e = meshMap.get(targetId);
+    if (e) e.meshes.forEach(m => m.material.emissive.setHex(0x00aa44));
+    qhudFeedback.textContent = '✓ Correct!';
+    qhudFeedback.style.color = '#56d364';
+    srsRecord(targetId, true);
+    refreshProgressPanel();   // Bug 4
+    setTimeout(() => { quizIdx++; showNextQuestion(); }, 900);
+  } else {
+    // Red for clicked, green+framed for target
+    const ce = meshMap.get(clickedModelId);
+    if (ce) ce.meshes.forEach(m => m.material.emissive.setHex(0xaa2200));
+    const te = meshMap.get(targetId);
+    if (te) {
+      te.meshes.forEach(m => { m.material.emissive.setHex(0x00aa44); m.material.opacity = 1; m.material.transparent = false; });
+      const wb = new THREE.Box3().setFromObject(te.mesh);
+      fitBoxWorld(wb);
+    }
+    const clickedName = meshMap.get(clickedModelId)?.modelDef?.name || '?';
+    const targetName  = meshMap.get(targetId)?.modelDef?.name || '?';
+    qhudFeedback.textContent = `✗ You clicked: ${clickedName} — correct: ${targetName}`;
+    qhudFeedback.style.color = '#f85149';
+    srsRecord(targetId, false);
+    refreshProgressPanel();   // Bug 4
+    if (!quizMissed.includes(targetId)) quizMissed.push(targetId);
+    qhudNext.classList.add('visible');
+  }
+}
+
+// ── F4: Name-it ───────────────────────────────────────────────────────────────
+
+// Bug 3 fix: also try swapped left/right in the name (e.g. "left insula" → "right insula")
+function buildDisctractors(targetId, targetEntry, count) {
+  const targetName = targetEntry.modelDef.name;
+  const candidates = [];
+
+  // 1a. exact contralateral: same name, opposite hemisphere
+  const targetHemi = targetEntry.modelDef.hemisphere;
+  const oppHemi    = targetHemi === 'left' ? 'right' : targetHemi === 'right' ? 'left' : null;
+  if (oppHemi) {
+    meshMap.forEach((e, mid) => {
+      if (mid === targetId) return;
+      if (e.modelDef.hemisphere === oppHemi && e.modelDef.name === targetName) {
+        candidates.push({ id: mid, priority: 0 });
+      }
+    });
+  }
+
+  // 1b. name-swapped counterpart: swap "left"↔"right" in the name string
+  const swappedName = targetName
+    .replace(/\bleft\b/gi,  '~~RIGHT~~')
+    .replace(/\bright\b/gi, 'left')
+    .replace(/~~RIGHT~~/g,  'right');
+  if (swappedName !== targetName) {
+    meshMap.forEach((e, mid) => {
+      if (mid === targetId) return;
+      if (candidates.find(c => c.id === mid)) return;
+      if (e.modelDef.name.toLowerCase() === swappedName.toLowerCase()) {
+        candidates.push({ id: mid, priority: 0 });
+      }
+    });
+  }
+
+  // 2. siblings from same parent group
+  const s0 = (targetEntry.modelDef.structures || [])[0];
+  const pg = s0?.parent_groups?.[0]?.id;
+  if (pg) {
+    const siblingIds = getModelIdsForGroup(pg);
+    siblingIds.forEach(mid => {
+      if (mid === targetId) return;
+      if (!candidates.find(c => c.id === mid)) candidates.push({ id: mid, priority: 1 });
+    });
+  }
+
+  // 3. random brain structures
+  meshMap.forEach((e, mid) => {
+    if (mid === targetId) return;
+    if (isSkin(mid) || isHnm(mid)) return;
+    if (!candidates.find(c => c.id === mid)) candidates.push({ id: mid, priority: 2 });
+  });
+
+  candidates.sort((a, b) => a.priority - b.priority || Math.random() - 0.5);
+  return candidates.slice(0, count).map(c => c.id);
+}
+
+// Bug 2 fix: restore per-mesh material properties altered by Name-it
+function restoreNameItMaterials() {
+  meshMap.forEach(entry => {
+    entry.meshes.forEach(m => {
+      m.material.depthWrite   = true;
+      m.material.depthTest    = true;
+      m.renderOrder           = 0;
+      m.material.opacity      = entry._baseOpacity ?? 1;
+      m.material.transparent  = entry._baseTransparent ?? false;
+      m.material.emissive && m.material.emissive.setHex(0x000000);
+      m.material.needsUpdate  = true;
+    });
+  });
+}
+
+function renderNameIt(modelId, entry) {
+  qhudPrompt.textContent = 'Which structure is highlighted?';
+
+  // Bug 2 fix: non-targets → depthWrite=false, very low opacity so deep target
+  // punches through; target → bright emissive, depthTest=false, high renderOrder.
+  showAll();
+  clearSelection();
+  meshMap.forEach((e, mid) => {
+    if (!isModelVisibleByToggles(mid)) return;
+    if (mid === modelId) {
+      e.meshes.forEach(m => {
+        m.material.emissive.setHex(0xffb000);  // bright amber — always visible
+        m.material.opacity     = 1;
+        m.material.transparent = false;
+        m.material.depthWrite  = true;
+        m.material.depthTest   = false;        // draw on top of everything
+        m.renderOrder          = 999;
+        m.material.needsUpdate = true;
+      });
+    } else {
+      e.meshes.forEach(m => {
+        m.material.emissive.setHex(0x000000);
+        m.material.opacity     = 0.04;
+        m.material.transparent = true;
+        m.material.depthWrite  = false;        // don't occlude the target
+        m.material.needsUpdate = true;
+      });
+    }
+  });
+  const wb = new THREE.Box3().setFromObject(entry.mesh);
+  fitBoxWorld(wb);
+
+  // Build 4 options
+  const distractors = buildDisctractors(modelId, entry, 3);
+  const opts = shuffle([modelId, ...distractors]);
+  qhudOptions.innerHTML = '';
+  opts.forEach((optId, i) => {
+    const optEntry = meshMap.get(optId);
+    if (!optEntry) return;
+    const btn = document.createElement('button');
+    btn.className   = 'qopt-btn';
+    btn.textContent = `${i+1}. ${optEntry.modelDef.name}`;
+    btn.dataset.optId = optId;
+    btn.addEventListener('click', () => onNameItAnswer(optId, modelId, opts));
+    qhudOptions.appendChild(btn);
+  });
+}
+
+function onNameItAnswer(chosenId, targetId, opts) {
+  if (quizAnswered) return;
+  quizAnswered = true;
+  const correct = chosenId === targetId;
+
+  qhudOptions.querySelectorAll('.qopt-btn').forEach(btn => {
+    btn.disabled = true;
+    if (btn.dataset.optId === targetId) btn.classList.add('correct');
+    if (btn.dataset.optId === chosenId && !correct) btn.classList.add('wrong');
+  });
+
+  if (correct) {
+    quizCorrect++;
+    qhudFeedback.textContent = '✓ Correct!';
+    qhudFeedback.style.color = '#56d364';
+    srsRecord(targetId, true);
+  } else {
+    qhudFeedback.textContent = `✗ Answer: ${meshMap.get(targetId)?.modelDef?.name}`;
+    qhudFeedback.style.color = '#f85149';
+    srsRecord(targetId, false);
+    if (!quizMissed.includes(targetId)) quizMissed.push(targetId);
+  }
+  // Bug 4: refresh progress panel after every answer
+  refreshProgressPanel();
+  qhudNext.classList.add('visible');
+}
+
+// ── intercept canvas click during Find-it ────────────────────────────────────
+// We patch into the existing pointerup handler by checking quiz state.
+// Override: add a capture-phase listener that short-circuits during quizzing.
+renderer.domElement.addEventListener('pointerup', function(e) {
+  if (!quizCurrentQ || quizCurrentQ.type !== 'findit') return;
+  if (quizAnswered) return;
+  if (pointerMoved) return;   // drag — ignore
+  const rect = canvas.getBoundingClientRect();
+  const mv = new THREE.Vector2(
+     ((e.clientX - rect.left) / rect.width)  * 2 - 1,
+    -((e.clientY - rect.top)  / rect.height) * 2 + 1
+  );
+  if (!raycaster) return;
+  raycaster.setFromCamera(mv, camera);
+  const allMeshes = [];
+  group.traverse(c => { if (c.isMesh && c.visible) allMeshes.push(c); });
+  const hits = filterClippedHits(raycaster.intersectObjects(allMeshes, false));  // Bug 5
+  if (!hits.length) return;
+  const clickedModelId = hits[0].object.userData.modelId;
+  if (clickedModelId) onFindItClick(clickedModelId);
+}, false);
+
+// ── suppress tooltip during quiz ─────────────────────────────────────────────
+renderer.domElement.addEventListener('mousemove', () => {
+  if (quizCurrentQ) {
+    tooltipEl.style.display = 'none';
+    hoverPending = false;
+  }
+});
+
+// ── Next button / Enter key ───────────────────────────────────────────────────
+qhudNext.addEventListener('click', () => { quizIdx++; showNextQuestion(); });
+
+document.addEventListener('keydown', function quizKeyHandler(e) {
+  if (!quizCurrentQ) return;
+  if (document.activeElement === searchEl) return;
+  if (e.key === 'Enter') {
+    e.preventDefault();   // Bug 1: stop Enter from clicking any focused button
+    if (quizAnswered) { quizIdx++; showNextQuestion(); }
+    return;
+  }
+  // 1-4 for Name-it
+  if (quizCurrentQ.type === 'nameit' && !quizAnswered) {
+    const idx = parseInt(e.key, 10);
+    if (idx >= 1 && idx <= 4) {
+      e.preventDefault();   // Bug 1: stop digit keys from activating focused elements
+      const btn = qhudOptions.querySelectorAll('.qopt-btn')[idx - 1];
+      if (btn) btn.click();
+    }
+  }
+});
+
+// ── F6: session summary ───────────────────────────────────────────────────────
+const quizSummaryEl = document.getElementById('quiz-summary');
+
+function endSession() {
+  leaveQuizMode();
+  refreshProgressPanel();
+
+  const total    = quizQueue.length;
+  const accuracy = total ? Math.round((quizCorrect / total) * 100) : 0;
+
+  const statsEl = document.getElementById('summ-stats');
+  statsEl.innerHTML =
+    `<div class="summ-stat">Questions: <strong>${total}</strong></div>` +
+    `<div class="summ-stat">Correct: <strong>${quizCorrect}</strong></div>` +
+    `<div class="summ-stat">Accuracy: <strong>${accuracy}%</strong></div>`;
+
+  const missedEl = document.getElementById('summ-missed-list');
+  missedEl.innerHTML = '';
+  if (quizMissed.length) {
+    const h = document.createElement('div');
+    h.style.cssText = 'font-size:12px;color:#8b949e;margin-bottom:5px';
+    h.textContent   = 'Missed structures (click to inspect):';
+    missedEl.appendChild(h);
+    quizMissed.forEach(mid => {
+      const e    = meshMap.get(mid);
+      if (!e) return;
+      const item = document.createElement('div');
+      item.className   = 'summ-missed-item';
+      item.textContent = e.modelDef.name;
+      item.addEventListener('click', () => {
+        quizSummaryEl.classList.remove('visible');
+        setMode('explore');
+        selectModel(mid);
+      });
+      missedEl.appendChild(item);
+    });
+  } else {
+    missedEl.innerHTML = '<div style="font-size:12px;color:#56d364;margin-top:6px">No misses — perfect session!</div>';
+  }
+
+  quizCurrentQ = null;
+  quizSummaryEl.classList.add('visible');
+}
+
+document.getElementById('summ-explore-btn').addEventListener('click', () => {
+  quizSummaryEl.classList.remove('visible');
+  setMode('explore');
+});
+
+document.getElementById('summ-review-btn').addEventListener('click', () => {
+  quizSummaryEl.classList.remove('visible');
+  if (!quizMissed.length) { setMode('explore'); return; }
+  // Re-queue only missed structures
+  quizQueue  = quizMissed.slice();
+  quizIdx    = 0;
+  quizMissed = [];
+  quizCorrect = 0;
+  enterQuizMode();
+  showNextQuestion();
+});
+
+// ── F7: mastery map ───────────────────────────────────────────────────────────
+// masteryMapOn declared in STATE section above
+const MASTERY_COLORS = ['#555', '#c62828', '#e65100', '#f9a825', '#558b2f', '#1b5e20'];
+
+const btnMastery = document.getElementById('btn-mastery-map');
+const masteryLegendEl = document.getElementById('mastery-legend');
+
+btnMastery.addEventListener('click', () => {
+  masteryMapOn = !masteryMapOn;
+  btnMastery.classList.toggle('active', masteryMapOn);
+  masteryLegendEl.classList.toggle('visible', masteryMapOn);
+  if (masteryMapOn) {
+    applyMasteryColors();
+  } else {
+    restoreMasteryColors();
+  }
+});
+
+function applyMasteryColors() {
+  meshMap.forEach((entry, modelId) => {
+    const rec = srsGet(modelId);
+    const box = rec.seen ? Math.max(rec.box, 1) : 0;
+    const col = new THREE.Color(MASTERY_COLORS[box]);
+    entry.mat.color.copy(col);
+    entry.mat.emissive.setHex(0x000000);
+    entry.mat.opacity     = entry._baseOpacity ?? 1;
+    entry.mat.transparent = entry._baseTransparent ?? false;
+  });
+}
+
+function restoreMasteryColors() {
+  meshMap.forEach(entry => {
+    const s0 = (entry.modelDef.structures || [])[0];
+    const color = s0 ? s0.color : 'rgb(136,136,136)';
+    const rgbStr = color.startsWith('rgba') ? rgbaToRgb(color) : color;
+    entry.mat.color.set(rgbStr);
+    entry.mat.opacity     = entry._baseOpacity ?? 1;
+    entry.mat.transparent = entry._baseTransparent ?? false;
+    entry.mat.emissive.setHex(0x000000);
+  });
+}
+
+// ── F8: progress panel ────────────────────────────────────────────────────────
+function refreshProgressPanel() {
+  const today = new Date(); today.setHours(0,0,0,0);
+  const counts = [0, 0, 0, 0, 0, 0]; // index 0 = unseen, 1-5 = boxes
+  let dueCount = 0;
+
+  if (manifest) {
+    manifest.models.forEach(mod => {
+      const rec = srsGet(mod.id);
+      if (!rec.seen) { counts[0]++; return; }
+      const b = Math.min(Math.max(rec.box, 1), 5);
+      counts[b]++;
+      if (rec.due && new Date(rec.due) <= today) dueCount++;
+    });
+  }
+
+  const rowsEl = document.getElementById('prog-rows');
+  rowsEl.innerHTML = '';
+  const labels = ['Unseen', 'Box 1', 'Box 2', 'Box 3', 'Box 4', 'Box 5'];
+  counts.forEach((c, i) => {
+    const d = document.createElement('div');
+    d.className = 'prog-row';
+    d.innerHTML = `<span>${escHtml(labels[i])}</span><span>${c}</span>`;
+    rowsEl.appendChild(d);
+  });
+  document.getElementById('prog-due').textContent = dueCount;
+
+  if (srsInMemory) {
+    const note = document.createElement('div');
+    note.style.cssText = 'font-size:10px;color:#f85149;margin-top:4px';
+    note.textContent   = 'localStorage unavailable — progress in memory only';
+    rowsEl.appendChild(note);
+  }
+}
+
+// Reset progress button
+document.getElementById('btn-reset-progress').addEventListener('click', () => {
+  document.getElementById('reset-confirm').classList.add('visible');
+});
+document.getElementById('rc-no').addEventListener('click', () => {
+  document.getElementById('reset-confirm').classList.remove('visible');
+});
+document.getElementById('rc-yes').addEventListener('click', () => {
+  srsResetAll();
+  document.getElementById('reset-confirm').classList.remove('visible');
+  refreshProgressPanel();
+  if (masteryMapOn) applyMasteryColors();
+  setStatus('Progress reset', false);
+});
+
+// ══════════════════════════════════════════════════════════════════════════════
+// TIER 3 — ADAPTIVE LEARNING LAYER
+// ══════════════════════════════════════════════════════════════════════════════
+
+// ── Profile storage ──────────────────────────────────────────────────────────
+(function loadProfile() {
+  try {
+    const raw = localStorage.getItem(PROFILE_KEY);
+    if (raw) { const p = JSON.parse(raw); if (p && typeof p === 'object' && !Array.isArray(p)) learnerProfile = p; }
+    if (!learnerProfile.seen) learnerProfile.seen = {};
+  } catch(e) {
+    learnerProfile  = { level: 'beginner', onboarded: false, seen: {} };
+    profileInMemory = true;
+  }
+})();
+
+function saveProfile() {
+  if (profileInMemory) return;
+  try { localStorage.setItem(PROFILE_KEY, JSON.stringify(learnerProfile)); }
+  catch(e) { profileInMemory = true; }
+}
+
+function markTopicSeen(topicId) {
+  if (!learnerProfile.seen[topicId]) {
+    learnerProfile.seen[topicId] = true;
+    saveProfile();
+  }
+}
+
+// ── Onboarding ───────────────────────────────────────────────────────────────
+(function initOnboarding() {
+  const panelTop  = document.getElementById('panel-top');
+  const card      = document.getElementById('onboard-card');
+
+  // Move card into panel-top after h1
+  const h1 = panelTop.querySelector('h1');
+  if (h1 && h1.nextSibling) {
+    panelTop.insertBefore(card, h1.nextSibling);
+  } else {
+    panelTop.appendChild(card);
+  }
+
+  if (!learnerProfile.onboarded) {
+    card.style.display = 'block';
+  } else {
+    showLevelSwitch();
+    applyProfileToQuizScope();
+  }
+
+  card.querySelectorAll('.onboard-level-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const level = btn.dataset.level;
+      learnerProfile.level = level;
+      // New-to-it: show orientation first
+      if (level === 'beginner') {
+        document.getElementById('onboard-orientation').style.display = 'block';
+        btn.disabled = true;
+        card.querySelectorAll('.onboard-level-btn').forEach(b => { if (b !== btn) b.style.display = 'none'; });
+        btn.style.borderColor = '#388bfd';
+        btn.style.color       = '#58a6ff';
+      } else {
+        finishOnboarding(level);
+      }
+    });
+  });
+
+  document.getElementById('btn-start-brain101').addEventListener('click', () => {
+    finishOnboarding('beginner');
+    const tour101 = learningData.tours.find(t => t.id === 'brain-101');
+    if (tour101) startTour(tour101);
+  });
+})();
+
+function finishOnboarding(level) {
+  learnerProfile.level     = level;
+  learnerProfile.onboarded = true;
+  saveProfile();
+  document.getElementById('onboard-card').style.display = 'none';
+  showLevelSwitch();
+  applyProfileToQuizScope();
+}
+
+function showLevelSwitch() {
+  const row = document.getElementById('level-switch-row');
+  row.style.display = 'flex';
+  const sel = document.getElementById('learner-level-sel');
+  sel.value = learnerProfile.level;
+  sel.addEventListener('change', () => {
+    learnerProfile.level = sel.value;
+    saveProfile();
+    applyProfileToQuizScope();
+    // Re-render learn panel if a structure is selected
+    if (selectedModelId) {
+      const entry = meshMap.get(selectedModelId);
+      if (entry) renderLearnPanel(entry.modelDef);
+    }
+  });
+  // Show tours button in explore mode
+  document.getElementById('tour-btn-wrap').classList.add('visible');
+}
+
+function applyProfileToQuizScope() {
+  const scopeSel = document.getElementById('qs-scope');
+  if (learnerProfile.level === 'beginner') {
+    scopeSel.value = 'core';
+  }
+}
+
+// ── Helpers: topic lookup ────────────────────────────────────────────────────
+function getTopicForModel(mod) {
+  if (!mod || !learningData) return null;
+  const topics  = learningData.topics || [];
+  const atlasIds = (mod.structures || []).map(s => s.atlas_id);
+
+  // Pass 1: exact atlas_id match — most specific, wins over any group match.
+  for (const topic of topics) {
+    const tIds = (topic.applies_to || {}).atlas_ids || [];
+    if (atlasIds.some(id => tIds.includes(id))) return topic;
+  }
+
+  // Pass 2: walk ancestor groups nearest→farthest; take the first topic match.
+  // Build the ancestor chain for each structure's parent groups.
+  // Use buildAncestorPath which returns [root, ..., leaf] — we want leaf first.
+  const s0 = (mod.structures || [])[0];
+  if (!s0) return null;
+  const directGroups = (s0.parent_groups || []).map(p => p.id);
+  // For each direct parent, get its full ancestor path (leaf = last element).
+  const orderedGroupIds = [];
+  const seenGroupIds = new Set();
+  directGroups.forEach(gid => {
+    const path = buildAncestorPath(gid); // [root, ..., gid]
+    // Iterate leaf-first (nearest ancestor first)
+    for (let i = path.length - 1; i >= 0; i--) {
+      const g = path[i];
+      if (!seenGroupIds.has(g)) {
+        seenGroupIds.add(g);
+        orderedGroupIds.push(g);
+      }
+    }
+  });
+
+  for (const gid of orderedGroupIds) {
+    for (const topic of topics) {
+      const tGrps = (topic.applies_to || {}).groups || [];
+      if (tGrps.includes(gid)) return topic;
+    }
+  }
+  return null;
+}
+
+// Check if modelGroupId is (recursively) within targetGroupId
+function isInGroup(modelGroupId, targetGroupId) {
+  if (modelGroupId === targetGroupId) return true;
+  const g = groupIndex.get(targetGroupId);
+  if (!g) return false;
+  return (g.members || []).some(mid => isInGroup(modelGroupId, mid));
+}
+
+function getTopicsForGroup(groupId) {
+  return (learningData.topics || []).filter(t => {
+    const appl = t.applies_to || {};
+    return (appl.groups || []).includes(groupId);
+  });
+}
+
+// ── Feature 2: Learn Panel ────────────────────────────────────────────────────
+function renderLearnPanel(mod) {
+  const body   = document.getElementById('learn-panel-body');
+  const badge  = document.getElementById('learn-panel-level-badge');
+  const topic  = getTopicForModel(mod);
+  const level  = learnerProfile.level;
+
+  const levelLabels = { beginner: 'New to it', some: 'Some background', expert: 'Expert' };
+  badge.textContent = levelLabels[level] || level;
+
+  body.innerHTML = '';
+
+  if (!topic) {
+    const el = document.createElement('div');
+    el.className   = 'learn-no-content';
+    el.textContent = 'No reviewed content yet.';
+    body.appendChild(el);
+    return;
+  }
+
+  markTopicSeen(topic.id);
+
+  const levels = topic.levels || {};
+  const begData = levels.beginner || {};
+  const expData = levels.expert   || {};
+  const sources = learningData.sources || {};
+
+  // Collect all used cite ids for the sources footer
+  const usedCiteIds = new Set();
+
+  function collectCites(pts) {
+    (pts || []).forEach(p => (p.cite || []).forEach(c => usedCiteIds.add(c)));
+  }
+
+  function renderPointsList(points, container) {
+    if (!points || !points.length) return;
+    const ul = document.createElement('ul');
+    ul.className = 'learn-points';
+    points.forEach((pt, i) => {
+      (pt.cite || []).forEach(c => usedCiteIds.add(c));
+      const li = document.createElement('li');
+      li.className = 'learn-point';
+      const bullet = document.createElement('span');
+      bullet.className   = 'learn-point-bullet';
+      bullet.textContent = '•';
+      const text = document.createElement('span');
+      applyGlossaryMarkup(text, pt.text || '');
+      (pt.cite || []).forEach((c, ci) => {
+        const sup = document.createElement('sup');
+        sup.className   = 'cite-sup';
+        const citeIdx   = getCiteIndex(c);
+        sup.textContent = '[' + citeIdx + ']';
+        sup.title       = sources[c] ? sources[c].citation : c;
+        text.appendChild(sup);
+      });
+      li.appendChild(bullet);
+      li.appendChild(text);
+      ul.appendChild(li);
+    });
+    container.appendChild(ul);
+  }
+
+  function renderSummary(summaryText, container) {
+    if (!summaryText) return;
+    const el = document.createElement('div');
+    el.className = 'learn-summary';
+    applyGlossaryMarkup(el, summaryText);
+    container.appendChild(el);
+  }
+
+  // Build content based on level
+  if (level === 'expert') {
+    collectCites(expData.points);
+    renderSummary(expData.summary, body);
+    renderPointsList(expData.points, body);
+    // "Simpler" toggle to show beginner content
+    if (begData.summary || (begData.points && begData.points.length)) {
+      const tog = document.createElement('span');
+      tog.className   = 'learn-expert-toggle';
+      tog.textContent = '[simpler]';
+      const simplerDiv = document.createElement('div');
+      simplerDiv.style.display = 'none';
+      collectCites(begData.points);
+      renderSummary(begData.summary, simplerDiv);
+      renderPointsList(begData.points, simplerDiv);
+      tog.addEventListener('click', () => {
+        const hidden = simplerDiv.style.display === 'none';
+        simplerDiv.style.display = hidden ? '' : 'none';
+        tog.textContent = hidden ? '[less]' : '[simpler]';
+      });
+      body.appendChild(tog);
+      body.appendChild(simplerDiv);
+    }
+  } else if (level === 'some') {
+    // Show beginner + expert points collapsed
+    collectCites(begData.points);
+    renderSummary(begData.summary, body);
+    renderPointsList(begData.points, body);
+    if (expData.summary || (expData.points && expData.points.length)) {
+      const det = document.createElement('details');
+      det.style.marginTop = '6px';
+      const summ = document.createElement('summary');
+      summ.style.cssText = 'font-size:11px;color:#58a6ff;cursor:pointer;user-select:none';
+      summ.textContent = 'Expert details';
+      det.appendChild(summ);
+      const expDiv = document.createElement('div');
+      collectCites(expData.points);
+      renderSummary(expData.summary, expDiv);
+      renderPointsList(expData.points, expDiv);
+      det.appendChild(expDiv);
+      body.appendChild(det);
+    }
+  } else {
+    // beginner
+    collectCites(begData.points);
+    renderSummary(begData.summary, body);
+    renderPointsList(begData.points, body);
+  }
+
+  // Connections
+  const connections = topic.connections || [];
+  if (connections.length) {
+    const connDiv = document.createElement('div');
+    connDiv.className = 'learn-connections';
+    const connTitle = document.createElement('div');
+    connTitle.className   = 'learn-connections-title';
+    connTitle.textContent = 'Connected to:';
+    connDiv.appendChild(connTitle);
+    connections.forEach(conn => {
+      (conn.cite || []).forEach(c => usedCiteIds.add(c));
+      const chip = document.createElement('span');
+      chip.className = 'conn-chip';
+      chip.textContent = conn.label || (conn.atlas_ids || []).join(', ');
+      chip.title = conn.label || '';
+      chip.addEventListener('click', () => {
+        (conn.atlas_ids || []).forEach(aid => {
+          const mid = atlasIdToModelId.get(aid);
+          if (mid) selectModel(mid);
+        });
+      });
+      connDiv.appendChild(chip);
+    });
+    body.appendChild(connDiv);
+  }
+
+  // Clinical notes
+  const clinical = topic.clinical || [];
+  if (clinical.length) {
+    const clinDet = document.createElement('details');
+    clinDet.className = 'learn-clinical-details';
+    const clinSumm = document.createElement('summary');
+    clinSumm.textContent = 'Clinical relevance';
+    clinDet.appendChild(clinSumm);
+    clinical.forEach(note => {
+      (note.cite || []).forEach(c => usedCiteIds.add(c));
+      const noteEl = document.createElement('div');
+      noteEl.className = 'learn-clinical-note';
+      applyGlossaryMarkup(noteEl, note.text || '');
+      (note.cite || []).forEach(c => {
+        const sup = document.createElement('sup');
+        sup.className   = 'cite-sup';
+        sup.textContent = '[' + getCiteIndex(c) + ']';
+        sup.title       = sources[c] ? sources[c].citation : c;
+        noteEl.appendChild(sup);
+      });
+      clinDet.appendChild(noteEl);
+    });
+    const disc = document.createElement('div');
+    disc.className   = 'learn-clinical-disclaimer';
+    disc.textContent = 'Educational use only — not medical advice.';
+    clinDet.appendChild(disc);
+    body.appendChild(clinDet);
+  }
+
+  // Sources
+  if (usedCiteIds.size) {
+    const srcDiv = document.createElement('div');
+    srcDiv.className = 'learn-sources';
+    const srcTitle = document.createElement('div');
+    srcTitle.className   = 'learn-sources-title';
+    srcTitle.textContent = 'Sources';
+    srcDiv.appendChild(srcTitle);
+    // Build ordered list
+    const orderedIds = [...citeOrder.entries()]
+      .filter(([id]) => usedCiteIds.has(id))
+      .sort((a, b) => a[1] - b[1]);
+    orderedIds.forEach(([cid, idx]) => {
+      const src  = sources[cid];
+      if (!src) return;
+      const item = document.createElement('div');
+      item.className = 'learn-source-item';
+      const numEl = document.createElement('span');
+      numEl.textContent = '[' + idx + '] ';
+      item.appendChild(numEl);
+      const citeEl = document.createElement('span');
+      citeEl.textContent = src.citation || cid;
+      item.appendChild(citeEl);
+      if (src.url) {
+        const a = document.createElement('a');
+        a.href   = safeUrl(src.url) || '#';
+        a.target = '_blank';
+        a.rel    = 'noopener noreferrer';
+        a.textContent = ' [link]';
+        item.appendChild(a);
+      }
+      srcDiv.appendChild(item);
+    });
+    body.appendChild(srcDiv);
+  }
+}
+
+// Citation index counter (per-render sequential numbering)
+const citeOrder = new Map();
+let citeCounter = 0;
+function getCiteIndex(cid) {
+  if (!citeOrder.has(cid)) {
+    citeCounter++;
+    citeOrder.set(cid, citeCounter);
+  }
+  return citeOrder.get(cid);
+}
+function resetCiteOrder() {
+  citeOrder.clear();
+  citeCounter = 0;
+}
+
+// Patch showInfoPanel to call renderLearnPanel and reset cite order
+const _origShowInfoPanel = showInfoPanel;
+showInfoPanel = function(mod) {
+  _origShowInfoPanel(mod);
+  resetCiteOrder();
+  renderLearnPanel(mod);
+};
+
+// ── Feature 3: Glossary ──────────────────────────────────────────────────────
+function buildGlossaryPanel() {
+  const list = document.getElementById('glossary-list');
+  list.innerHTML = '';
+  const glossary = learningData.glossary || [];
+  if (!glossary.length) {
+    document.getElementById('glossary-panel').classList.remove('visible');
+    return;
+  }
+  glossary.forEach(entry => {
+    const div  = document.createElement('div');
+    div.className = 'gloss-entry';
+    const term = document.createElement('div');
+    term.className   = 'gloss-entry-term';
+    term.textContent = entry.term;
+    const def  = document.createElement('div');
+    def.className   = 'gloss-entry-def';
+    def.textContent = entry.definition;
+    div.appendChild(term);
+    div.appendChild(def);
+    list.appendChild(div);
+  });
+  document.getElementById('glossary-panel').classList.add('visible');
+}
+
+// Build a regex that matches all glossary terms (whole word, case-insensitive)
+let glossaryRegex = null;
+function getGlossaryRegex() {
+  if (glossaryRegex) return glossaryRegex;
+  const terms = (learningData.glossary || []).map(e => e.term);
+  if (!terms.length) return null;
+  const escaped = terms.map(t => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+  glossaryRegex = new RegExp('\\b(' + escaped.join('|') + ')\\b', 'gi');
+  return glossaryRegex;
+}
+
+function getGlossaryDef(term) {
+  const lower = term.toLowerCase();
+  const entry = (learningData.glossary || []).find(e => e.term.toLowerCase() === lower);
+  return entry ? entry.definition : '';
+}
+
+// Apply glossary markup to a container element given plain text
+// (first occurrence per block only for each term)
+function applyGlossaryMarkup(container, text) {
+  const re = getGlossaryRegex();
+  if (!re) {
+    container.textContent = text;
+    return;
+  }
+  re.lastIndex = 0;
+  const seenTerms = new Set();
+  let last = 0;
+  let m;
+  const frag = document.createDocumentFragment();
+  while ((m = re.exec(text)) !== null) {
+    const matchedTerm = m[0];
+    const lowerTerm   = matchedTerm.toLowerCase();
+    if (seenTerms.has(lowerTerm)) continue;
+    seenTerms.add(lowerTerm);
+    if (m.index > last) {
+      frag.appendChild(document.createTextNode(text.slice(last, m.index)));
+    }
+    const span = document.createElement('span');
+    span.className   = 'gloss-term';
+    span.textContent = matchedTerm;
+    span.addEventListener('mouseenter', showGlossTooltip);
+    span.addEventListener('mouseleave', hideGlossTooltip);
+    frag.appendChild(span);
+    last = re.lastIndex;
+  }
+  if (last < text.length) {
+    frag.appendChild(document.createTextNode(text.slice(last)));
+  }
+  container.appendChild(frag);
+}
+
+const glossTooltipEl = document.getElementById('gloss-tooltip');
+function showGlossTooltip(e) {
+  const def = getGlossaryDef(e.currentTarget.textContent);
+  if (!def) return;
+  glossTooltipEl.textContent = def;
+  glossTooltipEl.style.display = 'block';
+  positionGlossTooltip(e);
+}
+function positionGlossTooltip(e) {
+  glossTooltipEl.style.left = Math.min(e.clientX + 12, window.innerWidth - 240) + 'px';
+  glossTooltipEl.style.top  = (e.clientY - 40) + 'px';
+}
+function hideGlossTooltip() {
+  glossTooltipEl.style.display = 'none';
+}
+document.addEventListener('mousemove', e => {
+  if (glossTooltipEl.style.display !== 'none') positionGlossTooltip(e);
+});
+
+// ── Feature 4: Guided Tours ──────────────────────────────────────────────────
+const tourListOverlay = document.getElementById('tour-list-overlay');
+const tourHudEl       = document.getElementById('tour-hud');
+const btnCloseTourEl  = document.getElementById('btn-close-tour');
+
+document.getElementById('btn-tours').addEventListener('click', openTourList);
+document.getElementById('btn-close-tour-list').addEventListener('click', () => {
+  tourListOverlay.classList.remove('open');
+});
+btnCloseTourEl.addEventListener('click', endTour);
+
+function openTourList() {
+  const itemsEl = document.getElementById('tour-list-items');
+  itemsEl.innerHTML = '';
+  const tours = learningData.tours || [];
+  if (!tours.length) {
+    const msg = document.createElement('div');
+    msg.style.cssText = 'font-size:12px;color:#8b949e;padding:8px 0';
+    msg.textContent   = 'No tours available yet.';
+    itemsEl.appendChild(msg);
+  } else {
+    tours.forEach(tour => {
+      const div   = document.createElement('div');
+      div.className = 'tour-list-item';
+      const title = document.createElement('span');
+      title.className   = 'tour-list-title';
+      title.textContent = tour.title;
+      const badge = document.createElement('span');
+      badge.className = 'tour-list-badge ' + (tour.level === 'expert' ? 'badge-expert' : 'badge-beginner');
+      badge.textContent = tour.level || 'beginner';
+      div.appendChild(title);
+      div.appendChild(badge);
+      div.addEventListener('click', () => {
+        tourListOverlay.classList.remove('open');
+        startTour(tour);
+      });
+      itemsEl.appendChild(div);
+    });
+  }
+  tourListOverlay.classList.add('open');
+}
+
+function startTour(tour) {
+  if (!tour || !tour.steps || !tour.steps.length) {
+    setStatus('Tour has no steps', false);
+    return;
+  }
+  activeTour = { tour, stepIdx: 0, revealed: false };
+  tourHudEl.classList.add('visible');
+  btnCloseTourEl.classList.add('visible');
+  showTourStep();
+}
+
+function showTourStep() {
+  if (!activeTour) return;
+  const { tour, stepIdx } = activeTour;
+  const steps  = tour.steps || [];
+  if (stepIdx >= steps.length) { endTour(); return; }
+  const step   = steps[stepIdx];
+  const sources = learningData.sources || {};
+
+  document.getElementById('tour-hud-progress').textContent =
+    'Step ' + (stepIdx + 1) + ' / ' + steps.length + ' — ' + (tour.title || '');
+
+  // Select structures
+  (step.atlas_ids || []).forEach(aid => {
+    const mid = atlasIdToModelId.get(aid);
+    if (mid) selectModel(mid);
+  });
+  (step.groups || []).forEach(gid => {
+    if (groupIndex.has(gid)) selectGroup(gid);
+  });
+
+  // View preset
+  if (step.view && PRESET_RAS[step.view]) {
+    animateToPreset(step.view);
+  }
+
+  // Predict mode
+  const predictEl = document.getElementById('tour-hud-predict');
+  const revealBtn = document.getElementById('tour-btn-reveal');
+  const textEl    = document.getElementById('tour-hud-text');
+
+  if (step.predict && !activeTour.revealed) {
+    predictEl.textContent = '🤔 ' + step.predict;
+    predictEl.classList.add('visible');
+    textEl.style.display  = 'none';
+    revealBtn.style.display = '';
+    document.getElementById('tour-btn-next').style.display = 'none';
+  } else {
+    predictEl.classList.remove('visible');
+    revealBtn.style.display = 'none';
+    document.getElementById('tour-btn-next').style.display = '';
+    textEl.style.display = '';
+    textEl.innerHTML = '';
+    const textNode = document.createElement('span');
+    applyGlossaryMarkup(textNode, step.text || '');
+    textEl.appendChild(textNode);
+    // Citations
+    (step.cite || []).forEach(c => {
+      const src = sources[c];
+      if (!src) return;
+      const sup = document.createElement('sup');
+      sup.className   = 'cite-sup';
+      sup.textContent = ' [src]';
+      sup.title       = src.citation;
+      textEl.appendChild(sup);
+    });
+  }
+
+  // Back button
+  document.getElementById('tour-btn-back').disabled = stepIdx === 0;
+}
+
+document.getElementById('tour-btn-reveal').addEventListener('click', () => {
+  if (!activeTour) return;
+  activeTour.revealed = true;
+  showTourStep();
+});
+
+document.getElementById('tour-btn-next').addEventListener('click', () => {
+  if (!activeTour) return;
+  activeTour.stepIdx++;
+  activeTour.revealed = false;
+  showTourStep();
+});
+
+document.getElementById('tour-btn-back').addEventListener('click', () => {
+  if (!activeTour || activeTour.stepIdx <= 0) return;
+  activeTour.stepIdx--;
+  activeTour.revealed = false;
+  showTourStep();
+});
+
+function endTour() {
+  activeTour = null;
+  tourHudEl.classList.remove('visible');
+  btnCloseTourEl.classList.remove('visible');
+  document.getElementById('tour-hud-predict').classList.remove('visible');
+}
+
+// ── Feature 5: Teach-before-test + Confidence ────────────────────────────────
+// DOM refs
+const learnCardOverlay  = document.getElementById('learn-card-overlay');
+const learnCardName     = document.getElementById('learn-card-name');
+const learnCardSummary  = document.getElementById('learn-card-summary');
+const learnCardTimer    = document.getElementById('learn-card-timer');
+const btnLearnCardCont  = document.getElementById('btn-learn-card-continue');
+const confidenceRow     = document.getElementById('confidence-row');
+const confLabel         = document.getElementById('conf-label');
+
+function showLearnCard(modelId, onDone) {
+  const entry = meshMap.get(modelId);
+  if (!entry) { onDone(); return; }
+  const topic   = getTopicForModel(entry.modelDef);
+  const summary = topic ? (topic.levels?.beginner?.summary || '') : '';
+
+  learnCardName.textContent   = entry.modelDef.name;
+  learnCardSummary.innerHTML  = '';
+  if (summary) {
+    applyGlossaryMarkup(learnCardSummary, summary);
+  } else {
+    learnCardSummary.textContent = 'Explore this structure in the 3D view.';
+  }
+
+  // Highlight the structure
+  selectModel(modelId);
+
+  // 5-second auto-timer
+  let remaining = 5;
+  learnCardTimer.textContent = 'Auto-continues in ' + remaining + 's…';
+  const interval = setInterval(() => {
+    remaining--;
+    if (remaining <= 0) {
+      clearInterval(interval);
+      learnCardTimer.textContent = '';
+    } else {
+      learnCardTimer.textContent = 'Auto-continues in ' + remaining + 's…';
+    }
+  }, 1000);
+
+  learnCardOverlay.classList.add('visible');
+
+  const proceed = () => {
+    clearInterval(interval);
+    learnCardOverlay.classList.remove('visible');
+    markTopicSeen(topic ? topic.id : modelId);
+    onDone();
+  };
+
+  const autoTimer = setTimeout(proceed, 5000);
+  btnLearnCardCont.onclick = () => { clearTimeout(autoTimer); proceed(); };
+}
+
+// Confidence selection
+function showConfidence(onPicked) {
+  pendingConfCallback = onPicked;
+  confidenceRow.classList.add('visible');
+  confLabel.classList.add('visible');
+  qhudNext.classList.remove('visible');
+}
+
+confidenceRow.querySelectorAll('.conf-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const conf = btn.dataset.conf;
+    confidenceRow.classList.remove('visible');
+    confLabel.classList.remove('visible');
+    if (pendingConfCallback) {
+      const cb = pendingConfCallback;
+      pendingConfCallback = null;
+      cb(conf);
+    }
+  });
+});
+
+// ── Feature 5: "Function" question type ──────────────────────────────────────
+function getCheckForModel(mod) {
+  const topic = getTopicForModel(mod);
+  if (!topic || !topic.checks || !topic.checks.length) return null;
+  const level = learnerProfile.level === 'expert' ? 'expert' : 'beginner';
+  const levelChecks = topic.checks.filter(c => c.level === level || !c.level);
+  if (!levelChecks.length) {
+    // fall back to any level
+    const anyChecks = topic.checks;
+    if (!anyChecks.length) return null;
+    return anyChecks[Math.floor(Math.random() * anyChecks.length)];
+  }
+  return levelChecks[Math.floor(Math.random() * levelChecks.length)];
+}
+
+function renderFunctionQ(modelId, entry) {
+  const check = getCheckForModel(entry.modelDef);
+  if (!check) {
+    // no function question available — skip to nameit
+    renderNameIt(modelId, entry);
+    return;
+  }
+  quizCurrentQ = { type: 'function', modelId, check };
+
+  qhudPrompt.textContent = check.q || 'Function question';
+  selectModel(modelId);
+
+  const options = check.options || [];
+  qhudOptions.innerHTML = '';
+  const shuffledIdxs = shuffle(options.map((_, i) => i));
+  shuffledIdxs.forEach((origIdx, i) => {
+    const btn = document.createElement('button');
+    btn.className      = 'qopt-btn';
+    btn.textContent    = (i + 1) + '. ' + (options[origIdx] || '');
+    btn.dataset.origIdx = origIdx;
+    btn.addEventListener('click', () => onFunctionAnswer(origIdx, check.answer, check, modelId));
+    qhudOptions.appendChild(btn);
+  });
+}
+
+function onFunctionAnswer(chosenIdx, correctIdx, check, modelId) {
+  if (quizAnswered) return;
+  quizAnswered = true;
+  const correct = chosenIdx === correctIdx;
+  const sources = learningData.sources || {};
+
+  qhudOptions.querySelectorAll('.qopt-btn').forEach(btn => {
+    btn.disabled = true;
+    if (parseInt(btn.dataset.origIdx, 10) === correctIdx) btn.classList.add('correct');
+    if (parseInt(btn.dataset.origIdx, 10) === chosenIdx && !correct) btn.classList.add('wrong');
+  });
+
+  if (correct) {
+    quizCorrect++;
+    qhudFeedback.textContent = '✓ Correct!';
+    qhudFeedback.style.color = '#56d364';
+  } else {
+    qhudFeedback.textContent = '';
+    qhudFeedback.style.color = '#f85149';
+    if (!quizMissed.includes(modelId)) quizMissed.push(modelId);
+  }
+
+  // Show explain + citations
+  if (check.explain) {
+    const expEl = document.createElement('div');
+    expEl.style.cssText = 'font-size:11px;color:#8b949e;margin-top:4px;line-height:1.5';
+    expEl.textContent   = check.explain;
+    qhudFeedback.appendChild(expEl);
+  }
+  if (check.cite && check.cite.length) {
+    const citeEl = document.createElement('div');
+    citeEl.style.cssText = 'font-size:10px;color:#57606a;margin-top:2px';
+    check.cite.forEach(c => {
+      const src = sources[c];
+      if (!src) return;
+      const span = document.createElement('span');
+      span.textContent = '[' + (src.citation || c) + '] ';
+      citeEl.appendChild(span);
+    });
+    qhudFeedback.appendChild(citeEl);
+  }
+
+  refreshProgressPanel();
+  showConfidence((conf) => {
+    applyConfidenceSRS(modelId, correct, conf);
+    qhudNext.classList.add('visible');
+  });
+}
+
+// ── Feature 7: About & Sources ───────────────────────────────────────────────
+function buildAboutSources() {
+  const srcs = learningData.sources || {};
+  const listEl = document.getElementById('about-sources-list');
+  listEl.innerHTML = '';
+  const ids = Object.keys(srcs);
+  if (!ids.length) {
+    const msg = document.createElement('div');
+    msg.style.cssText = 'font-size:11px;color:#8b949e';
+    msg.textContent   = 'No content sources yet.';
+    listEl.appendChild(msg);
+    return;
+  }
+  ids.forEach(cid => {
+    const src  = srcs[cid];
+    const item = document.createElement('div');
+    item.className = 'about-source-item';
+    const citeEl = document.createElement('span');
+    citeEl.textContent = src.citation || cid;
+    item.appendChild(citeEl);
+    if (src.url) {
+      const a = document.createElement('a');
+      a.href   = safeUrl(src.url) || '#';
+      a.target = '_blank';
+      a.rel    = 'noopener noreferrer';
+      a.textContent = ' [link]';
+      item.appendChild(a);
+    }
+    if (src.license) {
+      const lic = document.createElement('span');
+      lic.style.cssText = 'color:#57606a;font-size:10px';
+      lic.textContent   = ' (' + src.license + ')';
+      item.appendChild(lic);
+    }
+    listEl.appendChild(item);
+  });
+}
+
+const aboutOverlay = document.getElementById('about-overlay');
+document.getElementById('btn-about').addEventListener('click', openAbout);
+document.getElementById('btn-close-about').addEventListener('click', () => {
+  aboutOverlay.classList.remove('open');
+});
+
+function openAbout() {
+  // Atlas attribution
+  const atlasInfoEl = document.getElementById('about-atlas-info');
+  atlasInfoEl.innerHTML = '';
+  if (manifest && manifest.atlas) {
+    const a = manifest.atlas;
+    const p = document.createElement('p');
+    const strong = document.createElement('strong');
+    strong.textContent = a.name || 'Brain Atlas';
+    p.appendChild(strong);
+    if (a.license_url) {
+      p.appendChild(document.createTextNode(' — '));
+      const lnk = document.createElement('a');
+      lnk.href   = safeUrl(a.license_url) || '#';
+      lnk.target = '_blank';
+      lnk.rel    = 'noopener noreferrer';
+      lnk.textContent = '3D Slicer license';
+      p.appendChild(lnk);
+    }
+    if (a.citation_url) {
+      p.appendChild(document.createTextNode(' — '));
+      const lnk2 = document.createElement('a');
+      lnk2.href   = safeUrl(a.citation_url) || '#';
+      lnk2.target = '_blank';
+      lnk2.rel    = 'noopener noreferrer';
+      lnk2.textContent = 'Citation';
+      p.appendChild(lnk2);
+    }
+    atlasInfoEl.appendChild(p);
+  }
+  buildAboutSources();
+  aboutOverlay.classList.add('open');
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// TIER 3 — PATCHES TO EXISTING TIER 2 FUNCTIONS
+// ══════════════════════════════════════════════════════════════════════════════
+
+// ── Feature 5 (pool filtering) — patch buildQuizPool ────────────────────────
+const _origBuildQuizPool = buildQuizPool;
+buildQuizPool = function() {
+  const scopeEl = document.getElementById('qs-scope');
+  const scope   = scopeEl.value;
+
+  // Handle new scope values
+  if (scope === 'core') {
+    // Only models whose atlas_ids appear in topics with core:true
+    const coreAtlasIds = new Set();
+    (learningData.topics || []).filter(t => t.core).forEach(t => {
+      ((t.applies_to || {}).atlas_ids || []).forEach(id => coreAtlasIds.add(id));
+    });
+    const pool = [];
+    meshMap.forEach((entry, modelId) => {
+      if (isSkin(modelId)) return;
+      if (isHnm(modelId) && !hnmVisible) return;
+      const aids = (entry.modelDef.structures || []).map(s => s.atlas_id);
+      if (aids.some(id => coreAtlasIds.has(id))) pool.push(modelId);
+    });
+    // For new-to-it: also include any already seen items
+    if (scope === 'core') {
+      meshMap.forEach((entry, modelId) => {
+        if (pool.includes(modelId)) return;
+        if (isSkin(modelId) || (isHnm(modelId) && !hnmVisible)) return;
+        if (srsGet(modelId).seen) pool.push(modelId);
+      });
+    }
+    return pool.length >= 4 ? pool : _origBuildQuizPool();
+  }
+  if (scope === 'studied') {
+    const pool = [];
+    meshMap.forEach((entry, modelId) => {
+      if (isSkin(modelId)) return;
+      if (isHnm(modelId) && !hnmVisible) return;
+      if (learnerProfile.seen[getTopicForModel(entry.modelDef)?.id] || srsGet(modelId).seen) {
+        pool.push(modelId);
+      }
+    });
+    return pool.length >= 4 ? pool : _origBuildQuizPool();
+  }
+  return _origBuildQuizPool();
+};
+
+// ── Feature 5 (teach before test + function type) — patch showNextQuestion ───
+const _origShowNextQ = showNextQuestion;
+showNextQuestion = function() {
+  confidenceRow.classList.remove('visible');
+  confLabel.classList.remove('visible');
+  restoreNameItMaterials();
+
+  if (quizIdx >= quizQueue.length) {
+    endSession();
+    return;
+  }
+
+  const modelId = quizQueue[quizIdx];
+  const entry   = meshMap.get(modelId);
+  if (!entry) { quizIdx++; showNextQuestion(); return; }
+
+  // Teach before test: never-seen item → learn card first
+  if (!srsGet(modelId).seen && !learnerProfile.seen[getTopicForModel(entry.modelDef)?.id]) {
+    qhudProgress.textContent = 'Question ' + (quizIdx + 1) + ' / ' + quizQueue.length;
+    qhudFeedback.textContent = '';
+    qhudOptions.innerHTML    = '';
+    qhudNext.classList.remove('visible');
+    showLearnCard(modelId, () => {
+      // mark seen and proceed
+      srsData[modelId] = srsData[modelId] || {};
+      srsData[modelId].seen = true;
+      saveSRS();
+      _actualShowQ(modelId, entry);
+    });
+    return;
+  }
+
+  _actualShowQ(modelId, entry);
+};
+
+function _actualShowQ(modelId, entry) {
+  let qtype = quizType;
+  if (qtype === 'mixed') {
+    // Expert sees function questions too (if available)
+    const hasCheck = !!getCheckForModel(entry.modelDef);
+    if (hasCheck && Math.random() < 0.3) {
+      qtype = 'function';
+    } else {
+      qtype = Math.random() < 0.5 ? 'findit' : 'nameit';
+    }
+  }
+  quizCurrentQ = { type: qtype, modelId };
+
+  qhudProgress.textContent = 'Question ' + (quizIdx + 1) + ' / ' + quizQueue.length;
+  qhudFeedback.textContent = '';
+  qhudOptions.innerHTML    = '';
+  qhudNext.classList.remove('visible');
+  quizAnswered = false;
+
+  if (qtype === 'findit') {
+    renderFindIt(modelId, entry);
+  } else if (qtype === 'function') {
+    renderFunctionQ(modelId, entry);
+  } else {
+    renderNameIt(modelId, entry);
+  }
+}
+
+// ── Feature 5 (confidence) — patch onNameItAnswer ────────────────────────────
+const _origOnNameItAnswer = onNameItAnswer;
+onNameItAnswer = function(chosenId, targetId, opts) {
+  if (quizAnswered) return;
+  quizAnswered = true;
+  const correct = chosenId === targetId;
+
+  qhudOptions.querySelectorAll('.qopt-btn').forEach(btn => {
+    btn.disabled = true;
+    if (btn.dataset.optId === targetId) btn.classList.add('correct');
+    if (btn.dataset.optId === chosenId && !correct) btn.classList.add('wrong');
+  });
+
+  if (correct) {
+    quizCorrect++;
+    qhudFeedback.textContent = '✓ Correct!';
+    qhudFeedback.style.color = '#56d364';
+  } else {
+    qhudFeedback.textContent = '✗ Answer: ' + (meshMap.get(targetId)?.modelDef?.name || '');
+    qhudFeedback.style.color = '#f85149';
+    if (!quizMissed.includes(targetId)) quizMissed.push(targetId);
+  }
+
+  refreshProgressPanel();
+
+  showConfidence((conf) => {
+    applyConfidenceSRS(targetId, correct, conf);
+    // Hypercorrection: confident + wrong → show topic summary immediately
+    if (!correct && conf === 'knew') {
+      quizConfidentWrong++;
+      const entry2 = meshMap.get(targetId);
+      if (entry2) {
+        const topic2 = getTopicForModel(entry2.modelDef);
+        if (topic2) {
+          const summ2 = (topic2.levels?.beginner?.summary || topic2.levels?.expert?.summary || '');
+          if (summ2) {
+            const hyperEl = document.createElement('div');
+            hyperEl.style.cssText = 'font-size:11px;color:#f0883e;margin-top:6px;line-height:1.5;border-top:1px solid #30363d;padding-top:4px';
+            hyperEl.textContent   = summ2;
+            qhudFeedback.appendChild(hyperEl);
+          }
+        }
+      }
+    }
+    qhudNext.classList.add('visible');
+  });
+};
+
+// ── Feature 5 (confidence) — patch onFindItClick ─────────────────────────────
+const _origOnFindItClick = onFindItClick;
+onFindItClick = function(clickedModelId) {
+  if (quizAnswered) return;
+  quizAnswered = true;
+
+  const { modelId: targetId } = quizCurrentQ;
+  const correct = clickedModelId === targetId;
+
+  if (correct) {
+    quizCorrect++;
+    const e = meshMap.get(targetId);
+    if (e) e.meshes.forEach(m => m.material.emissive.setHex(0x00aa44));
+    qhudFeedback.textContent = '✓ Correct!';
+    qhudFeedback.style.color = '#56d364';
+  } else {
+    const ce = meshMap.get(clickedModelId);
+    if (ce) ce.meshes.forEach(m => m.material.emissive.setHex(0xaa2200));
+    const te = meshMap.get(targetId);
+    if (te) {
+      te.meshes.forEach(m => { m.material.emissive.setHex(0x00aa44); m.material.opacity = 1; m.material.transparent = false; });
+      const wb = new THREE.Box3().setFromObject(te.mesh);
+      fitBoxWorld(wb);
+    }
+    const clickedName = meshMap.get(clickedModelId)?.modelDef?.name || '?';
+    const targetName  = meshMap.get(targetId)?.modelDef?.name || '?';
+    qhudFeedback.textContent = '✗ You clicked: ' + clickedName + ' — correct: ' + targetName;
+    qhudFeedback.style.color = '#f85149';
+    if (!quizMissed.includes(targetId)) quizMissed.push(targetId);
+  }
+
+  refreshProgressPanel();
+
+  showConfidence((conf) => {
+    applyConfidenceSRS(targetId, correct, conf);
+    if (!correct && conf === 'knew') {
+      quizConfidentWrong++;
+      const entry2 = meshMap.get(targetId);
+      if (entry2) {
+        const topic2 = getTopicForModel(entry2.modelDef);
+        if (topic2) {
+          const summ2 = (topic2.levels?.beginner?.summary || topic2.levels?.expert?.summary || '');
+          if (summ2) {
+            const hyperEl = document.createElement('div');
+            hyperEl.style.cssText = 'font-size:11px;color:#f0883e;margin-top:6px;line-height:1.5;border-top:1px solid #30363d;padding-top:4px';
+            hyperEl.textContent   = summ2;
+            qhudFeedback.appendChild(hyperEl);
+          }
+        }
+      }
+    }
+    qhudNext.classList.add('visible');
+    if (correct) { quizIdx++; showNextQuestion(); }
+  });
+};
+
+// ── Confidence-aware SRS scheduling ──────────────────────────────────────────
+function applyConfidenceSRS(modelId, wasCorrect, confidence) {
+  const rec = srsGet(modelId);
+  rec.seen    = true;
+  rec.total   = (rec.total || 0) + 1;
+
+  if (wasCorrect && confidence === 'knew') {
+    rec.correct = (rec.correct || 0) + 1;
+    rec.box     = Math.min((rec.box || 0) + 1, 5);
+  } else if (wasCorrect && confidence === 'guessed') {
+    // stay in same box — no change to rec.box
+    rec.correct = (rec.correct || 0) + 1;
+  } else {
+    // wrong, or unsure
+    rec.box = 1;
+  }
+
+  const daysAhead = SRS_DAYS[rec.box] || 0;
+  const due       = new Date();
+  due.setHours(0, 0, 0, 0);
+  due.setDate(due.getDate() + daysAhead);
+  rec.due          = due.toISOString().slice(0, 10);
+  srsData[modelId] = rec;
+  saveSRS();
+}
+
+// ── Feature 5 (calibration) — patch endSession ───────────────────────────────
+const _origEndSession = endSession;
+endSession = function() {
+  leaveQuizMode();
+  refreshProgressPanel();
+
+  const total    = quizQueue.length;
+  const accuracy = total ? Math.round((quizCorrect / total) * 100) : 0;
+
+  const statsEl = document.getElementById('summ-stats');
+  let calibText = '';
+  if (quizConfidentWrong > 0) {
+    const totalWrong = total - quizCorrect;
+    calibText = '<div class="summ-stat" style="color:#f0883e">Calibration: confident on ' +
+      quizConfidentWrong + ' of ' + totalWrong + ' wrong answer' + (totalWrong !== 1 ? 's' : '') + '</div>';
+  }
+
+  statsEl.innerHTML =
+    '<div class="summ-stat">Questions: <strong>' + total + '</strong></div>' +
+    '<div class="summ-stat">Correct: <strong>' + quizCorrect + '</strong></div>' +
+    '<div class="summ-stat">Accuracy: <strong>' + accuracy + '%</strong></div>' +
+    calibText;
+
+  quizConfidentWrong = 0;
+
+  const missedEl = document.getElementById('summ-missed-list');
+  missedEl.innerHTML = '';
+  if (quizMissed.length) {
+    const h = document.createElement('div');
+    h.style.cssText = 'font-size:12px;color:#8b949e;margin-bottom:5px';
+    h.textContent   = 'Missed structures (click to inspect):';
+    missedEl.appendChild(h);
+    quizMissed.forEach(mid => {
+      const e = meshMap.get(mid);
+      if (!e) return;
+      const item = document.createElement('div');
+      item.className   = 'summ-missed-item';
+      item.textContent = e.modelDef.name;
+      item.addEventListener('click', () => {
+        quizSummaryEl.classList.remove('visible');
+        setMode('explore');
+        selectModel(mid);
+      });
+      missedEl.appendChild(item);
+    });
+  } else {
+    missedEl.innerHTML = '<div style="font-size:12px;color:#56d364;margin-top:6px">No misses — perfect session!</div>';
+  }
+
+  quizCurrentQ = null;
+  quizSummaryEl.classList.add('visible');
+};
+
+// ── Feature 6a: Name-it distractors — ensure atlas_id swap for contralateral ─
+// The existing buildDisctractors already does hemisphere + name-swap checks.
+// Additional guarantee: swap left_X <-> right_X in atlas_id directly.
+const _origBuildDistractors = buildDisctractors;
+buildDisctractors = function(targetId, targetEntry, count) {
+  const candidates = _origBuildDistractors(targetId, targetEntry, count + 5);
+  // Ensure the atlas_id-swapped counterpart is at priority 0
+  const atlasIds = (targetEntry.modelDef.structures || []).map(s => s.atlas_id);
+  atlasIds.forEach(aid => {
+    let swappedAid = null;
+    if (aid.startsWith('left_')) swappedAid = 'right_' + aid.slice(5);
+    else if (aid.startsWith('right_')) swappedAid = 'left_' + aid.slice(6);
+    if (swappedAid) {
+      const contraModelId = atlasIdToModelId.get(swappedAid);
+      if (contraModelId && contraModelId !== targetId && !candidates.includes(contraModelId)) {
+        candidates.unshift(contraModelId);
+      }
+    }
+  });
+  return candidates.slice(0, count);
+};
+
+// ── Start quiz button: reset confident-wrong counter ─────────────────────────
+document.getElementById('btn-start-quiz').addEventListener('click', () => {
+  quizConfidentWrong = 0;
+}, true); // capture phase, runs before the existing handler
+</script>
+</body>
+</html>

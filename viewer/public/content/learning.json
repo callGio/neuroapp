@@ -1,0 +1,659 @@
+{
+  "version": 1,
+  "status": "pilot",
+  "note": "Every point is paraphrased from the cited source and must be checked against it before the topic is marked reviewed. Educational use only; not medical advice.",
+  "sources": {
+    "os_ap_13_2": {
+      "citation": "Betts, J. G., Young, K. A., Wise, J. A., Johnson, E., Poe, B., Kruse, D. H., Korol, O., Johnson, J. E., Womble, M., & DeSaix, P. (2022). The central nervous system (Section 13.2). In Anatomy and physiology (2nd ed.). OpenStax.",
+      "url": "https://openstax.org/books/anatomy-and-physiology-2e/pages/13-2-the-central-nervous-system",
+      "license": "CC BY 4.0"
+    },
+    "os_ap_1_6": {
+      "citation": "Betts, J. G., Young, K. A., Wise, J. A., Johnson, E., Poe, B., Kruse, D. H., Korol, O., Johnson, J. E., Womble, M., & DeSaix, P. (2022). Anatomical terminology (Section 1.6). In Anatomy and physiology (2nd ed.). OpenStax.",
+      "url": "https://openstax.org/books/anatomy-and-physiology-2e/pages/1-6-anatomical-terminology",
+      "license": "CC BY 4.0"
+    },
+    "os_ibn_1_3": {
+      "citation": "OpenStax. (n.d.). The central nervous system: CNS (Section 1.3). In Introduction to behavioral neuroscience. OpenStax.",
+      "url": "https://openstax.org/books/introduction-behavioral-neuroscience/pages/1-3-the-central-nervous-system-cns",
+      "license": "CC BY 4.0"
+    },
+    "sp_hippocampus": {
+      "citation": "Fogwe, L. A., Reddy, V., & Mesfin, F. B. (2023). Neuroanatomy, hippocampus. In StatPearls. StatPearls Publishing.",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK482171/",
+      "license": "CC BY-NC-ND 4.0"
+    },
+    "sp_amygdala": {
+      "citation": "AbuHasan, Q., Reddy, V., & Siddiqui, W. (2023). Neuroanatomy, amygdala. In StatPearls. StatPearls Publishing.",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK537102/",
+      "license": "CC BY-NC-ND 4.0"
+    },
+    "sp_thalamic_nuclei": {
+      "citation": "Sheridan, N., & Tadi, P. (2023). Neuroanatomy, thalamic nuclei. In StatPearls. StatPearls Publishing.",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/31751098/",
+      "license": "CC BY-NC-ND 4.0"
+    },
+    "sp_cerebellum": {
+      "citation": "Jimsheleishvili, S., & Dididze, M. (2023). Neuroanatomy, cerebellum. In StatPearls. StatPearls Publishing.",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/30844194/",
+      "license": "CC BY-NC-ND 4.0"
+    },
+    "dobson_2017": {
+      "citation": "Dobson, J. L., Perez, J., & Linderholm, T. (2017). Distributed retrieval practice promotes superior recall of anatomy information. Anatomical Sciences Education, 10(4), 339-347. https://doi.org/10.1002/ase.1668",
+      "url": "https://doi.org/10.1002/ase.1668",
+      "license": "Journal article (cited, not reproduced)"
+    }
+  },
+
+  "glossary": [
+    { "term": "anterior", "definition": "Toward the front. In the brain this is toward the forehead.", "cite": ["os_ap_1_6"] },
+    { "term": "posterior", "definition": "Toward the back.", "cite": ["os_ap_1_6"] },
+    { "term": "superior", "definition": "Above another part; toward the top of the head.", "cite": ["os_ap_1_6"] },
+    { "term": "inferior", "definition": "Below another part.", "cite": ["os_ap_1_6"] },
+    { "term": "medial", "definition": "Toward the midline that divides left from right.", "cite": ["os_ap_1_6"] },
+    { "term": "lateral", "definition": "Toward the side, away from the midline.", "cite": ["os_ap_1_6"] },
+    { "term": "deep", "definition": "Farther from the surface.", "cite": ["os_ap_1_6"] },
+    { "term": "superficial", "definition": "Closer to the surface.", "cite": ["os_ap_1_6"] },
+    { "term": "sagittal", "definition": "A cut that splits a structure into left and right parts.", "cite": ["os_ap_1_6"] },
+    { "term": "coronal", "definition": "Also called frontal: a cut that splits a structure into front and back parts.", "cite": ["os_ap_1_6"] },
+    { "term": "transverse", "definition": "A horizontal cut that splits a structure into upper and lower parts (the app's Axial slider).", "cite": ["os_ap_1_6"] },
+    { "term": "dorsal", "definition": "In the brain, toward the top; in the spinal cord, toward the back.", "cite": ["os_ibn_1_3"] },
+    { "term": "ventral", "definition": "In the brain, toward the bottom; in the spinal cord, toward the front.", "cite": ["os_ibn_1_3"] },
+    { "term": "contralateral", "definition": "On the opposite side. Example: the right motor cortex controls the left side of the body.", "cite": ["os_ibn_1_3"] },
+    { "term": "ipsilateral", "definition": "On the same side.", "cite": ["os_ibn_1_3"] },
+    { "term": "gyrus", "definition": "A ridge on the folded surface of the brain (plural: gyri).", "cite": ["os_ap_13_2"] },
+    { "term": "sulcus", "definition": "A groove between two gyri (plural: sulci).", "cite": ["os_ap_13_2"] },
+    { "term": "cortex", "definition": "The thin outer sheet of the cerebrum; the word comes from the Latin for bark.", "cite": ["os_ibn_1_3"] },
+    { "term": "tract", "definition": "A bundle of axons in white matter that carries signals between regions.", "cite": ["os_ibn_1_3"] },
+    { "term": "hemisphere", "definition": "One half (left or right) of the cerebrum; together the hemispheres make up most of the brain.", "cite": ["os_ap_13_2", "os_ibn_1_3"] }
+  ],
+
+  "topics": [
+    {
+      "id": "brain-overview",
+      "title": "The brain at a glance",
+      "applies_to": { "atlas_ids": [], "groups": ["Brain"] },
+      "core": true,
+      "levels": {
+        "beginner": {
+          "summary": "The adult brain is usually described as four big regions. Learning these four first gives you a map for everything else.",
+          "points": [
+            { "text": "The four major regions are the cerebrum, the diencephalon, the brain stem, and the cerebellum.", "cite": ["os_ap_13_2"] },
+            { "text": "The wrinkled outer layer of the cerebrum is the cerebral cortex. Its folding packs a large surface into the skull.", "cite": ["os_ap_13_2"] },
+            { "text": "A deep groove, the longitudinal fissure, splits the cerebrum into left and right hemispheres.", "cite": ["os_ap_13_2"] },
+            { "text": "Many control relationships are crossed: the right motor cortex moves the left side of the body.", "cite": ["os_ibn_1_3"] }
+          ]
+        },
+        "expert": {
+          "summary": "Developmentally, the forebrain (prosencephalon) divides into telencephalon and diencephalon, the midbrain stays undivided, and the hindbrain (rhombencephalon) becomes the metencephalon and myelencephalon. The app's group hierarchy follows this scheme.",
+          "points": [
+            { "text": "The cerebral hemispheres derive from the telencephalon and make up roughly 85% of brain mass.", "cite": ["os_ibn_1_3"] },
+            { "text": "The ventricles are remnants of the neural tube's cavity: lateral ventricles (telencephalon), third ventricle (diencephalon), fourth ventricle (rhombencephalon).", "cite": ["os_ibn_1_3"] }
+          ]
+        }
+      },
+      "connections": [],
+      "clinical": [],
+      "checks": [
+        { "level": "beginner", "q": "Which list names the four major regions of the adult brain?", "options": ["Cerebrum, diencephalon, brain stem, cerebellum", "Frontal, parietal, temporal, occipital", "Cortex, white matter, ventricles, spinal cord"], "answer": 0, "explain": "Frontal, parietal, temporal and occipital are lobes of the cerebrum, one of the four regions.", "cite": ["os_ap_13_2"] }
+      ]
+    },
+
+    {
+      "id": "frontal-lobe",
+      "title": "Frontal lobe",
+      "applies_to": { "atlas_ids": [], "groups": ["left_frontal_lobe", "right_frontal_lobe"] },
+      "core": true,
+      "levels": {
+        "beginner": {
+          "summary": "The frontal lobe sits at the front of each hemisphere, in front of the central sulcus. It is mainly about movement, planning, and thinking.",
+          "points": [
+            { "text": "The central sulcus separates the frontal lobe from the parietal lobe behind it.", "cite": ["os_ap_13_2"] },
+            { "text": "Its back strip, the precentral gyrus, is the primary motor cortex.", "cite": ["os_ap_13_2"] },
+            { "text": "The prefrontal cortex at the front supports functions behind personality, short-term memory, and consciousness.", "cite": ["os_ap_13_2"] }
+          ]
+        },
+        "expert": {
+          "summary": "Motor hierarchy within the frontal lobe: primary motor cortex (precentral gyrus), premotor area for movement planning, frontal eye fields, and Broca's area.",
+          "points": [
+            { "text": "The premotor area plans movements; the frontal eye fields control eye movements and attention to visual stimuli.", "cite": ["os_ap_13_2"] },
+            { "text": "Broca's area supports language production and the movements of speech, and in most people is present only on the left.", "cite": ["os_ap_13_2"] }
+          ]
+        }
+      },
+      "connections": [
+        { "atlas_ids": ["left_central_sulcus", "right_central_sulcus"], "label": "Posterior border: central sulcus", "cite": ["os_ap_13_2"] }
+      ],
+      "clinical": [],
+      "checks": [
+        { "level": "beginner", "q": "Which groove separates the frontal lobe from the parietal lobe?", "options": ["Central sulcus", "Lateral sulcus", "Longitudinal fissure"], "answer": 0, "explain": "The lateral sulcus separates the temporal lobe; the longitudinal fissure separates the hemispheres.", "cite": ["os_ap_13_2"] }
+      ]
+    },
+
+    {
+      "id": "parietal-lobe",
+      "title": "Parietal lobe",
+      "applies_to": { "atlas_ids": [], "groups": ["left_parietal_lobe", "right_parietal_lobe"] },
+      "core": true,
+      "levels": {
+        "beginner": {
+          "summary": "The parietal lobe lies behind the central sulcus. Its main job is body sensation: touch, pressure, pain, and sensing where your body is.",
+          "points": [
+            { "text": "Its main sensation is somatosensation, the general senses of the body.", "cite": ["os_ap_13_2"] },
+            { "text": "The parieto-occipital sulcus, visible on the inner (medial) surface, separates it from the occipital lobe.", "cite": ["os_ap_13_2"] }
+          ]
+        },
+        "expert": {
+          "summary": "The postcentral gyrus (Brodmann areas 1, 2 and 3) is the primary somatosensory cortex; parietal regions also join the temporal lobe in higher visual processing.",
+          "points": [
+            { "text": "More complex visual processing extends beyond the occipital lobe into the temporal and parietal lobes.", "cite": ["os_ap_13_2"] }
+          ]
+        }
+      },
+      "connections": [],
+      "clinical": [],
+      "checks": []
+    },
+
+    {
+      "id": "temporal-lobe",
+      "title": "Temporal lobe",
+      "applies_to": { "atlas_ids": [], "groups": ["left_temporal_lobe", "right_temporal_lobe"] },
+      "core": true,
+      "levels": {
+        "beginner": {
+          "summary": "The temporal lobe sits low on the side of each hemisphere, under the lateral sulcus. It handles hearing and plays a big part in memory.",
+          "points": [
+            { "text": "The lateral sulcus separates the temporal lobe from the lobes above it.", "cite": ["os_ap_13_2"] },
+            { "text": "Primary auditory cortex (Brodmann areas 41 and 42) lies in the superior temporal lobe.", "cite": ["os_ap_13_2"] },
+            { "text": "Because parts of the temporal lobe belong to the limbic system, memory is a key temporal-lobe function.", "cite": ["os_ap_13_2"] }
+          ]
+        },
+        "expert": {
+          "summary": "The medial temporal lobe houses the hippocampal formation and amygdala; select those structures for detail.",
+          "points": []
+        }
+      },
+      "connections": [
+        { "atlas_ids": ["left_hippocampus", "right_hippocampus"], "label": "Medial temporal: hippocampus", "cite": ["sp_hippocampus"] },
+        { "atlas_ids": ["left_amygdala", "right_amygdala"], "label": "Medial temporal: amygdala", "cite": ["sp_amygdala"] }
+      ],
+      "clinical": [],
+      "checks": [
+        { "level": "beginner", "q": "Primary auditory cortex is found in which lobe?", "options": ["Temporal", "Occipital", "Frontal"], "answer": 0, "explain": "Brodmann areas 41 and 42 lie in the superior temporal lobe.", "cite": ["os_ap_13_2"] }
+      ]
+    },
+
+    {
+      "id": "occipital-lobe",
+      "title": "Occipital lobe and visual cortex",
+      "applies_to": { "atlas_ids": ["left_visual_cortex", "right_visual_cortex"], "groups": ["left_occipital_lobe", "right_occipital_lobe"] },
+      "core": true,
+      "levels": {
+        "beginner": {
+          "summary": "The occipital lobe is at the very back of the brain and is where vision first reaches the cortex.",
+          "points": [
+            { "text": "Brodmann areas 17 and 18 in the occipital lobe handle primary visual perception.", "cite": ["os_ap_13_2"] },
+            { "text": "On the outer surface there is no obvious border between the occipital lobe and the parietal or temporal lobes.", "cite": ["os_ap_13_2"] }
+          ]
+        },
+        "expert": {
+          "summary": "Visual processing continues beyond primary visual cortex into temporal and parietal regions.",
+          "points": [
+            { "text": "Complex visual processing involves the temporal and parietal lobes as well as the occipital lobe.", "cite": ["os_ap_13_2"] }
+          ]
+        }
+      },
+      "connections": [],
+      "clinical": [],
+      "checks": [
+        { "level": "beginner", "q": "Primary visual perception depends on Brodmann areas 17 and 18 in which lobe?", "options": ["Occipital", "Parietal", "Temporal"], "answer": 0, "explain": "Areas 17 and 18 are in the occipital lobe.", "cite": ["os_ap_13_2"] }
+      ]
+    },
+
+    {
+      "id": "precentral-gyrus",
+      "title": "Precentral gyrus (primary motor cortex)",
+      "applies_to": { "atlas_ids": ["left_precentral_gyrus", "right_precentral_gyrus"], "groups": [] },
+      "core": true,
+      "levels": {
+        "beginner": {
+          "summary": "This ridge, just in front of the central sulcus, sends the commands that move your muscles.",
+          "points": [
+            { "text": "The precentral gyrus is the primary motor cortex.", "cite": ["os_ap_13_2"] },
+            { "text": "Control is crossed: the right motor cortex controls the left side of the body.", "cite": ["os_ibn_1_3"] }
+          ]
+        },
+        "expert": {
+          "summary": "Upper motor neurons here instruct spinal cord neurons that drive skeletal muscle.",
+          "points": [
+            { "text": "Cells of this region are upper motor neurons that instruct spinal cord cells to move skeletal muscles.", "cite": ["os_ap_13_2"] },
+            { "text": "Movement planning upstream involves the premotor area and the basal nuclei.", "cite": ["os_ap_13_2"] }
+          ]
+        }
+      },
+      "connections": [
+        { "atlas_ids": ["left_central_sulcus", "right_central_sulcus"], "label": "Just anterior to the central sulcus", "cite": ["os_ap_13_2"] },
+        { "atlas_ids": ["left_postcentral_gyrus", "right_postcentral_gyrus"], "label": "Partner across the sulcus: postcentral gyrus", "cite": ["os_ap_13_2"] }
+      ],
+      "clinical": [],
+      "checks": [
+        { "level": "beginner", "q": "The right precentral gyrus mainly controls movement of which side of the body?", "options": ["Left", "Right", "Both equally"], "answer": 0, "explain": "Motor control is contralateral (crossed).", "cite": ["os_ibn_1_3"] }
+      ]
+    },
+
+    {
+      "id": "postcentral-gyrus",
+      "title": "Postcentral gyrus (primary somatosensory cortex)",
+      "applies_to": { "atlas_ids": ["left_postcentral_gyrus", "right_postcentral_gyrus"], "groups": [] },
+      "core": true,
+      "levels": {
+        "beginner": {
+          "summary": "This ridge, just behind the central sulcus, is where body sensations first reach the cortex.",
+          "points": [
+            { "text": "The postcentral gyrus is the primary somatosensory cortex.", "cite": ["os_ap_13_2"] },
+            { "text": "It processes touch, pressure, pain, itch, vibration, and the sense of body position.", "cite": ["os_ap_13_2"] }
+          ]
+        },
+        "expert": {
+          "summary": "Corresponds to Brodmann areas 1, 2 and 3.",
+          "points": [
+            { "text": "The primary somatosensory cortex is identified as Brodmann areas 1, 2 and 3.", "cite": ["os_ap_13_2"] }
+          ]
+        }
+      },
+      "connections": [
+        { "atlas_ids": ["left_central_sulcus", "right_central_sulcus"], "label": "Just posterior to the central sulcus", "cite": ["os_ap_13_2"] },
+        { "atlas_ids": ["left_precentral_gyrus", "right_precentral_gyrus"], "label": "Partner across the sulcus: precentral gyrus", "cite": ["os_ap_13_2"] }
+      ],
+      "clinical": [],
+      "checks": [
+        { "level": "expert", "q": "Primary somatosensory cortex corresponds to which Brodmann areas?", "options": ["1, 2 and 3", "17 and 18", "41 and 42"], "answer": 0, "explain": "17/18 are visual and 41/42 are auditory.", "cite": ["os_ap_13_2"] }
+      ]
+    },
+
+    {
+      "id": "corpus-callosum",
+      "title": "Corpus callosum",
+      "applies_to": { "atlas_ids": ["corpus_callosum"], "groups": [] },
+      "core": true,
+      "levels": {
+        "beginner": {
+          "summary": "A thick band of white matter deep in the brain that links the left and right hemispheres.",
+          "points": [
+            { "text": "The corpus callosum is the major pathway for communication between the two cerebral hemispheres.", "cite": ["os_ap_13_2"] }
+          ]
+        },
+        "expert": { "summary": "The largest commissural white-matter structure of the cerebrum.", "points": [] }
+      },
+      "connections": [],
+      "clinical": [],
+      "checks": []
+    },
+
+    {
+      "id": "basal-nuclei",
+      "title": "Basal nuclei (basal ganglia)",
+      "applies_to": {
+        "atlas_ids": ["left_caudate_nucleus", "right_caudate_nucleus", "left_putamen", "right_putamen", "left_globus_pallidus_pars_externa", "right_globus_pallidus_pars_externa", "left_globus_pallidus_pars_interna", "right_globus_pallidus_pars_interna", "left_substantia_nigra", "right_substantia_nigra", "left_subthalamic_nucleus", "right_subthalamic_nucleus"],
+        "groups": ["striatum_of_left_cerebral_hemisphere", "striatum_of_right_cerebral_hemisphere", "left_lentiform_nucleus", "right_lentiform_nucleus"]
+      },
+      "core": true,
+      "levels": {
+        "beginner": {
+          "summary": "A set of deep nuclei that help decide whether a movement happens. Their most important job is planning movement.",
+          "points": [
+            { "text": "The basal nuclei compare cortical activity with the overall state of the nervous system to influence whether a movement takes place.", "cite": ["os_ap_13_2"] },
+            { "text": "The caudate and putamen together form the striatum, the entry point for cortical input.", "cite": ["os_ap_13_2"] }
+          ]
+        },
+        "expert": {
+          "summary": "Two opposing loops through the thalamus gate cortical excitation, and dopamine from the substantia nigra tilts the balance between them.",
+          "points": [
+            { "text": "Direct pathway: striatum to internal globus pallidus/substantia nigra pars reticulata to thalamus to cortex. It disinhibits the thalamus, allowing cortical excitation; dopamine activates it.", "cite": ["os_ap_13_2"] },
+            { "text": "Indirect pathway: striatum to external globus pallidus to subthalamic nucleus to internal globus pallidus/pars reticulata. It reinforces thalamic inhibition; dopamine inhibits it.", "cite": ["os_ap_13_2"] },
+            { "text": "Substantia nigra pars compacta releases dopamine into the striatum.", "cite": ["os_ap_13_2"] }
+          ]
+        }
+      },
+      "connections": [
+        { "atlas_ids": ["left_substantia_nigra", "right_substantia_nigra"], "label": "Dopamine input to striatum", "cite": ["os_ap_13_2"] },
+        { "atlas_ids": ["left_subthalamic_nucleus", "right_subthalamic_nucleus"], "label": "Indirect pathway relay", "cite": ["os_ap_13_2"] },
+        { "atlas_ids": [], "groups": ["thalamus"], "label": "Output target: thalamus", "cite": ["os_ap_13_2"] }
+      ],
+      "clinical": [],
+      "checks": [
+        { "level": "beginner", "q": "Which two nuclei together form the striatum?", "options": ["Caudate and putamen", "Globus pallidus and subthalamic nucleus", "Hippocampus and amygdala"], "answer": 0, "explain": "All cortical input to the basal nuclei enters through the striatum.", "cite": ["os_ap_13_2"] },
+        { "level": "expert", "q": "What does dopamine do to the indirect pathway?", "options": ["Inhibits it", "Activates it", "Has no effect"], "answer": 0, "explain": "Dopamine activates the direct pathway and inhibits the indirect pathway, both favoring movement.", "cite": ["os_ap_13_2"] }
+      ]
+    },
+
+    {
+      "id": "thalamus",
+      "title": "Thalamus",
+      "applies_to": { "atlas_ids": [], "groups": ["thalamus", "left_thalamus", "right_thalamus"] },
+      "core": true,
+      "levels": {
+        "beginner": {
+          "summary": "The brain's central relay hub: almost every sense passes through it on the way to the cortex.",
+          "points": [
+            { "text": "All sensory information except smell passes through the thalamus before reaching the cortex.", "cite": ["os_ap_13_2"] },
+            { "text": "It does more than relay; it also processes information, for example influencing which visual stimuli get attention.", "cite": ["os_ap_13_2"] }
+          ]
+        },
+        "expert": {
+          "summary": "About 60 nuclei, grouped on each side into anterior, medial and lateral groups, plus a reticular nucleus that regulates thalamic activity.",
+          "points": [
+            { "text": "Motor, limbic and sensory pathways (except olfaction) pass through the thalamus; it divides into roughly 60 nuclei.", "cite": ["sp_thalamic_nuclei"] },
+            { "text": "On each side the nuclei form lateral, medial and anterior groups; relay nuclei make up most of the thalamus.", "cite": ["sp_thalamic_nuclei"] },
+            { "text": "The reticular nucleus projects back onto the thalamus rather than to cortex, and contributes to alertness and attention.", "cite": ["sp_thalamic_nuclei"] },
+            { "text": "It receives the primary output of the basal nuclei.", "cite": ["os_ap_13_2"] }
+          ]
+        }
+      },
+      "connections": [
+        { "atlas_ids": ["left_hippocampus", "right_hippocampus"], "label": "Receives hippocampal output via the fornix (anterior nuclei)", "cite": ["sp_hippocampus"] }
+      ],
+      "clinical": [
+        { "text": "An anatomic variant, the artery of Percheron (estimated in 4% to 12% of people), can cause infarction of both thalami when blocked.", "cite": ["sp_thalamic_nuclei"] }
+      ],
+      "checks": [
+        { "level": "beginner", "q": "Which sense does NOT pass through the thalamus on its way to the cortex?", "options": ["Smell", "Vision", "Touch"], "answer": 0, "explain": "Olfaction is the exception.", "cite": ["os_ap_13_2"] }
+      ]
+    },
+
+    {
+      "id": "hypothalamus",
+      "title": "Hypothalamus",
+      "applies_to": { "atlas_ids": [], "groups": ["hypothalamus", "left_hypothalamus", "right_hypothalamus"] },
+      "core": true,
+      "levels": {
+        "beginner": {
+          "summary": "A small region below the thalamus that keeps the body's internal conditions stable.",
+          "points": [
+            { "text": "It lies below and slightly in front of the thalamus.", "cite": ["os_ap_13_2"] },
+            { "text": "It largely regulates homeostasis.", "cite": ["os_ap_13_2"] }
+          ]
+        },
+        "expert": {
+          "summary": "Controls the autonomic nervous system and, through the pituitary, the endocrine system; parts contribute to limbic functions.",
+          "points": [
+            { "text": "It controls the autonomic nervous system and the endocrine system via the anterior pituitary.", "cite": ["os_ap_13_2"] },
+            { "text": "Parts of the hypothalamus contribute to memory and emotion as part of the limbic system.", "cite": ["os_ap_13_2"] }
+          ]
+        }
+      },
+      "connections": [
+        { "atlas_ids": ["left_amygdala", "right_amygdala"], "label": "Input from amygdala (stria terminalis)", "cite": ["sp_amygdala"] }
+      ],
+      "clinical": [],
+      "checks": [
+        { "level": "beginner", "q": "The hypothalamus mainly regulates…", "options": ["Homeostasis", "Voluntary movement", "Vision"], "answer": 0, "explain": "It keeps internal conditions stable through autonomic and endocrine control.", "cite": ["os_ap_13_2"] }
+      ]
+    },
+
+    {
+      "id": "hippocampus",
+      "title": "Hippocampus",
+      "applies_to": { "atlas_ids": ["left_hippocampus", "right_hippocampus"], "groups": [] },
+      "core": true,
+      "levels": {
+        "beginner": {
+          "summary": "A curved structure deep in the temporal lobe that is essential for turning experiences into lasting memories.",
+          "points": [
+            { "text": "The hippocampus is closely associated with consolidating memories and with decision-making.", "cite": ["sp_hippocampus"] },
+            { "text": "It and the amygdala are involved in forming long-term memories and emotional responses.", "cite": ["os_ap_13_2"] }
+          ]
+        },
+        "expert": {
+          "summary": "Three zones (dentate gyrus, hippocampus proper, subiculum); Cornu Ammonis subfields CA1 to CA4; main output via the fornix.",
+          "points": [
+            { "text": "It lies within the parahippocampal gyrus and bulges into the temporal (inferior) horn of the lateral ventricle.", "cite": ["sp_hippocampus"] },
+            { "text": "Its three zones are the dentate gyrus, the hippocampus proper, and the subiculum.", "cite": ["sp_hippocampus"] },
+            { "text": "The Cornu Ammonis is divided into subfields CA1, CA2, CA3 and CA4; CA3 receives input from dentate granule cells.", "cite": ["sp_hippocampus"] },
+            { "text": "The fornix is its main outflow bundle, projecting toward the anterior thalamus and hypothalamus.", "cite": ["sp_hippocampus"] }
+          ]
+        }
+      },
+      "connections": [
+        { "atlas_ids": ["left_fornix_of_forebrain", "right_fornix_of_forebrain"], "label": "Main output: fornix", "cite": ["sp_hippocampus"] },
+        { "atlas_ids": ["left_anterior_thalamic_nucleus", "right_anterior_thalamic_nucleus"], "label": "Target: anterior thalamus", "cite": ["sp_hippocampus"] },
+        { "atlas_ids": ["left_parahippocampal_gyrus", "right_parahippocampal_gyrus"], "label": "Surrounding: parahippocampal gyrus", "cite": ["sp_hippocampus"] },
+        { "atlas_ids": ["temporal_horn_of_left_lateral_ventricle", "temporal_horn_of_right_lateral_ventricle"], "label": "Bulges into: temporal horn of lateral ventricle", "cite": ["sp_hippocampus"] }
+      ],
+      "clinical": [
+        { "text": "Alzheimer's disease involves early loss of synapses in the hippocampus, and loss of CA1 pyramidal neurons; these changes may contribute to memory loss.", "cite": ["sp_hippocampus"] },
+        { "text": "In medial temporal lobe epilepsy caused by hippocampal sclerosis, surgeons may remove the hippocampus (hippocampectomy).", "cite": ["sp_hippocampus"] }
+      ],
+      "checks": [
+        { "level": "beginner", "q": "The hippocampus is best known for its role in…", "options": ["Forming lasting memories", "Controlling breathing", "Primary vision"], "answer": 0, "explain": "It is central to memory consolidation.", "cite": ["sp_hippocampus"] },
+        { "level": "expert", "q": "What is the main output bundle of the hippocampus?", "options": ["Fornix", "Corpus callosum", "Optic tract"], "answer": 0, "explain": "The fornix carries hippocampal output toward the anterior thalamus and hypothalamus.", "cite": ["sp_hippocampus"] }
+      ]
+    },
+
+    {
+      "id": "amygdala",
+      "title": "Amygdala",
+      "applies_to": { "atlas_ids": ["left_amygdala", "right_amygdala"], "groups": [] },
+      "core": true,
+      "levels": {
+        "beginner": {
+          "summary": "An almond-shaped cluster deep in the temporal lobe that helps process emotions, especially fear.",
+          "points": [
+            { "text": "The amygdala is almond-shaped and lies in the temporal lobe, just beneath the uncus.", "cite": ["sp_amygdala"] },
+            { "text": "It helps regulate anxiety, aggression, fear conditioning, emotional memory, and social cognition.", "cite": ["sp_amygdala"] }
+          ]
+        },
+        "expert": {
+          "summary": "About 13 nuclei in five functional groups; outputs reach the septal area, hypothalamus and mediodorsal thalamus.",
+          "points": [
+            { "text": "Its roughly 13 nuclei sort into basolateral, cortical-like, central, other amygdaloid, and extended amygdala groups.", "cite": ["sp_amygdala"] },
+            { "text": "A dorsal output route (stria terminalis) reaches the septal area and hypothalamus; a ventral route (ventral amygdalofugal pathway) also reaches the mediodorsal thalamic nucleus.", "cite": ["sp_amygdala"] },
+            { "text": "Amygdala activation modulates how emotionally charged memories are acquired and consolidated.", "cite": ["sp_amygdala"] }
+          ]
+        }
+      },
+      "connections": [
+        { "atlas_ids": [], "groups": ["hypothalamus"], "label": "Output: hypothalamus (stria terminalis)", "cite": ["sp_amygdala"] },
+        { "atlas_ids": ["left_dorsomedial_thalamic_nucleus", "right_dorsomedial_thalamic_nucleus"], "label": "Output: mediodorsal thalamus", "cite": ["sp_amygdala"] }
+      ],
+      "clinical": [
+        { "text": "Bilateral reductions of hippocampal and amygdala volume have been reported in PTSD.", "cite": ["sp_amygdala"] }
+      ],
+      "checks": [
+        { "level": "beginner", "q": "The amygdala is most associated with…", "options": ["Fear and emotional memory", "Hearing", "Balance"], "answer": 0, "explain": "It processes fear, anxiety and emotional memory.", "cite": ["sp_amygdala"] }
+      ]
+    },
+
+    {
+      "id": "midbrain",
+      "title": "Midbrain",
+      "applies_to": { "atlas_ids": ["part_of_midbrain"], "groups": ["midbrain", "left_side_of_midbrain", "right_side_of_midbrain"] },
+      "core": true,
+      "levels": {
+        "beginner": {
+          "summary": "The top part of the brain stem, between the thalamus and the pons.",
+          "points": [
+            { "text": "The brain stem (midbrain, pons, medulla) connects the forebrain to the spinal cord.", "cite": ["os_ap_13_2"] },
+            { "text": "The midbrain coordinates maps of visual, auditory and body-sense space.", "cite": ["os_ap_13_2"] }
+          ]
+        },
+        "expert": {
+          "summary": "Roof (tectum) with the colliculi; floor (tegmentum); the cerebral aqueduct runs through its center.",
+          "points": [
+            { "text": "The superior colliculus integrates visual, auditory and somatosensory input and orients the eyes toward a sound or touch.", "cite": ["os_ap_13_2"] },
+            { "text": "The inferior colliculus is part of the auditory brain stem pathway and projects to the thalamus.", "cite": ["os_ap_13_2"] },
+            { "text": "The cerebral aqueduct passes through the midbrain.", "cite": ["os_ap_13_2"] }
+          ]
+        }
+      },
+      "connections": [
+        { "atlas_ids": ["left_superior_colliculus", "right_superior_colliculus"], "label": "Tectum: superior colliculi", "cite": ["os_ap_13_2"] },
+        { "atlas_ids": ["left_inferior_colliculus__0", "left_inferior_colliculus__1", "right_inferior_colliculus"], "label": "Tectum: inferior colliculi", "cite": ["os_ap_13_2"] }
+      ],
+      "clinical": [],
+      "checks": []
+    },
+
+    {
+      "id": "pons",
+      "title": "Pons",
+      "applies_to": { "atlas_ids": ["pons"], "groups": [] },
+      "core": true,
+      "levels": {
+        "beginner": {
+          "summary": "The bulge in the middle of the brain stem; its name means bridge.",
+          "points": [
+            { "text": "Seen from the front it is a thick bundle of white matter, the main connection to the cerebellum.", "cite": ["os_ap_13_2"] }
+          ]
+        },
+        "expert": {
+          "summary": "Pontine neurons relay descending forebrain input to the cerebellum.",
+          "points": [
+            { "text": "Neurons in the pons relay descending forebrain input, including copies of motor commands, to the cerebellum.", "cite": ["os_ap_13_2"] }
+          ]
+        }
+      },
+      "connections": [
+        { "atlas_ids": [], "groups": ["cerebellum"], "label": "Relays to cerebellum", "cite": ["os_ap_13_2"] }
+      ],
+      "clinical": [],
+      "checks": []
+    },
+
+    {
+      "id": "medulla",
+      "title": "Medulla oblongata",
+      "applies_to": { "atlas_ids": ["medulla_oblongata"], "groups": [] },
+      "core": true,
+      "levels": {
+        "beginner": {
+          "summary": "The lowest part of the brain stem, continuous with the spinal cord. It helps keep you breathing and your heart working.",
+          "points": [
+            { "text": "Its white matter is continuous with the spinal cord.", "cite": ["os_ap_13_2"] },
+            { "text": "It regulates cardiovascular and respiratory functions.", "cite": ["os_ap_13_2"] }
+          ]
+        },
+        "expert": {
+          "summary": "Contains cranial nerve nuclei and the inferior olive, which sends sensory input to the cerebellum.",
+          "points": [
+            { "text": "It contains nuclei that process cranial nerve information, including the inferior olive.", "cite": ["os_ap_13_2"] }
+          ]
+        }
+      },
+      "connections": [
+        { "atlas_ids": [], "groups": ["cerebellum"], "label": "Inferior olive input to cerebellum", "cite": ["os_ap_13_2"] }
+      ],
+      "clinical": [],
+      "checks": [
+        { "level": "beginner", "q": "Which part of the brain stem regulates breathing and heart function?", "options": ["Medulla oblongata", "Midbrain", "Pons only"], "answer": 0, "explain": "The medulla regulates cardiovascular and respiratory functions.", "cite": ["os_ap_13_2"] }
+      ]
+    },
+
+    {
+      "id": "cerebellum",
+      "title": "Cerebellum",
+      "applies_to": { "atlas_ids": [], "groups": ["cerebellum", "left_hemisphere_of_cerebellum", "right_hemisphere_of_cerebellum"] },
+      "core": true,
+      "levels": {
+        "beginner": {
+          "summary": "The 'little brain' at the back and bottom. It compares what you meant to do with what your body actually did, and corrects movement.",
+          "points": [
+            { "text": "It is about 10 percent of the brain's mass and is folded like the cerebrum.", "cite": ["os_ap_13_2"] },
+            { "text": "It compares motor commands from the cerebrum with sensory feedback to correct and coordinate movement.", "cite": ["os_ap_13_2"] },
+            { "text": "Damage impairs fine movement control, posture, and motor learning.", "cite": ["sp_cerebellum"] }
+          ]
+        },
+        "expert": {
+          "summary": "Two hemispheres joined by the vermis; three lobes; three-layer cortex; deep nuclei provide the output.",
+          "points": [
+            { "text": "Two hemispheres are joined by the vermis; the primary and posterolateral fissures divide it into anterior, posterior and flocculonodular lobes.", "cite": ["sp_cerebellum"] },
+            { "text": "The cortex has three layers: molecular, Purkinje cell, and granular.", "cite": ["sp_cerebellum"] },
+            { "text": "Deep nuclei, medial to lateral: fastigial, interposed (globose and emboliform), and dentate, the largest.", "cite": ["sp_cerebellum"] },
+            { "text": "Superior, middle and inferior cerebellar peduncles attach it to the brain stem.", "cite": ["sp_cerebellum"] },
+            { "text": "It receives motor-command copies via pontine neurons and sensory input via the inferior olive, and sends corrections to the midbrain.", "cite": ["os_ap_13_2"] }
+          ]
+        }
+      },
+      "connections": [
+        { "atlas_ids": ["pons"], "label": "Input: pons (motor-command copies)", "cite": ["os_ap_13_2"] },
+        { "atlas_ids": ["medulla_oblongata"], "label": "Input: inferior olive (medulla)", "cite": ["os_ap_13_2"] },
+        { "atlas_ids": ["part_of_midbrain"], "groups": ["midbrain"], "label": "Output: midbrain", "cite": ["os_ap_13_2"] }
+      ],
+      "clinical": [],
+      "checks": [
+        { "level": "beginner", "q": "The cerebellum's main job is to…", "options": ["Coordinate and correct movement", "Store long-term memories", "Regulate body temperature"], "answer": 0, "explain": "It compares intended movement with feedback and corrects it.", "cite": ["os_ap_13_2"] },
+        { "level": "expert", "q": "Which is the largest deep cerebellar nucleus?", "options": ["Dentate", "Fastigial", "Globose"], "answer": 0, "explain": "From medial to lateral: fastigial, interposed, dentate (largest).", "cite": ["sp_cerebellum"] }
+      ]
+    },
+
+    {
+      "id": "ventricles",
+      "title": "Ventricles",
+      "applies_to": { "atlas_ids": ["third_ventricle__0", "third_ventricle__1", "fourth_ventricle"], "groups": ["left_lateral_ventricle__0", "right_lateral_ventricle__1"] },
+      "core": false,
+      "levels": {
+        "beginner": {
+          "summary": "Fluid-filled spaces inside the brain, left over from the hollow tube the nervous system develops from.",
+          "points": [
+            { "text": "Lateral ventricles sit in the hemispheres, the third ventricle in the diencephalon, and the fourth in the hindbrain.", "cite": ["os_ibn_1_3"] },
+            { "text": "The diencephalon forms the walls of the third ventricle.", "cite": ["os_ap_13_2"] }
+          ]
+        },
+        "expert": {
+          "summary": "The fourth ventricle continues into the spinal cord's central canal; the cerebral aqueduct links third and fourth ventricles through the midbrain.",
+          "points": [
+            { "text": "The spinal cord's central canal is continuous with the fourth ventricle and filled with cerebrospinal fluid.", "cite": ["os_ibn_1_3"] }
+          ]
+        }
+      },
+      "connections": [],
+      "clinical": [],
+      "checks": []
+    }
+  ],
+
+  "tours": [
+    {
+      "id": "brain-101",
+      "title": "Brain 101: the big map",
+      "level": "beginner",
+      "steps": [
+        { "atlas_ids": [], "groups": ["Brain"], "view": "left", "predict": "Before we start: how many major regions do you think the brain is divided into?", "text": "Anatomists describe four major regions: cerebrum, diencephalon, brain stem, and cerebellum. This tour visits each one.", "cite": ["os_ap_13_2"] },
+        { "atlas_ids": [], "groups": ["left_cerebral_hemisphere", "right_cerebral_hemisphere"], "view": "superior", "text": "From above you see the cerebrum's two hemispheres, separated by the longitudinal fissure. The wrinkled surface is the cerebral cortex.", "cite": ["os_ap_13_2"] },
+        { "atlas_ids": ["corpus_callosum"], "groups": [], "view": "left", "predict": "The two hemispheres need to talk. Where do you think the bridge between them is?", "text": "Deep in the middle, the corpus callosum carries most of the traffic between the hemispheres.", "cite": ["os_ap_13_2"] },
+        { "atlas_ids": [], "groups": ["left_frontal_lobe"], "view": "left", "text": "The frontal lobe: movement, planning, and much of what we call personality.", "cite": ["os_ap_13_2"] },
+        { "atlas_ids": ["left_central_sulcus", "left_precentral_gyrus", "left_postcentral_gyrus"], "groups": [], "view": "left", "text": "The central sulcus divides frontal from parietal. In front of it, the precentral gyrus moves the body; behind it, the postcentral gyrus feels the body.", "cite": ["os_ap_13_2"] },
+        { "atlas_ids": [], "groups": ["left_temporal_lobe"], "view": "left", "text": "The temporal lobe, below the lateral sulcus: hearing and memory.", "cite": ["os_ap_13_2"] },
+        { "atlas_ids": [], "groups": ["left_occipital_lobe"], "view": "posterior", "text": "The occipital lobe at the back is where vision first reaches the cortex.", "cite": ["os_ap_13_2"] },
+        { "atlas_ids": [], "groups": ["thalamus", "hypothalamus"], "view": "left", "text": "The diencephalon sits at the center. The thalamus relays almost all senses to the cortex; the hypothalamus keeps the body in balance.", "cite": ["os_ap_13_2"] },
+        { "atlas_ids": ["part_of_midbrain", "pons", "medulla_oblongata"], "groups": ["midbrain"], "view": "left", "predict": "Which region do you think keeps you breathing without thinking about it?", "text": "The brain stem: midbrain, pons, and medulla. The medulla regulates breathing and heart function.", "cite": ["os_ap_13_2"] },
+        { "atlas_ids": [], "groups": ["cerebellum"], "view": "posterior", "text": "The cerebellum compares intended movement with what actually happened and corrects it. You now know the four regions; try the Quiz to lock them in.", "cite": ["os_ap_13_2", "dobson_2017"] }
+      ]
+    },
+    {
+      "id": "movement",
+      "title": "How a movement happens",
+      "level": "intermediate",
+      "steps": [
+        { "atlas_ids": ["left_precentral_gyrus"], "groups": [], "view": "left", "text": "Commands start in the primary motor cortex, whose upper motor neurons instruct the spinal cord.", "cite": ["os_ap_13_2"] },
+        { "atlas_ids": [], "groups": ["striatum_of_left_cerebral_hemisphere", "left_lentiform_nucleus"], "view": "left", "predict": "Which deep structures do you think decide whether a movement is allowed to start?", "text": "The basal nuclei gate movement. Cortical input enters the striatum (caudate and putamen).", "cite": ["os_ap_13_2"] },
+        { "atlas_ids": ["left_substantia_nigra"], "groups": [], "view": "anterior", "text": "Dopamine from the substantia nigra activates the direct pathway and inhibits the indirect pathway.", "cite": ["os_ap_13_2"] },
+        { "atlas_ids": [], "groups": ["left_thalamus"], "view": "left", "text": "Basal nuclei output returns to the cortex through the thalamus.", "cite": ["os_ap_13_2"] },
+        { "atlas_ids": ["pons"], "groups": [], "view": "left", "text": "Copies of motor commands travel through the pons to the cerebellum.", "cite": ["os_ap_13_2"] },
+        { "atlas_ids": [], "groups": ["cerebellum"], "view": "posterior", "text": "The cerebellum compares the command with sensory feedback (via the inferior olive) and sends corrections to the midbrain.", "cite": ["os_ap_13_2"] }
+      ]
+    },
+    {
+      "id": "memory-emotion",
+      "title": "Memory and emotion",
+      "level": "beginner",
+      "steps": [
+        { "atlas_ids": ["left_hippocampus"], "groups": [], "view": "left", "predict": "Where do you think new long-term memories are formed? Look at the inside of the temporal lobe.", "text": "The hippocampus, deep in the temporal lobe, is central to forming lasting memories.", "cite": ["sp_hippocampus"] },
+        { "atlas_ids": ["left_fornix_of_forebrain"], "groups": [], "view": "left", "text": "Its main output is the fornix, an arching bundle heading toward the anterior thalamus and hypothalamus.", "cite": ["sp_hippocampus"] },
+        { "atlas_ids": ["left_amygdala"], "groups": [], "view": "left", "text": "Just in front of the hippocampus, the amygdala processes fear and adds emotional weight to memories.", "cite": ["sp_amygdala"] },
+        { "atlas_ids": [], "groups": ["hypothalamus"], "view": "left", "text": "The amygdala reaches the hypothalamus, which drives the body's autonomic and hormonal responses.", "cite": ["sp_amygdala", "os_ap_13_2"] }
+      ]
+    }
+  ]
+}
