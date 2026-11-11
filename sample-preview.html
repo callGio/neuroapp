@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brain Atlas — Sample Preview</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0d1117; color: #e6edf3;
+         font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
+         overflow: hidden; }
+  #canvas-wrap { position: fixed; inset: 0; }
+  canvas { display: block; width: 100% !important; height: 100% !important; }
+
+  #ui {
+    position: fixed; top: 16px; left: 16px; z-index: 10;
+    background: rgba(13,17,23,0.82); border: 1px solid #30363d;
+    border-radius: 8px; padding: 14px 16px; min-width: 220px;
+    backdrop-filter: blur(6px);
+  }
+  #ui h1 { font-size: 13px; font-weight: 600; letter-spacing: .03em;
+            color: #8b949e; text-transform: uppercase; margin-bottom: 10px; }
+  .legend-item { display: flex; align-items: center; gap: 8px;
+                 font-size: 12px; margin-bottom: 5px; color: #c9d1d9; }
+  .swatch { width: 12px; height: 12px; border-radius: 2px; flex-shrink: 0; }
+  #btn-reset {
+    margin-top: 14px; width: 100%; padding: 6px 0; font-size: 12px;
+    background: #21262d; border: 1px solid #30363d; border-radius: 6px;
+    color: #c9d1d9; cursor: pointer; transition: background .15s;
+  }
+  #btn-reset:hover { background: #30363d; }
+
+  #status {
+    position: fixed; bottom: 14px; left: 50%; transform: translateX(-50%);
+    font-size: 11px; color: #8b949e; background: rgba(13,17,23,0.7);
+    padding: 4px 12px; border-radius: 12px; z-index: 10;
+    pointer-events: none; transition: opacity 2s;
+  }
+</style>
+</head>
+<body>
+
+<div id="canvas-wrap"><canvas id="c"></canvas></div>
+
+<div id="ui">
+  <h1>Sample meshes</h1>
+  <div class="legend-item"><span class="swatch" style="background:#e07b54"></span>Left precentral gyrus</div>
+  <div class="legend-item"><span class="swatch" style="background:#5b9bd5"></span>Left hippocampus</div>
+  <div class="legend-item"><span class="swatch" style="background:#6abf69"></span>Medulla oblongata</div>
+  <button id="btn-reset">Reset View</button>
+</div>
+
+<div id="status">Loading…</div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three":         "./vendor/three/build/three.module.js",
+    "three/addons/": "./vendor/three/examples/jsm/"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE         from 'three';
+import { GLTFLoader }     from 'three/addons/loaders/GLTFLoader.js';
+import { OrbitControls }  from 'three/addons/controls/OrbitControls.js';
+
+// ── renderer ─────────────────────────────────────────────────────────────────
+const canvas   = document.getElementById('c');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+renderer.setPixelRatio(window.devicePixelRatio);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.setClearColor(0x0d1117);
+
+const scene  = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 2000);
+
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping    = true;
+controls.dampingFactor    = 0.08;
+controls.screenSpacePanning = false;
+controls.minDistance      = 5;
+controls.maxDistance      = 800;
+
+// ── lights ────────────────────────────────────────────────────────────────────
+scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+
+const key = new THREE.DirectionalLight(0xffffff, 1.2);
+key.position.set(1, 2, 1.5);
+scene.add(key);
+
+const fill = new THREE.DirectionalLight(0xffffff, 0.35);
+fill.position.set(-1, -0.5, -1);
+scene.add(fill);
+
+// ── shared parent group ───────────────────────────────────────────────────────
+// VTK/Slicer stores geometry in RAS space (X right, Y anterior, Z superior).
+// Rotate -90° around X so Z becomes the up axis in Three.js view space.
+const group = new THREE.Group();
+group.rotation.x = -Math.PI / 2;
+scene.add(group);
+
+// ── mesh config ───────────────────────────────────────────────────────────────
+const MESHES = [
+  { file: './models_sample/Model_1024_left_precentral_gyrus.glb', color: 0xe07b54, opacity: 0.92 },
+  { file: './models_sample/Model_17_left_hippocampus.glb',        color: 0x5b9bd5, opacity: 1.00 },
+  { file: './models_sample/Model_61_medulla_oblongata.glb',       color: 0x6abf69, opacity: 1.00 },
+];
+
+const statusEl = document.getElementById('status');
+const loader   = new GLTFLoader();
+let loaded = 0;
+
+// ── saved camera state for Reset View ─────────────────────────────────────────
+let savedCamPos, savedTarget;
+
+function fitCamera() {
+  const combinedBox = new THREE.Box3();
+  group.traverse((child) => {
+    if (child.isMesh) {
+      combinedBox.union(new THREE.Box3().setFromObject(child));
+    }
+  });
+  if (combinedBox.isEmpty()) return;
+
+  const sphere = new THREE.Sphere();
+  combinedBox.getBoundingSphere(sphere);
+
+  const dist = (sphere.radius / Math.sin(THREE.MathUtils.degToRad(camera.fov / 2))) * 1.15;
+  camera.position.set(sphere.center.x, sphere.center.y + sphere.radius * 0.3, sphere.center.z + dist);
+  controls.target.copy(sphere.center);
+  controls.update();
+
+  savedCamPos = camera.position.clone();
+  savedTarget = controls.target.clone();
+}
+
+document.getElementById('btn-reset').addEventListener('click', () => {
+  if (!savedCamPos) return;
+  camera.position.copy(savedCamPos);
+  controls.target.copy(savedTarget);
+  controls.update();
+});
+
+// ── load GLBs ─────────────────────────────────────────────────────────────────
+MESHES.forEach(({ file, color, opacity }) => {
+  loader.load(
+    file,
+    (gltf) => {
+      const mat = new THREE.MeshPhongMaterial({
+        color,
+        opacity,
+        transparent: opacity < 1,
+        shininess: 40,
+        specular: 0x222222,
+        side: THREE.DoubleSide,
+      });
+
+      gltf.scene.traverse((child) => {
+        if (child.isMesh) {
+          child.material = mat;
+          child.geometry.computeVertexNormals();
+        }
+      });
+
+      group.add(gltf.scene);
+      loaded++;
+      statusEl.textContent = `Loaded ${loaded} / ${MESHES.length}`;
+
+      if (loaded === MESHES.length) {
+        fitCamera();
+        statusEl.textContent = 'All 3 meshes loaded — drag to rotate, scroll to zoom';
+        setTimeout(() => { statusEl.style.opacity = '0'; }, 4000);
+      }
+    },
+    undefined,
+    (err) => {
+      statusEl.textContent = `ERROR loading ${file}: ${err.message || err}`;
+      statusEl.style.color = '#f85149';
+      console.error(err);
+    }
+  );
+});
+
+// ── resize ────────────────────────────────────────────────────────────────────
+function onResize() {
+  const w = window.innerWidth, h = window.innerHeight;
+  renderer.setSize(w, h, false);
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+}
+window.addEventListener('resize', onResize);
+onResize();
+
+// ── render loop ───────────────────────────────────────────────────────────────
+(function animate() {
+  requestAnimationFrame(animate);
+  controls.update();
+  renderer.render(scene, camera);
+})();
+</script>
+</body>
+</html>
