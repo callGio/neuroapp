@@ -37,6 +37,13 @@ the first load downloads about 55 MB of 3D models).
 - Lessons at beginner or expert depth, each point with numbered citations.
 - Clickable connections (for example, hippocampus → fornix → anterior thalamus).
 - Glossary tooltips and guided tours that ask you to *predict* before they explain.
+- Pathway tours that trace a signal through the atlas: seeing, hearing and touch.
+- **Neuron mode** (`neuron.html`): a clickable 3D neuron with every part explained at two
+  levels, step-by-step animations of the action potential, myelin and the synapse, an
+  input-summation playground, a comparison with an artificial neuron, and a quiz.
+- **Brain-imaging guide** (`imaging.html`): what MRI, DTI, CT, fMRI, PET, EEG and MEG
+  measure, a time-against-space trade-off chart, an EEG electrode and rhythm explorer, and
+  a "which tool would you use?" quiz.
 
 **Practice**
 - *Find it*: the app names a structure, you click it on the brain.
@@ -102,6 +109,8 @@ unmapped, or failed), keeps the atlas's original coordinates, and writes
 scripts/convert_atlas.py         VTK -> glTF converter and manifest builder
 scripts/check_atlas_samples.py   3-mesh sanity check (shared reader/writer)
 viewer/public/index.html         the welcome page
+viewer/public/neuron.html        neuron mode (content/neuron.json)
+viewer/public/imaging.html       brain-imaging guide (content/imaging.json)
 viewer/public/atlas-viewer.html  the app (Three.js, no build step)
 viewer/public/atlas-manifest.json  structure names, hierarchy, colors, RadLex IDs
 viewer/public/models/            328 binary glTF meshes
@@ -112,7 +121,7 @@ docs/tasks/                      the build specifications used during developmen
 
 ## Content and accuracy
 
-`content/learning.json` is a **pilot**: 18 topics, 20 glossary terms and 3 tours, each
+`content/learning.json` is a **pilot**: 62 topics, 20 glossary terms and 6 tours, each
 statement paraphrased from and cited to OpenStax or StatPearls. Content should be checked
 against its sources before being marked reviewed. Corrections are welcome as issues.
 

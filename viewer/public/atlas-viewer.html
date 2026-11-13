@@ -459,6 +459,7 @@ body{
 #panel-top h1{display:flex;align-items:center;gap:8px;font-family:"Space Grotesk",sans-serif;font-size:13px;font-weight:600;color:var(--text);text-transform:none;letter-spacing:0}
 .home-link{margin-left:auto;font-size:10px;color:var(--muted);text-decoration:none;display:flex;align-items:center;gap:3px;padding:2px 6px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface-solid)}
 .home-link:hover{color:var(--text);border-color:rgba(139,108,255,.45)}
+.home-link.mode-link{margin-left:4px}
 
 /* ── tabs ── */
 #panel-tabs{background:var(--surface-solid);border-bottom:1px solid var(--border)}
@@ -730,6 +731,8 @@ body{
         </svg>
         Home
       </a>
+      <a href="./neuron.html?from=atlas" class="home-link mode-link" title="Zoom in to a single neuron">Neuron</a>
+      <a href="./imaging.html" class="home-link mode-link" title="How brain imaging works">Imaging</a>
     </h1>
     <!-- legacy invisible mode-switcher; Tier-2 JS references tab-explore / tab-quiz -->
     <div id="mode-switcher" aria-hidden="true">
@@ -1015,6 +1018,8 @@ body{
           </svg>
           Home
         </a>
+        <a href="./neuron.html?from=atlas" class="home-link" style="display:inline-flex;margin-left:6px">Neuron</a>
+        <a href="./imaging.html" class="home-link" style="display:inline-flex;margin-left:6px">Imaging</a>
       </div>
     </div>
   </div>

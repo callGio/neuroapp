@@ -1,0 +1,1544 @@
+{
+  "version": 1,
+  "note": "Paraphrased from the cited sources. Educational use only; not medical advice. Resolution figures are approximate and depend on the scanner, the method and the study.",
+  "sources": {
+    "openstax": {
+      "citation": "Spielman, R. M., Jenkins, W. J., & Lovett, M. D. (2020). Psychology 2e (Section 3.4: The brain and spinal cord). OpenStax.",
+      "url": "https://openstax.org/books/psychology-2e/pages/3-4-the-brain-and-spinal-cord",
+      "license": "CC BY 4.0",
+      "checked": "https://openstax.org/books/psychology-2e/pages/3-4-the-brain-and-spinal-cord"
+    },
+    "nibib_ct": {
+      "citation": "National Institute of Biomedical Imaging and Bioengineering. (2022). Computed tomography (CT). National Institutes of Health.",
+      "url": "https://nibib.nih.gov/science-education/science-topics/computed-tomography-ct",
+      "license": "U.S. government work (public domain)",
+      "checked": "https://nibib.nih.gov/science-education/science-topics/computed-tomography-ct"
+    },
+    "nibib_nm": {
+      "citation": "National Institute of Biomedical Imaging and Bioengineering. (2025). Nuclear medicine. National Institutes of Health.",
+      "url": "https://nibib.nih.gov/science-education/science-topics/nuclear-medicine",
+      "license": "U.S. government work (public domain)",
+      "checked": "https://nibib.nih.gov/science-education/science-topics/nuclear-medicine"
+    },
+    "sp_mri": {
+      "citation": "Magnetic resonance imaging contraindications. (2025). In StatPearls. StatPearls Publishing.",
+      "url": "https://www.statpearls.com/point-of-care/34537",
+      "license": "StatPearls (openly readable)",
+      "checked": "https://www.statpearls.com/point-of-care/34537"
+    },
+    "sp_eeg": {
+      "citation": "Nayak, C. S., & Anilkumar, A. C. (2025). Normal EEG waveforms. In StatPearls. StatPearls Publishing.",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK539805/",
+      "license": "StatPearls on NCBI Bookshelf (openly readable)",
+      "checked": "https://www.ncbi.nlm.nih.gov/books/NBK539805/"
+    },
+    "ucsf": {
+      "citation": "UCSF Department of Radiology & Biomedical Imaging. (2021). Exploring the brain: Is CT or MRI better for brain imaging? University of California, San Francisco.",
+      "url": "https://radiology.ucsf.edu/news/exploring-brain-ct-or-mri-better-brain-imaging",
+      "license": "University web page (openly readable)",
+      "checked": "https://radiology.ucsf.edu/news/exploring-brain-ct-or-mri-better-brain-imaging"
+    },
+    "buxton": {
+      "citation": "Buxton, R. B., Uludağ, K., Dubowitz, D. J., & Liu, T. T. (2004). Modeling the hemodynamic response to brain activation. NeuroImage, 23(Suppl. 1), S220–S233. https://doi.org/10.1016/j.neuroimage.2004.07.013",
+      "url": "https://cfmriweb.ucsd.edu/tliu/pdf/buxton04_model.pdf",
+      "license": "Peer-reviewed article; author-hosted copy (openly readable)",
+      "checked": "https://cfmriweb.ucsd.edu/tliu/pdf/buxton04_model.pdf"
+    },
+    "wager": {
+      "citation": "Wager, T. D., & Lindquist, M. A. (2015). Principles of fMRI. Leanpub.",
+      "url": "https://leanpub.com/read/principlesoffmri/leanpub-auto-chapter-7---fmri-basics-processing-stages-terminology-and-data-structure",
+      "license": "Textbook by the authors, readable online",
+      "checked": "https://leanpub.com/read/principlesoffmri/leanpub-auto-chapter-7---fmri-basics-processing-stages-terminology-and-data-structure ; https://s3.amazonaws.com/samples.leanpub.com/principlesoffmri-sample.pdf"
+    },
+    "poldrack": {
+      "citation": "Poldrack, R. A. (2006). Can cognitive processes be inferred from neuroimaging data? Trends in Cognitive Sciences, 10(2), 59–63. https://doi.org/10.1016/j.tics.2005.12.004",
+      "url": "https://doi.org/10.1016/j.tics.2005.12.004",
+      "license": "Peer-reviewed article (publisher copyright); text checked in a course-hosted copy",
+      "checked": "https://piazza.com/class_profile/get_resource/hpyffbnbr685tq/hq7fcckwwy56kt"
+    },
+    "logothetis": {
+      "citation": "Logothetis, N. K. (2008). What we can do and what we cannot do with fMRI. Nature, 453(7197), 869–878. https://doi.org/10.1038/nature06976",
+      "url": "https://www.nature.com/articles/nature06976.pdf",
+      "license": "Peer-reviewed article (publisher copyright); abstract checked",
+      "checked": "https://www.nature.com/articles/nature06976.pdf"
+    },
+    "mori": {
+      "citation": "Mori, S., & van Zijl, P. C. M. (2002). Fiber tracking: Principles and strategies – a technical review. NMR in Biomedicine, 15(7–8), 468–480. https://doi.org/10.1002/nbm.781",
+      "url": "https://www.cmu.edu/dietrich/psychology/cognitiveaxon/documents/Mori_vanZijl_2002.pdf",
+      "license": "Peer-reviewed article; university-hosted copy (openly readable)",
+      "checked": "https://www.cmu.edu/dietrich/psychology/cognitiveaxon/documents/Mori_vanZijl_2002.pdf"
+    },
+    "catana": {
+      "citation": "Catana, C. (2019). Development of dedicated brain PET imaging devices: Recent advances and future perspectives. Journal of Nuclear Medicine, 60(8), 1044–1052. https://doi.org/10.2967/jnumed.118.217901",
+      "url": "https://jnm.snmjournals.org/content/60/8/1044.full.pdf",
+      "license": "Peer-reviewed article (publisher copyright); full text readable at the URL",
+      "checked": "https://jnm.snmjournals.org/content/60/8/1044.full.pdf"
+    },
+    "gosseries": {
+      "citation": "Gosseries, O., Demertzi, A., Noirhomme, Q., Tshibanda, J., Boly, M., Op de Beeck, M., Hustinx, R., Maquet, P., Salmon, E., Moonen, G., Luxen, A., Laureys, S., & De Tiège, X. (2008). Que mesure la neuro-imagerie fonctionnelle: IRMf, TEP & MEG? [Functional neuroimaging (fMRI, PET and MEG): What do we measure?]. Revue Médicale de Liège, 63(5–6), 231–237.",
+      "url": "https://rmlg.uliege.be/article/1735?lang=en",
+      "license": "Peer-reviewed article; English abstract openly readable",
+      "checked": "https://rmlg.uliege.be/article/1735?lang=en ; https://orbi.uliege.be/handle/2268/5536"
+    },
+    "he2018": {
+      "citation": "He, B., Sohrabpour, A., Brown, E., & Liu, Z. (2018). Electrophysiological source imaging: A noninvasive window to brain dynamics. Annual Review of Biomedical Engineering, 20, 171–196. https://doi.org/10.1146/annurev-bioeng-062117-120853",
+      "url": "https://dspace.mit.edu/bitstream/1721.1/123301/1/ARBE_ESI_Submitted.pdf",
+      "license": "Peer-reviewed article; author manuscript in MIT open repository",
+      "checked": "https://dspace.mit.edu/bitstream/1721.1/123301/1/ARBE_ESI_Submitted.pdf"
+    },
+    "hamalainen": {
+      "citation": "Hämäläinen, M., Hari, R., Ilmoniemi, R. J., Knuutila, J., & Lounasmaa, O. V. (1993). Magnetoencephalography—theory, instrumentation, and applications to noninvasive studies of the working human brain. Reviews of Modern Physics, 65(2), 413–497. https://doi.org/10.1103/RevModPhys.65.413",
+      "url": "https://acris.aalto.fi/ws/portalfiles/portal/14383291/RevModPhys.65.413.pdf",
+      "license": "Peer-reviewed article; Aalto University repository copy (openly readable)",
+      "checked": "https://acris.aalto.fi/ws/portalfiles/portal/14383291/RevModPhys.65.413.pdf"
+    },
+    "braeutigam": {
+      "citation": "Braeutigam, S. (2013). Magnetoencephalography: Fundamentals and established and emerging clinical applications in radiology. ISRN Radiology, 2013, Article 529463. https://doi.org/10.5402/2013/529463",
+      "url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4045536/",
+      "license": "Open-access peer-reviewed article (PubMed Central)",
+      "checked": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4045536/"
+    },
+    "chudler": {
+      "citation": "Chudler, E. H. (n.d.). The 10-20 system. Neuroscience for Kids. University of Washington.",
+      "url": "https://staff.washington.edu/chudler/1020.html",
+      "license": "University educational page (openly readable)",
+      "checked": "https://staff.washington.edu/chudler/1020.html"
+    },
+    "acns": {
+      "citation": "Acharya, J. N., Hani, A., Thirumala, P., & Tsuchida, T. N. (2016). Guideline 3: A proposal for standard montages to be used in clinical EEG. American Clinical Neurophysiology Society.",
+      "url": "https://acns.org/UserFiles/file/EEGGuideline3Montage_final20160323revclean_v1.pdf",
+      "license": "Professional society guideline (openly readable)",
+      "checked": "https://acns.org/UserFiles/file/EEGGuideline3Montage_final20160323revclean_v1.pdf"
+    }
+  },
+  "intro": {
+    "beginner": "Brain scans answer two different questions: what the brain looks like, and what it is doing. Each method that records activity trades sharp timing against sharp location, and none of them shows a thought directly.",
+    "expert": "Structural methods image tissue; functional methods record either the brain's electromagnetic fields (EEG, MEG) or slower blood-flow and metabolic signals that follow neural activity (fMRI, PET). The choice is a trade-off between temporal and spatial resolution, risk and cost, and every functional map needs careful inference.",
+    "cite": [
+      "openstax",
+      "gosseries",
+      "poldrack"
+    ]
+  },
+  "families": [
+    {
+      "id": "structure",
+      "title": "What does the brain look like?",
+      "methods": [
+        "mri",
+        "dti",
+        "ct"
+      ],
+      "text": "MRI, diffusion imaging and CT make detailed pictures of anatomy: soft tissue, white-matter pathways, bone and bleeding. They show structure, not activity.",
+      "cite": [
+        "openstax",
+        "ucsf",
+        "mori",
+        "nibib_ct"
+      ]
+    },
+    {
+      "id": "activity",
+      "title": "What is the brain doing?",
+      "methods": [
+        "fmri",
+        "pet",
+        "eeg",
+        "meg"
+      ],
+      "text": "fMRI and PET follow changes in blood flow or metabolism that come after neural activity. EEG and MEG pick up the electrical and magnetic signals of nerve cells themselves.",
+      "cite": [
+        "gosseries"
+      ]
+    }
+  ],
+  "chart": {
+    "caption": {
+      "text": "None of these non-invasive methods is sharp in both time and space: EEG and MEG catch milliseconds but blur location, while fMRI and PET locate millimetres but take seconds to minutes. All ranges are approximate and depend on the scanner and the study.",
+      "cite": [
+        "gosseries"
+      ]
+    }
+  },
+  "methods": [
+    {
+      "id": "mri",
+      "name": "MRI",
+      "full": "Magnetic resonance imaging",
+      "family": "structure",
+      "short": "A strong magnet and radio waves make detailed pictures of brain tissue.",
+      "measures": {
+        "text": "Signals given off by hydrogen atoms after a strong magnetic field nudges them; different tissues give different signals, which a computer turns into an image.",
+        "cite": [
+          "openstax"
+        ]
+      },
+      "direct": null,
+      "levels": {
+        "beginner": {
+          "summary": "MRI takes a sharp, still picture of the brain's anatomy. It shows shape and tissue, not what the brain is doing.",
+          "points": [
+            {
+              "text": "It uses a strong magnetic field, not X-rays, so there is no ionising radiation.",
+              "cite": [
+                "sp_mri",
+                "ucsf"
+              ]
+            },
+            {
+              "text": "It shows soft brain tissue in more detail than CT.",
+              "cite": [
+                "ucsf"
+              ]
+            },
+            {
+              "text": "Because it is so detailed, researchers use it to compare the brains of people with and without a condition.",
+              "cite": [
+                "openstax"
+              ]
+            }
+          ]
+        },
+        "expert": {
+          "summary": "Structural MRI offers a wide range of soft-tissue contrast without ionising radiation; safety limits come from the static field, radiofrequency energy and noise.",
+          "points": [
+            {
+              "text": "After the field shifts hydrogen atoms, they give off signals as they return to position, and those signals differ between tissues.",
+              "cite": [
+                "openstax"
+              ]
+            },
+            {
+              "text": "The static field can turn ferromagnetic objects into projectiles, and some implants that are safe at 1.5 tesla are not safe at 3 tesla.",
+              "cite": [
+                "sp_mri"
+              ]
+            },
+            {
+              "text": "Radiofrequency energy can heat tissue, more so when implants are present.",
+              "cite": [
+                "sp_mri"
+              ]
+            },
+            {
+              "text": "Gadolinium contrast is generally considered safe, but rare allergic reactions occur.",
+              "cite": [
+                "sp_mri"
+              ]
+            }
+          ],
+          "caveat": "The simple 'atoms emit signals' story leaves out the relaxation physics that actually sets image contrast."
+        }
+      },
+      "good_for": [
+        {
+          "text": "Detailed anatomy of soft brain tissue.",
+          "cite": [
+            "ucsf"
+          ]
+        },
+        {
+          "text": "Comparing brain structure between groups of people.",
+          "cite": [
+            "openstax"
+          ]
+        }
+      ],
+      "limits": [
+        {
+          "text": "A standard MRI pictures tissue; following activity over time needs fMRI.",
+          "cite": [
+            "openstax"
+          ]
+        },
+        {
+          "text": "Not possible, or needs special planning, for some people with implanted devices such as pacemakers.",
+          "cite": [
+            "sp_mri"
+          ]
+        }
+      ],
+      "experience": {
+        "text": "The scanner is loud enough that earplugs or headphones are needed. Claustrophobia can stop a scan; explanation beforehand, sedation, or open or wide-bore scanners can help.",
+        "cite": [
+          "sp_mri"
+        ]
+      },
+      "resolution": {
+        "spatial_mm": null,
+        "temporal_s": null,
+        "approximate": true,
+        "text": "A single still picture, sharper than an fMRI image. Its level of detail depends on the scanner and its settings, so the chart shows no bar.",
+        "cite": [
+          "wager"
+        ]
+      },
+      "invasive": "none",
+      "misconception": {
+        "claim": "An MRI scan shows which parts of the brain are working.",
+        "correction": "A standard MRI shows structure only. Measuring activity needs a functional method such as fMRI, which tracks blood oxygen over time.",
+        "cite": [
+          "openstax"
+        ]
+      }
+    },
+    {
+      "id": "dti",
+      "name": "DTI",
+      "full": "Diffusion tensor imaging",
+      "family": "structure",
+      "short": "An MRI method that traces white-matter pathways by following water movement.",
+      "measures": {
+        "text": "How freely water molecules diffuse in each direction. In white matter, fibres restrict diffusion across their length, so the preferred direction hints at the fibre direction.",
+        "cite": [
+          "mori"
+        ]
+      },
+      "direct": null,
+      "levels": {
+        "beginner": {
+          "summary": "DTI maps the brain's wiring: the bundles of fibres that link regions. It shows likely routes, not messages travelling along them.",
+          "points": [
+            {
+              "text": "Water moves more easily along a fibre bundle than across it, and DTI measures that difference.",
+              "cite": [
+                "mori"
+              ]
+            },
+            {
+              "text": "A computer joins the directions together into 3D pictures of tracts; this is called tractography.",
+              "cite": [
+                "mori"
+              ]
+            },
+            {
+              "text": "It cannot see single axons; each picture element holds a great many of them.",
+              "cite": [
+                "mori"
+              ]
+            }
+          ]
+        },
+        "expert": {
+          "summary": "DTI fits a diffusion tensor in each voxel; tractography chains the principal directions into putative tracts, with well-known ambiguities.",
+          "points": [
+            {
+              "text": "Typical voxels are about 1 to 5 mm across, far larger than individual axons.",
+              "cite": [
+                "mori"
+              ]
+            },
+            {
+              "text": "Simple tensor tracking cannot tell crossing fibres from fibres that touch and turn away within one voxel.",
+              "cite": [
+                "mori"
+              ]
+            },
+            {
+              "text": "The direction of water diffusion cannot tell afferent from efferent pathways, and DTI gives no cell-level connectivity.",
+              "cite": [
+                "mori"
+              ]
+            },
+            {
+              "text": "Partial-volume mixing of tissue or fibre types within a voxel distorts the estimates.",
+              "cite": [
+                "mori"
+              ]
+            }
+          ],
+          "caveat": "'Tracts' from tractography are reconstructions, and validating them against true anatomy remains hard."
+        }
+      },
+      "good_for": [
+        {
+          "text": "Mapping the course of major white-matter tracts in the living brain.",
+          "cite": [
+            "mori"
+          ]
+        }
+      ],
+      "limits": [
+        {
+          "text": "Cannot resolve individual axons or tell which way signals travel.",
+          "cite": [
+            "mori"
+          ]
+        },
+        {
+          "text": "Crossing fibres can send tractography the wrong way.",
+          "cite": [
+            "mori"
+          ]
+        }
+      ],
+      "experience": {
+        "text": "It is an MRI scan, so it feels the same as MRI and the same magnet-safety rules apply.",
+        "cite": [
+          "mori",
+          "sp_mri"
+        ]
+      },
+      "resolution": {
+        "spatial_mm": [
+          1,
+          5
+        ],
+        "temporal_s": null,
+        "approximate": true,
+        "text": "A still picture with picture elements of about 1 to 5 mm.",
+        "cite": [
+          "mori"
+        ]
+      },
+      "invasive": "none",
+      "misconception": {
+        "claim": "Tractography shows the brain's individual connections.",
+        "correction": "It shows the likely course of large fibre bundles. It cannot see single axons or cell-to-cell connections.",
+        "cite": [
+          "mori"
+        ]
+      }
+    },
+    {
+      "id": "ct",
+      "name": "CT",
+      "full": "Computed tomography",
+      "family": "structure",
+      "short": "Rotating X-rays build cross-sectional slices; fast, but uses radiation.",
+      "measures": {
+        "text": "How much of a narrow, rotating X-ray beam passes through the head; a computer builds the readings into slices.",
+        "cite": [
+          "nibib_ct",
+          "openstax"
+        ]
+      },
+      "direct": null,
+      "levels": {
+        "beginner": {
+          "summary": "CT is a fast X-ray picture of the head in slices. Hospitals use it in emergencies, such as checking for bleeding.",
+          "points": [
+            {
+              "text": "It uses X-rays, which are ionising radiation.",
+              "cite": [
+                "nibib_ct"
+              ]
+            },
+            {
+              "text": "It is much faster and cheaper than MRI.",
+              "cite": [
+                "ucsf"
+              ]
+            },
+            {
+              "text": "It can find bleeding, clots that cause stroke, injuries and tumours.",
+              "cite": [
+                "nibib_ct"
+              ]
+            }
+          ]
+        },
+        "expert": {
+          "summary": "CT reconstructs X-ray attenuation slices. It is the usual choice in acute trauma, but its soft-tissue contrast is poorer than MRI's.",
+          "points": [
+            {
+              "text": "Cancer risk from the radiation is generally small but adds up over a lifetime of scans.",
+              "cite": [
+                "nibib_ct"
+              ]
+            },
+            {
+              "text": "It shows cortical bone, calcification and metal well.",
+              "cite": [
+                "ucsf"
+              ]
+            },
+            {
+              "text": "An iodine-based contrast agent can be injected to show blood vessels.",
+              "cite": [
+                "nibib_ct"
+              ]
+            }
+          ],
+          "caveat": "We found no cited millimetre figure for CT, so it is listed without a bar on the chart."
+        }
+      },
+      "good_for": [
+        {
+          "text": "Emergencies and trauma, where speed matters.",
+          "cite": [
+            "ucsf"
+          ]
+        },
+        {
+          "text": "Bone, and people who cannot have MRI because of implants.",
+          "cite": [
+            "ucsf"
+          ]
+        }
+      ],
+      "limits": [
+        {
+          "text": "Ionising radiation, with a small risk that grows with repeated scans.",
+          "cite": [
+            "nibib_ct"
+          ]
+        },
+        {
+          "text": "Less soft-tissue detail than MRI.",
+          "cite": [
+            "ucsf"
+          ]
+        }
+      ],
+      "experience": {
+        "text": "Quick. You keep still while an X-ray source rotates around a circular opening; it may be easier than MRI for people with claustrophobia.",
+        "cite": [
+          "nibib_ct",
+          "ucsf"
+        ]
+      },
+      "resolution": {
+        "spatial_mm": null,
+        "temporal_s": null,
+        "approximate": true,
+        "text": "A single still picture. Its level of detail depends on the scanner and its settings, so the chart shows no bar.",
+        "cite": [
+          "ucsf"
+        ]
+      },
+      "invasive": "none",
+      "misconception": {
+        "claim": "CT and MRI are the same kind of scan.",
+        "correction": "CT uses X-rays (ionising radiation); MRI uses a magnet and radio waves and shows soft tissue in more detail.",
+        "cite": [
+          "nibib_ct",
+          "ucsf"
+        ]
+      }
+    },
+    {
+      "id": "fmri",
+      "name": "fMRI",
+      "full": "Functional magnetic resonance imaging",
+      "family": "activity",
+      "short": "Tracks blood oxygen changes that follow brain activity, seconds later.",
+      "measures": {
+        "text": "The BOLD signal: changes in blood flow, blood volume and oxygen use that follow neural activity. It does not measure the activity itself.",
+        "cite": [
+          "buxton",
+          "openstax"
+        ]
+      },
+      "direct": false,
+      "levels": {
+        "beginner": {
+          "summary": "fMRI uses an MRI scanner to follow blood oxygen while you do a task. Active areas get more blood, so fMRI sees activity indirectly and a few seconds late.",
+          "points": [
+            {
+              "text": "The blood signal rises slowly and peaks about 5 to 6 seconds after the brain activity that caused it.",
+              "cite": [
+                "wager"
+              ]
+            },
+            {
+              "text": "A coloured 'active' area is the result of a statistical comparison between conditions, such as a task and a rest period. It is not a part switching on.",
+              "cite": [
+                "wager"
+              ]
+            },
+            {
+              "text": "Seeing an area light up does not by itself tell you what the person was thinking.",
+              "cite": [
+                "poldrack"
+              ]
+            }
+          ]
+        },
+        "expert": {
+          "summary": "BOLD fMRI reflects haemodynamic changes coupled to neural activity, sampled every few seconds at millimetre scale; maps are statistical contrasts, and interpretation is the hard part.",
+          "points": [
+            {
+              "text": "Blood-flow and BOLD responses even to a brief stimulus start after a delay of 1 to 2 seconds and spread over about 4 to 6 seconds.",
+              "cite": [
+                "buxton"
+              ]
+            },
+            {
+              "text": "Typical voxels are about 3 mm on a side, and whole-brain images have usually been taken every 2 to 3 seconds.",
+              "cite": [
+                "wager"
+              ]
+            },
+            {
+              "text": "Reverse inference, concluding that a mental process occurred because a region was active, is not deductively valid; its strength depends on how selectively the region responds.",
+              "cite": [
+                "poldrack"
+              ]
+            },
+            {
+              "text": "Conclusions drawn from fMRI often ignore the method's real limitations.",
+              "cite": [
+                "logothetis"
+              ]
+            }
+          ],
+          "caveat": "BOLD depends on blood flow, blood volume and oxygen metabolism together, so it is not a simple read-out of firing."
+        }
+      },
+      "good_for": [
+        {
+          "text": "Finding where in the brain a task changes activity, at the scale of millimetres.",
+          "cite": [
+            "wager",
+            "gosseries"
+          ]
+        },
+        {
+          "text": "More detailed images and better timing than PET.",
+          "cite": [
+            "openstax"
+          ]
+        }
+      ],
+      "limits": [
+        {
+          "text": "Slow: the blood response lags the neural activity by seconds.",
+          "cite": [
+            "buxton",
+            "wager"
+          ]
+        },
+        {
+          "text": "Indirect: it does not measure neural activity itself.",
+          "cite": [
+            "buxton"
+          ]
+        },
+        {
+          "text": "Head movement during the scan is a serious problem.",
+          "cite": [
+            "wager"
+          ]
+        }
+      ],
+      "experience": {
+        "text": "Like MRI: a loud scanner, no ionising radiation, and you must keep your head still, often while doing tasks.",
+        "cite": [
+          "sp_mri",
+          "wager"
+        ]
+      },
+      "resolution": {
+        "spatial_mm": [
+          3,
+          3
+        ],
+        "temporal_s": [
+          2,
+          6
+        ],
+        "approximate": true,
+        "text": "Location to about 3 mm. Timing in seconds: a new image every 2 to 3 seconds, and the blood response peaks about 5 to 6 seconds after the activity.",
+        "cite": [
+          "wager",
+          "gosseries"
+        ]
+      },
+      "invasive": "none",
+      "misconception": {
+        "claim": "The bright spot on an fMRI picture is the part of the brain that 'does' that thought.",
+        "correction": "The spot marks a statistical difference in blood signal between conditions. Many regions respond in many tasks, so activity alone is weak evidence for a particular mental process.",
+        "cite": [
+          "wager",
+          "poldrack"
+        ]
+      }
+    },
+    {
+      "id": "pet",
+      "name": "PET",
+      "full": "Positron emission tomography",
+      "family": "activity",
+      "short": "A radioactive tracer is injected and its build-up in the brain is imaged.",
+      "measures": {
+        "text": "Where an injected radioactive tracer collects. With the tracer FDG, a radioactively labelled deoxyglucose, it shows where glucose is taken up; other tracers are built to show other things, such as signs of Alzheimer's disease.",
+        "cite": [
+          "nibib_nm",
+          "openstax"
+        ]
+      },
+      "direct": false,
+      "levels": {
+        "beginner": {
+          "summary": "PET follows a mildly radioactive tracer around the body. Busier brain areas take up more of it, so PET shows activity indirectly and over minutes.",
+          "points": [
+            {
+              "text": "The tracer is usually injected into a vein.",
+              "cite": [
+                "nibib_nm"
+              ]
+            },
+            {
+              "text": "It involves a small amount of radiation; the risk is judged to be small compared with the benefit of the scan.",
+              "cite": [
+                "nibib_nm"
+              ]
+            },
+            {
+              "text": "PET shows little detail and cannot pin events down in time.",
+              "cite": [
+                "openstax"
+              ]
+            }
+          ]
+        },
+        "expert": {
+          "summary": "PET images the distribution of positron-emitting tracers. Its strength is molecular specificity, not speed.",
+          "points": [
+            {
+              "text": "Positrons from the tracer annihilate with electrons and produce gamma photons that the scanner detects.",
+              "cite": [
+                "nibib_nm"
+              ]
+            },
+            {
+              "text": "Dedicated brain PET scanners reach about 2 to 3 mm near the centre of the scanner's view, worsening to about 6 mm toward the edge on some systems.",
+              "cite": [
+                "catana"
+              ]
+            },
+            {
+              "text": "Research studies most often use frames of about 5 to 10 minutes.",
+              "cite": [
+                "catana"
+              ]
+            },
+            {
+              "text": "A PET tracer has been approved to help diagnose Alzheimer's disease.",
+              "cite": [
+                "nibib_nm"
+              ]
+            }
+          ],
+          "caveat": "What PET measures depends entirely on the tracer; 'PET shows activity' is true only for tracers of blood flow or glucose use."
+        }
+      },
+      "good_for": [
+        {
+          "text": "Measuring specific molecules, such as neurotransmitter receptors.",
+          "cite": [
+            "openstax"
+          ]
+        },
+        {
+          "text": "Clinical brain imaging, including help with diagnosing Alzheimer's disease.",
+          "cite": [
+            "nibib_nm"
+          ]
+        }
+      ],
+      "limits": [
+        {
+          "text": "Radiation exposure; the cancer risk is considered small compared with the expected benefit.",
+          "cite": [
+            "nibib_nm"
+          ]
+        },
+        {
+          "text": "Less detailed and slower than fMRI for mapping activity during a task.",
+          "cite": [
+            "openstax"
+          ]
+        }
+      ],
+      "experience": {
+        "text": "An injection of a radioactive tracer, then a scan that detects the signals the tracer gives off.",
+        "cite": [
+          "nibib_nm"
+        ]
+      },
+      "resolution": {
+        "spatial_mm": [
+          2,
+          6
+        ],
+        "temporal_s": [
+          300,
+          600
+        ],
+        "approximate": true,
+        "text": "Location to about 2 to 3 mm near the centre of dedicated brain scanners, and about 6 mm toward the edge on some. Timing in minutes: research images often sum about 5 to 10 minutes of data.",
+        "cite": [
+          "catana",
+          "gosseries"
+        ]
+      },
+      "invasive": "injection",
+      "misconception": {
+        "claim": "PET is just a slower fMRI.",
+        "correction": "PET can image specific molecules, such as receptors, depending on the tracer. That is something fMRI cannot do.",
+        "cite": [
+          "openstax",
+          "nibib_nm"
+        ]
+      }
+    },
+    {
+      "id": "eeg",
+      "name": "EEG",
+      "full": "Electroencephalography",
+      "family": "activity",
+      "short": "Scalp electrodes record the brain's electrical rhythms, millisecond by millisecond.",
+      "measures": {
+        "text": "Voltage changes on the scalp produced by the synchronised activity of very many aligned cortical neurons, mostly their postsynaptic currents.",
+        "cite": [
+          "sp_eeg",
+          "he2018"
+        ]
+      },
+      "direct": true,
+      "levels": {
+        "beginner": {
+          "summary": "EEG uses electrodes on the scalp to record the brain's electrical activity. It is very fast but poor at saying exactly where a signal came from.",
+          "points": [
+            {
+              "text": "It catches changes within milliseconds.",
+              "cite": [
+                "openstax"
+              ]
+            },
+            {
+              "text": "Each electrode picks up the summed, synchronised activity of millions of neurons, not single cells.",
+              "cite": [
+                "sp_eeg"
+              ]
+            },
+            {
+              "text": "The signal spreads through the head before it reaches the scalp, which blurs where it came from.",
+              "cite": [
+                "he2018"
+              ]
+            },
+            {
+              "text": "It is widely used to study sleep.",
+              "cite": [
+                "openstax"
+              ]
+            }
+          ]
+        },
+        "expert": {
+          "summary": "EEG measures volume-conducted fields from postsynaptic currents in aligned pyramidal cells; timing is excellent, localisation needs source modelling.",
+          "points": [
+            {
+              "text": "Currents behind action potentials contribute little at the EEG scale; the signal comes mainly from postsynaptic currents.",
+              "cite": [
+                "he2018"
+              ]
+            },
+            {
+              "text": "Estimating sources from scalp data (the inverse problem) is under-determined: many source patterns fit the same recording.",
+              "cite": [
+                "he2018"
+              ]
+            },
+            {
+              "text": "With source imaging, activity can be localised to roughly 5 mm.",
+              "cite": [
+                "he2018"
+              ]
+            },
+            {
+              "text": "Skull and scalp inhomogeneities distort scalp potentials more than they distort magnetic fields.",
+              "cite": [
+                "hamalainen"
+              ]
+            }
+          ],
+          "caveat": "The 5 mm to 1 cm figures assume source modelling; a raw scalp map is far blurrier."
+        }
+      },
+      "good_for": [
+        {
+          "text": "Questions about timing: what happens in the first fractions of a second.",
+          "cite": [
+            "openstax",
+            "gosseries"
+          ]
+        },
+        {
+          "text": "Sleep stages and brain rhythms.",
+          "cite": [
+            "openstax",
+            "sp_eeg"
+          ]
+        }
+      ],
+      "limits": [
+        {
+          "text": "Weak localisation, especially without source modelling.",
+          "cite": [
+            "he2018"
+          ]
+        },
+        {
+          "text": "A single normal EEG does not rule out a problem, because abnormalities can come and go.",
+          "cite": [
+            "sp_eeg"
+          ]
+        }
+      ],
+      "experience": {
+        "text": "Electrodes are placed around the head and record from the scalp.",
+        "cite": [
+          "openstax"
+        ]
+      },
+      "resolution": {
+        "spatial_mm": [
+          5,
+          10
+        ],
+        "temporal_s": [
+          0.001,
+          0.001
+        ],
+        "approximate": true,
+        "text": "Timing to within milliseconds. Location to about 5 mm to 1 cm when source-modelling methods are used.",
+        "cite": [
+          "openstax",
+          "gosseries",
+          "he2018"
+        ]
+      },
+      "invasive": "none",
+      "misconception": {
+        "claim": "The electrode over a spot records the brain right beneath it.",
+        "correction": "Each electrode picks up activity spread through the head from many sources, so working out the true source is an under-determined problem.",
+        "cite": [
+          "he2018"
+        ]
+      }
+    },
+    {
+      "id": "meg",
+      "name": "MEG",
+      "full": "Magnetoencephalography",
+      "family": "activity",
+      "short": "Ultra-sensitive sensors record the brain's tiny magnetic fields in a shielded room.",
+      "measures": {
+        "text": "The magnetic fields produced mainly by postsynaptic currents in pyramidal cells, when thousands to tens of thousands of neighbouring cells are active together.",
+        "cite": [
+          "braeutigam",
+          "hamalainen"
+        ]
+      },
+      "direct": true,
+      "levels": {
+        "beginner": {
+          "summary": "MEG records the magnetic side of the brain's electrical activity. It is as fast as EEG and can pinpoint sources in the folds of the cortex more precisely, but it needs a shielded room.",
+          "points": [
+            {
+              "text": "The brain's magnetic fields are extremely weak compared with magnetic noise from things like passing cars and lifts, so MEG works inside a magnetically shielded room.",
+              "cite": [
+                "hamalainen"
+              ]
+            },
+            {
+              "text": "Its sensors (SQUIDs) only work at very low temperatures, so they sit in a helmet cooled with liquid helium.",
+              "cite": [
+                "braeutigam",
+                "hamalainen"
+              ]
+            },
+            {
+              "text": "It is silent and completely non-invasive.",
+              "cite": [
+                "braeutigam"
+              ]
+            }
+          ]
+        },
+        "expert": {
+          "summary": "MEG measures extracranial magnetic fields of tens to hundreds of femtotesla with sub-millisecond resolution; it is blind to some source orientations.",
+          "points": [
+            {
+              "text": "Neuromagnetic signals are typically about 50 to 500 fT.",
+              "cite": [
+                "hamalainen"
+              ]
+            },
+            {
+              "text": "Radially oriented sources are nearly silent outside the head, so MEG sees mainly activity in the cortical fissures, and is relatively insensitive to deep sources.",
+              "cite": [
+                "hamalainen",
+                "braeutigam"
+              ]
+            },
+            {
+              "text": "Unlike EEG, MEG is reference-free and largely unaffected by differences in tissue conductivity.",
+              "cite": [
+                "braeutigam"
+              ]
+            },
+            {
+              "text": "Under favourable conditions it can localise sources to a few millimetres, better than EEG.",
+              "cite": [
+                "hamalainen"
+              ]
+            }
+          ],
+          "caveat": "The inverse problem has no unique solution (shown by Helmholtz in 1853), so every MEG location rests on a source model."
+        }
+      },
+      "good_for": [
+        {
+          "text": "Fast cortical events with better localisation than EEG.",
+          "cite": [
+            "hamalainen",
+            "gosseries"
+          ]
+        }
+      ],
+      "limits": [
+        {
+          "text": "Needs a shielded room and cryogenically cooled sensors.",
+          "cite": [
+            "braeutigam"
+          ]
+        },
+        {
+          "text": "Relatively insensitive to deep and radially oriented sources.",
+          "cite": [
+            "braeutigam"
+          ]
+        },
+        {
+          "text": "Implanted metal objects create artefacts that are hard to correct.",
+          "cite": [
+            "braeutigam"
+          ]
+        }
+      ],
+      "experience": {
+        "text": "Your head rests in a helmet-shaped array of sensors and needs to stay still; the machine makes no noise.",
+        "cite": [
+          "braeutigam"
+        ]
+      },
+      "resolution": {
+        "spatial_mm": [
+          5,
+          10
+        ],
+        "temporal_s": [
+          0.001,
+          0.001
+        ],
+        "approximate": true,
+        "text": "Timing better than a millisecond. Location to about 5 mm to 1 cm, and a few millimetres under favourable conditions.",
+        "cite": [
+          "hamalainen",
+          "braeutigam",
+          "gosseries",
+          "he2018"
+        ]
+      },
+      "invasive": "none",
+      "misconception": {
+        "claim": "MEG is a kind of MRI scan, since both involve magnetism.",
+        "correction": "MEG measures the magnetic fields produced by the brain's own currents, so it records activity directly; it does not rely on secondary effects of activity, as blood-based methods do.",
+        "cite": [
+          "braeutigam"
+        ]
+      }
+    }
+  ],
+  "eeg": {
+    "system": {
+      "text": "The 10–20 system places 19 electrodes on the scalp, plus a reference on each ear, at fixed steps of 10% or 20% of the distance between landmarks on the head, such as the nasion (between the forehead and nose) and the inion (the bump at the back of the skull). Each name is a letter for the area plus a number: odd numbers on the left, even on the right, and z for the midline. Newer guidelines rename T3, T4, T5 and T6 as T7, T8, P7 and P8.",
+      "cite": [
+        "chudler",
+        "acns"
+      ]
+    },
+    "letters": [
+      {
+        "letter": "Fp",
+        "meaning": "prefrontal (front of the forehead)",
+        "cite": [
+          "acns"
+        ]
+      },
+      {
+        "letter": "F",
+        "meaning": "frontal",
+        "cite": [
+          "chudler"
+        ]
+      },
+      {
+        "letter": "C",
+        "meaning": "central (a label only; there is no 'central lobe')",
+        "cite": [
+          "chudler"
+        ]
+      },
+      {
+        "letter": "T",
+        "meaning": "temporal",
+        "cite": [
+          "chudler"
+        ]
+      },
+      {
+        "letter": "P",
+        "meaning": "parietal",
+        "cite": [
+          "chudler"
+        ]
+      },
+      {
+        "letter": "O",
+        "meaning": "occipital",
+        "cite": [
+          "chudler"
+        ]
+      },
+      {
+        "letter": "A",
+        "meaning": "ear reference",
+        "cite": [
+          "acns"
+        ]
+      },
+      {
+        "letter": "z",
+        "meaning": "midline",
+        "cite": [
+          "chudler"
+        ]
+      }
+    ],
+    "electrodes": [
+      {
+        "id": "Fp1",
+        "x": -0.247,
+        "y": 0.761,
+        "region": "left prefrontal"
+      },
+      {
+        "id": "Fp2",
+        "x": 0.247,
+        "y": 0.761,
+        "region": "right prefrontal"
+      },
+      {
+        "id": "F7",
+        "x": -0.647,
+        "y": 0.47,
+        "region": "left frontal, lower side (anterior temporal)"
+      },
+      {
+        "id": "F3",
+        "x": -0.33,
+        "y": 0.42,
+        "region": "left frontal"
+      },
+      {
+        "id": "Fz",
+        "x": 0.0,
+        "y": 0.4,
+        "region": "frontal midline"
+      },
+      {
+        "id": "F4",
+        "x": 0.33,
+        "y": 0.42,
+        "region": "right frontal"
+      },
+      {
+        "id": "F8",
+        "x": 0.647,
+        "y": 0.47,
+        "region": "right frontal, lower side (anterior temporal)"
+      },
+      {
+        "id": "T3",
+        "x": -0.8,
+        "y": 0.0,
+        "region": "left temporal"
+      },
+      {
+        "id": "C3",
+        "x": -0.4,
+        "y": 0.0,
+        "region": "left central"
+      },
+      {
+        "id": "Cz",
+        "x": 0.0,
+        "y": 0.0,
+        "region": "central midline (top of the head)"
+      },
+      {
+        "id": "C4",
+        "x": 0.4,
+        "y": 0.0,
+        "region": "right central"
+      },
+      {
+        "id": "T4",
+        "x": 0.8,
+        "y": 0.0,
+        "region": "right temporal"
+      },
+      {
+        "id": "T5",
+        "x": -0.647,
+        "y": -0.47,
+        "region": "left temporal, toward the back"
+      },
+      {
+        "id": "P3",
+        "x": -0.33,
+        "y": -0.42,
+        "region": "left parietal"
+      },
+      {
+        "id": "Pz",
+        "x": 0.0,
+        "y": -0.4,
+        "region": "parietal midline"
+      },
+      {
+        "id": "P4",
+        "x": 0.33,
+        "y": -0.42,
+        "region": "right parietal"
+      },
+      {
+        "id": "T6",
+        "x": 0.647,
+        "y": -0.47,
+        "region": "right temporal, toward the back"
+      },
+      {
+        "id": "O1",
+        "x": -0.247,
+        "y": -0.761,
+        "region": "left occipital"
+      },
+      {
+        "id": "O2",
+        "x": 0.247,
+        "y": -0.761,
+        "region": "right occipital"
+      },
+      {
+        "id": "A1",
+        "x": -1.08,
+        "y": 0.0,
+        "region": "left ear reference"
+      },
+      {
+        "id": "A2",
+        "x": 1.08,
+        "y": 0.0,
+        "region": "right ear reference"
+      }
+    ],
+    "bands": [
+      {
+        "id": "delta",
+        "name": "Delta",
+        "hz": [
+          0.5,
+          4
+        ],
+        "text": "About 0.5 to 4 Hz. Normal in deep sleep, strongest over the front and centre of the head.",
+        "cite": [
+          "sp_eeg"
+        ]
+      },
+      {
+        "id": "theta",
+        "name": "Theta",
+        "hz": [
+          4,
+          7
+        ],
+        "text": "About 4 to 7 Hz. Appears with drowsiness and light sleep.",
+        "cite": [
+          "sp_eeg"
+        ]
+      },
+      {
+        "id": "alpha",
+        "name": "Alpha",
+        "hz": [
+          8,
+          12
+        ],
+        "text": "About 8 to 12 Hz. Seen over the back of the head when awake and relaxed, strongest with the eyes closed.",
+        "cite": [
+          "sp_eeg"
+        ]
+      },
+      {
+        "id": "beta",
+        "name": "Beta",
+        "hz": [
+          13,
+          30
+        ],
+        "text": "About 13 to 30 Hz. The most common rhythm in awake adults and children, strongest over the front and centre.",
+        "cite": [
+          "sp_eeg"
+        ]
+      },
+      {
+        "id": "gamma",
+        "name": "Gamma",
+        "hz": [
+          30,
+          80
+        ],
+        "text": "About 30 to 80 Hz. Seen in the cerebral cortex across the sleep–wake cycle.",
+        "cite": [
+          "sp_eeg"
+        ]
+      }
+    ],
+    "bands_note": {
+      "text": "Band edges differ slightly between sources, and even within one source (theta is sometimes given as 4 to 8 Hz, beta as starting at 10 Hz). The ranges here follow the main definitions in the cited chapter.",
+      "cite": [
+        "sp_eeg"
+      ]
+    },
+    "depth": {
+      "text": "Scalp EEG is dominated by the cerebral cortex: it needs large groups of neurons lined up in parallel and active together, and cortical pyramidal cells are arranged that way. Their signals then spread through the head before reaching the scalp, so the scalp record mainly reflects the cortex and blurs where any signal came from.",
+      "cite": [
+        "sp_eeg",
+        "he2018"
+      ]
+    }
+  },
+  "chooser": [
+    {
+      "q": "You want to know how many milliseconds after seeing a face the brain first responds differently to faces than to houses. The lab has a small budget.",
+      "options": [
+        "eeg",
+        "fmri",
+        "pet",
+        "mri"
+      ],
+      "answer": "eeg",
+      "explain": "Timing against location: EEG resolves milliseconds. fMRI and PET are seconds to minutes too slow, and MRI shows no activity at all.",
+      "cite": [
+        "openstax",
+        "gosseries"
+      ]
+    },
+    {
+      "q": "You want to find which millimetre-scale patch of visual cortex responds more to faces than to houses.",
+      "options": [
+        "fmri",
+        "eeg",
+        "ct",
+        "dti"
+      ],
+      "answer": "fmri",
+      "explain": "Location against timing: fMRI resolves a few millimetres, though its signal lags by seconds. EEG times things well but localises poorly; CT and DTI show structure, not activity.",
+      "cite": [
+        "wager",
+        "gosseries"
+      ]
+    },
+    {
+      "q": "A patient arrives in the emergency department after a head injury, and doctors need to check for bleeding fast.",
+      "options": [
+        "ct",
+        "mri",
+        "pet",
+        "meg"
+      ],
+      "answer": "ct",
+      "explain": "Speed against detail: CT is fast and the usual choice for trauma and acute emergencies, and it detects bleeding. MRI gives more soft-tissue detail but takes longer.",
+      "cite": [
+        "ucsf",
+        "nibib_ct"
+      ]
+    },
+    {
+      "q": "You want to follow the course of a large white-matter bundle connecting two brain regions.",
+      "options": [
+        "dti",
+        "fmri",
+        "eeg",
+        "ct"
+      ],
+      "answer": "dti",
+      "explain": "Structure against activity: DTI follows water diffusion along fibre bundles. It shows likely routes, not which way signals flow.",
+      "cite": [
+        "mori"
+      ]
+    },
+    {
+      "q": "You want to measure where a particular neurotransmitter receptor is concentrated in the living brain.",
+      "options": [
+        "pet",
+        "fmri",
+        "eeg",
+        "mri"
+      ],
+      "answer": "pet",
+      "explain": "Risk against benefit: PET with a suitable tracer can image specific molecules such as receptors, at the cost of an injection and a radiation dose.",
+      "cite": [
+        "openstax",
+        "nibib_nm"
+      ]
+    },
+    {
+      "q": "You need millisecond timing and better localisation than EEG for a cortical response, and you have access to a shielded room.",
+      "options": [
+        "meg",
+        "eeg",
+        "fmri",
+        "pet"
+      ],
+      "answer": "meg",
+      "explain": "Timing and location together: MEG keeps sub-millisecond timing and, under favourable conditions, localises cortical sources more precisely than EEG, but needs a shielded room and helium-cooled sensors.",
+      "cite": [
+        "hamalainen",
+        "braeutigam"
+      ]
+    },
+    {
+      "q": "You want a detailed picture of a healthy volunteer's brain anatomy for a study, with no radiation.",
+      "options": [
+        "mri",
+        "ct",
+        "pet",
+        "eeg"
+      ],
+      "answer": "mri",
+      "explain": "Structure, and risk: MRI gives more soft-tissue detail than CT and uses no ionising radiation; CT and PET both involve radiation.",
+      "cite": [
+        "ucsf",
+        "sp_mri",
+        "nibib_nm"
+      ]
+    },
+    {
+      "q": "You want to study how brain rhythms change across the stages of a full night's sleep.",
+      "options": [
+        "eeg",
+        "fmri",
+        "pet",
+        "ct"
+      ],
+      "answer": "eeg",
+      "explain": "Timing, and practicality: EEG tracks rhythms continuously and is widely used to study sleep. Scanners are loud and can trigger claustrophobia, and PET and CT add radiation.",
+      "cite": [
+        "openstax",
+        "sp_eeg",
+        "sp_mri",
+        "nibib_ct",
+        "nibib_nm"
+      ]
+    },
+    {
+      "q": "A study needs a patient's brain anatomy, but the patient has a pacemaker that is not safe in the scanner's magnet.",
+      "options": [
+        "ct",
+        "mri",
+        "dti",
+        "fmri"
+      ],
+      "answer": "ct",
+      "explain": "Safety against detail: implanted electronic devices can make MRI-based scans (MRI, DTI, fMRI) unsafe, while CT can be done without that risk, at the cost of radiation and less soft-tissue detail.",
+      "cite": [
+        "sp_mri",
+        "ucsf"
+      ]
+    }
+  ],
+  "glossary": [
+    {
+      "term": "BOLD signal",
+      "definition": "The blood-oxygen signal that fMRI measures. It reflects changes in blood flow, volume and oxygen use after neural activity, not the activity itself.",
+      "cite": [
+        "buxton"
+      ]
+    },
+    {
+      "term": "Haemodynamic response",
+      "definition": "The change in local blood flow that follows neural activity. In fMRI it starts after a delay of 1 to 2 seconds.",
+      "cite": [
+        "buxton"
+      ]
+    },
+    {
+      "term": "Voxel",
+      "definition": "A 3D picture element of a scan. Typical fMRI voxels are about 3 mm on a side.",
+      "cite": [
+        "wager"
+      ]
+    },
+    {
+      "term": "Reverse inference",
+      "definition": "Concluding that a mental process took place because a brain region was active. It is only as strong as the region is selective.",
+      "cite": [
+        "poldrack"
+      ]
+    },
+    {
+      "term": "Ionising radiation",
+      "definition": "Radiation, such as X-rays, used by CT and PET (by different means). MRI does not use it.",
+      "cite": [
+        "nibib_ct",
+        "nibib_nm",
+        "sp_mri"
+      ]
+    },
+    {
+      "term": "Radiotracer",
+      "definition": "A radioactive substance given for PET, usually by injection, whose build-up the scanner images.",
+      "cite": [
+        "nibib_nm"
+      ]
+    },
+    {
+      "term": "Tractography",
+      "definition": "Joining diffusion directions from DTI into 3D reconstructions of fibre tracts.",
+      "cite": [
+        "mori"
+      ]
+    },
+    {
+      "term": "Inverse problem",
+      "definition": "Working out where in the brain a scalp EEG or MEG signal came from. Many source patterns fit the same measurement, so a model is needed.",
+      "cite": [
+        "he2018",
+        "hamalainen"
+      ]
+    },
+    {
+      "term": "SQUID",
+      "definition": "The superconducting sensor in most MEG systems; it has to be cooled with liquid helium.",
+      "cite": [
+        "hamalainen",
+        "braeutigam"
+      ]
+    },
+    {
+      "term": "10–20 system",
+      "definition": "The standard way of placing and naming scalp EEG electrodes, at 10% or 20% steps between head landmarks.",
+      "cite": [
+        "chudler"
+      ]
+    }
+  ]
+}

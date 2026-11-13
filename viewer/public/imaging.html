@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self' blob: data:; worker-src 'self' blob:; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="description" content="What MRI, DTI, CT, fMRI, PET, EEG and MEG each measure, what they are good for, and what they cannot tell you. Every fact is cited.">
+<link rel="icon" href="./assets/favicon.svg">
+<title>Brain imaging: NeuroApp</title>
+<style>
+@font-face{font-family:"Inter";src:url("./vendor/fonts/inter-var.woff2") format("woff2");font-weight:100 900;font-display:swap}
+@font-face{font-family:"Space Grotesk";src:url("./vendor/fonts/space-grotesk-var.woff2") format("woff2");font-weight:300 700;font-display:swap}
+:root{
+  --bg-0:#060912; --bg-1:#0b1120; --bg-2:#111a2e;
+  --surface:rgba(16,24,42,.72); --surface-solid:#121b30; --border:rgba(148,163,209,.16);
+  --text:#e8ecf6; --muted:#9aa5bd; --faint:#6b7590;
+  --violet:#8b6cff; --cyan:#22d3ee; --pink:#f472b6; --green:#34d399; --amber:#fbbf24; --red:#f87171;
+  --grad:linear-gradient(135deg,#8b6cff 0%,#22d3ee 100%);
+  --radius:14px; --radius-sm:10px; --shadow:0 10px 40px rgba(0,0,0,.45);
+  --link:#a5b4fc;
+}
+*,::before,::after{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%;scroll-padding-top:76px}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+body{background:var(--bg-0);color:var(--text);font-family:"Inter",system-ui,sans-serif;font-size:15px;line-height:1.6;min-height:100vh;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0;background-image:radial-gradient(rgba(255,255,255,.035) 1px,transparent 1px);background-size:24px 24px;pointer-events:none;z-index:0}
+body::after{content:"";position:fixed;inset:0;background:radial-gradient(ellipse 60vw 60vw at 0% 0%,rgba(139,108,255,.18) 0%,transparent 65%),radial-gradient(ellipse 55vw 55vw at 100% 100%,rgba(34,211,238,.16) 0%,transparent 65%);filter:blur(120px);pointer-events:none;z-index:0}
+:focus-visible{outline:2px solid var(--cyan);outline-offset:3px;border-radius:4px}
+a{color:var(--link)}
+h1,h2,h3{font-family:"Space Grotesk",sans-serif;line-height:1.2;font-weight:600}
+button{font:inherit;color:inherit;cursor:pointer}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* header */
+#topbar{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px 16px;padding:8px clamp(14px,4vw,48px);min-height:60px;background:rgba(10,15,28,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--border)}
+.brand{display:flex;align-items:center;gap:9px;text-decoration:none;font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:1.1rem;color:var(--text);min-height:44px}
+.modes{display:flex;gap:4px;flex-wrap:wrap}
+.modes a{display:inline-flex;align-items:center;min-height:44px;padding:0 12px;border-radius:999px;color:var(--muted);text-decoration:none;font-size:.88rem;border:1px solid transparent}
+.modes a:hover{color:var(--text)}
+.modes a[aria-current="page"]{color:var(--text);border-color:rgba(139,108,255,.55);background:rgba(139,108,255,.14)}
+
+main{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:0 clamp(14px,4vw,40px) 40px}
+section{padding:44px 0 8px;scroll-margin-top:72px}
+section > h2{font-size:clamp(1.35rem,2.6vw,1.8rem);margin-bottom:8px}
+.lede{color:var(--muted);max-width:68ch;margin-bottom:18px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow)}
+.illus{font-size:.78rem;color:var(--muted);font-style:italic}
+
+/* opening */
+#opening{padding-top:40px}
+#opening h1{font-size:clamp(1.8rem,4.6vw,2.9rem);max-width:22ch;margin-bottom:14px}
+#opening h1 span{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+#intro{font-size:1.06rem;max-width:62ch;color:var(--text);margin-bottom:18px}
+.level{display:inline-flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+.level .lbl{color:var(--muted);font-size:.9rem}
+.seg{display:inline-flex;border:1px solid var(--border);border-radius:999px;padding:3px;background:var(--surface-solid)}
+.seg button{min-height:40px;min-width:44px;padding:0 16px;border:0;border-radius:999px;background:transparent;color:var(--muted);font-size:.9rem;font-weight:500}
+.seg button[aria-pressed="true"]{background:var(--grad);color:#060912;font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:inline-flex;align-items:center;gap:7px;min-height:44px;padding:0 16px;border-radius:999px;border:1px solid var(--border);background:var(--surface-solid);color:var(--text);text-decoration:none;font-weight:600;font-size:.92rem}
+.chip:hover{border-color:rgba(139,108,255,.55)}
+.dot{width:10px;height:10px;border-radius:50%;flex:none}
+
+/* families */
+.fam{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.fam h3{font-size:1.15rem;margin-bottom:6px}
+.fam .card{border-top:3px solid var(--violet)}
+.fam .card.activity{border-top-color:var(--cyan)}
+.fam .mini{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+.fam .mini a{min-height:44px;display:inline-flex;align-items:center;padding:0 12px;border-radius:var(--radius-sm);background:rgba(255,255,255,.05);color:var(--text);text-decoration:none;font-weight:600;font-size:.88rem}
+
+/* chart */
+#chart-wrap{position:relative;padding:4px 10px 6px}
+#chart{display:block;width:100%;height:auto;overflow:visible}
+#chart text{font-family:"Inter",sans-serif;fill:var(--muted)}
+#chart .bar{cursor:pointer}
+#chart .bar:focus{outline:none}
+#chart .bar:focus-visible rect.hit{stroke:var(--text);stroke-width:2;stroke-dasharray:4 3}
+#chart .bar.dim{opacity:.5}
+.chart-caption{color:var(--text);margin:10px 4px 4px;max-width:80ch}
+.chart-note{color:var(--muted);font-size:.85rem;margin:4px 4px 0}
+.picker{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
+.picker button{min-height:44px;padding:0 14px;border-radius:999px;border:1px solid var(--border);background:var(--surface-solid);font-weight:600;display:inline-flex;align-items:center;gap:7px}
+.picker button[aria-pressed="true"]{border-color:var(--text);background:rgba(255,255,255,.1)}
+#res-detail{min-height:3.2em;padding:14px 16px;border-radius:var(--radius-sm);background:var(--surface-solid);border:1px solid var(--border)}
+#res-detail strong{font-family:"Space Grotesk",sans-serif}
+.tbl-wrap{overflow-x:auto;margin-top:16px}
+table{border-collapse:collapse;width:100%;font-size:.9rem}
+caption{text-align:left;color:var(--muted);padding:0 0 8px;font-size:.88rem}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--border);vertical-align:top}
+th{font-weight:600;color:var(--text)}
+td{color:var(--text)}
+
+/* method cards */
+.mcard{margin-bottom:18px;padding:0;overflow:hidden;scroll-margin-top:72px}
+.mhead{display:flex;align-items:center;gap:14px;padding:18px 20px;border-bottom:1px solid var(--border)}
+.mhead h3{font-size:1.4rem}
+.mhead .full{color:var(--muted);font-size:.95rem}
+.mhead .tg{margin-left:auto}
+.mtoggle{display:none}
+.mbody{display:grid;grid-template-columns:minmax(220px,300px) 1fr;gap:22px;padding:20px}
+.schem{background:var(--bg-1);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px}
+.schem svg{display:block;width:100%;height:auto}
+.schem svg text{font-family:"Inter",sans-serif;font-size:11px;fill:var(--muted)}
+.mcol h4{font-family:"Space Grotesk",sans-serif;font-size:1rem;margin:16px 0 6px;color:var(--text)}
+.mcol h4:first-child{margin-top:0}
+.mcol p,.mcol li{color:var(--text)}
+.mcol ul{padding-left:20px}
+.mcol li{margin:4px 0}
+.tag{display:inline-flex;align-items:center;min-height:26px;padding:0 10px;border-radius:999px;font-size:.78rem;font-weight:600;border:1px solid}
+.tag.direct{color:#86efac;border-color:rgba(52,211,153,.5);background:rgba(52,211,153,.1)}
+.tag.indirect{color:#fcd34d;border-color:rgba(251,191,36,.5);background:rgba(251,191,36,.1)}
+.tag.anat{color:#c4b5fd;border-color:rgba(139,108,255,.55);background:rgba(139,108,255,.12)}
+.summary{font-size:1.02rem;margin-bottom:8px}
+.caveat{margin-top:10px;padding:10px 12px;border-left:3px solid var(--amber);background:rgba(251,191,36,.07);border-radius:0 8px 8px 0;color:var(--text);font-size:.92rem}
+.mixup{margin-top:16px;padding:12px 14px;border-radius:var(--radius-sm);background:rgba(244,114,182,.08);border:1px solid rgba(244,114,182,.35)}
+.mixup .claim{color:var(--muted)}
+.mixup .claim s{text-decoration-color:rgba(244,114,182,.8)}
+.twocol{display:grid;grid-template-columns:1fr 1fr;gap:6px 22px}
+
+/* cite markers */
+.cite{position:relative;display:inline-block;margin:0 1px 0 3px;padding:1px 6px;min-width:22px;border:0;border-radius:5px;background:rgba(88,166,255,.14);color:#9ccbff;font-size:.72rem;line-height:1.5;vertical-align:super;font-weight:600}
+/* inline citation markers: hit area extended vertically only, so neighbouring markers never overlap */
+.cite::after{content:"";position:absolute;left:0;right:0;top:50%;height:40px;transform:translateY(-50%)}
+.cite:hover{background:rgba(88,166,255,.28)}
+#cite-pop{position:absolute;z-index:80;max-width:min(420px,calc(100vw - 24px));padding:14px 16px;background:#16213b;border:1px solid rgba(148,163,209,.35);border-radius:var(--radius-sm);box-shadow:var(--shadow);font-size:.88rem;color:var(--text)}
+#cite-pop[hidden]{display:none}
+#cite-pop p{margin-bottom:6px}
+#cite-pop a{word-break:break-all}
+#cite-pop .close{position:absolute;top:4px;right:4px;width:44px;height:44px;border:0;background:transparent;color:var(--muted);font-size:1.2rem}
+
+/* EEG */
+.eeg-grid{display:grid;grid-template-columns:minmax(280px,420px) 1fr;gap:20px}
+#head-box{position:relative;width:100%;max-width:420px;aspect-ratio:1/1.04;margin:0 auto}
+#head-box svg{position:absolute;inset:0;width:100%;height:100%}
+.el{position:absolute;width:44px;height:44px;transform:translate(-50%,-50%);border:0;background:transparent;display:flex;align-items:center;justify-content:center;padding:0}
+.el span{display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;background:#1b2747;border:1.5px solid rgba(148,163,209,.55);font-size:.68rem;font-weight:700;color:var(--text)}
+.el.ref span{border-style:dashed;background:#141c33}
+.el[aria-pressed="true"] span{background:var(--cyan);color:#060912;border-color:var(--cyan)}
+.el:hover span{border-color:var(--cyan)}
+#el-detail{margin-top:12px;min-height:5.4em}
+#el-detail .big{font-family:"Space Grotesk",sans-serif;font-size:1.5rem;font-weight:600}
+.bands{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 12px}
+.bands button{min-height:44px;padding:0 14px;border-radius:999px;border:1px solid var(--border);background:var(--surface-solid);font-weight:600}
+.bands button[aria-pressed="true"]{border-color:var(--green);background:rgba(52,211,153,.15)}
+#wave{display:block;width:100%;height:170px;background:var(--bg-1);border:1px solid var(--border);border-radius:var(--radius-sm)}
+.wave-row{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:6px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:44px;padding:0 18px;border-radius:999px;border:1px solid var(--border);background:var(--surface-solid);color:var(--text);font-weight:600;text-decoration:none}
+.btn.primary{background:var(--grad);color:#060912;border:0}
+.btn:hover{border-color:rgba(139,108,255,.55)}
+#depth{margin-top:18px}
+
+/* quiz */
+#quiz .q{font-size:1.1rem;margin:6px 0 14px;max-width:70ch}
+#quiz .progress{color:var(--muted);font-size:.88rem}
+.opts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.opts button{min-height:52px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface-solid);font-weight:600;font-size:1rem}
+.opts button:disabled{cursor:default}
+.opts button.right{border-color:var(--green);background:rgba(52,211,153,.18)}
+.opts button.wrong{border-color:var(--red);background:rgba(248,113,113,.15)}
+#quiz-fb{margin-top:14px;min-height:1.5em}
+#quiz-fb .verdict{font-weight:700}
+#quiz-fb .verdict.ok{color:#86efac}
+#quiz-fb .verdict.no{color:#fca5a5}
+.quiz-actions{margin-top:14px;display:flex;gap:10px;flex-wrap:wrap}
+
+/* glossary & sources */
+dl.gloss{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+dl.gloss div{padding:14px 16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm)}
+dl.gloss dt{font-weight:700;font-family:"Space Grotesk",sans-serif}
+dl.gloss dd{color:var(--text);margin-top:4px}
+ol.srcs{padding-left:28px}
+ol.srcs li{margin:8px 0;color:var(--text);font-size:.9rem}
+ol.srcs a{word-break:break-all}
+.note-small{color:var(--muted);font-size:.85rem;margin-top:10px}
+.closing{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px}
+
+footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:18px clamp(14px,4vw,40px);color:var(--muted);font-size:.88rem;display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;justify-content:space-between;max-width:1120px;margin:0 auto}
+#foot-sources{max-width:1120px;margin:0 auto;padding:0 clamp(14px,4vw,40px) 30px;position:relative;z-index:1}
+
+/* MOBILE (<=760px): single column, method cards collapse */
+@media (max-width:760px){
+  section{padding-top:34px}
+  #topbar{position:relative}
+  .fam{grid-template-columns:1fr}
+  .mbody{grid-template-columns:1fr;padding:16px}
+  .mcard:not(.open) .mbody{display:none}
+  .mtoggle{display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;margin-left:8px;border-radius:999px;border:1px solid var(--border);background:var(--surface-solid);font-size:.85rem;padding:0 12px}
+  .mhead{flex-wrap:wrap;padding:14px 16px;gap:8px 12px}
+  .mhead .tg{margin-left:0}
+  .twocol{grid-template-columns:1fr}
+  .eeg-grid{grid-template-columns:1fr}
+  .opts{grid-template-columns:repeat(2,minmax(0,1fr))}
+  dl.gloss{grid-template-columns:1fr}
+  .modes a{padding:0 10px;font-size:.84rem}
+  .card{padding:16px}
+  #chart-wrap{padding:10px 2px 4px}
+}
+@media (max-width:400px){
+  .brand{font-size:1rem}
+  .modes a{padding:0 8px}
+}
+</style>
+</head>
+<body>
+
+<header id="topbar">
+  <a href="./index.html" class="brand" aria-label="NeuroApp home">
+    <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true" focusable="false">
+      <defs>
+        <linearGradient id="ng" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#8b6cff"/>
+          <stop offset="100%" stop-color="#22d3ee"/>
+        </linearGradient>
+      </defs>
+      <circle cx="15" cy="15" r="4.5" stroke="url(#ng)" stroke-width="1.8" fill="none"/>
+      <path d="M15 10.5 C14 6, 10 4, 8 2" stroke="url(#ng)" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+      <path d="M15 10.5 C16.5 7, 20 5.5, 22 3.5" stroke="url(#ng)" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+      <path d="M18.9 13 C22 12, 25.5 10, 28 9" stroke="url(#ng)" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+      <path d="M18.9 17 C22 19, 26 20.5, 28 22" stroke="url(#ng)" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+      <path d="M15 19.5 C14 23, 11 26, 9 28" stroke="url(#ng)" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+      <path d="M11.1 17 C8 18.5, 5 20, 2 21" stroke="url(#ng)" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+    </svg>
+    NeuroApp
+  </a>
+  <nav class="modes" aria-label="Modes">
+    <a href="./atlas-viewer.html">Whole brain</a>
+    <a href="./neuron.html">Neuron</a>
+    <a href="./imaging.html" aria-current="page">Imaging</a>
+  </nav>
+</header>
+
+<main id="main">
+  <section id="opening" aria-labelledby="h-open">
+    <h1 id="h-open">How scientists <span>look at the brain</span></h1>
+    <p id="intro"></p>
+    <div class="level" role="group" aria-labelledby="lvl-lbl">
+      <span class="lbl" id="lvl-lbl">Level:</span>
+      <div class="seg">
+        <button type="button" data-level="beginner" aria-pressed="true">New to it</button>
+        <button type="button" data-level="expert" aria-pressed="false">Expert</button>
+      </div>
+    </div>
+    <nav class="chips" id="chips" aria-label="Jump to a method"></nav>
+    <p id="load-err" class="lede" hidden>The content file could not be loaded. Please reload the page.</p>
+  </section>
+
+  <section id="families" aria-labelledby="h-fam">
+    <h2 id="h-fam">Two questions, two families</h2>
+    <div class="fam" id="fam"></div>
+  </section>
+
+  <section id="tradeoff" aria-labelledby="h-chart">
+    <h2 id="h-chart">The trade-off: when against where</h2>
+    <p class="lede">Each box spans the cited range for a method. Further left means finer timing; lower means finer detail. Select a box or a button to read the numbers.</p>
+    <div class="card">
+      <div id="chart-wrap"><svg id="chart" role="img" aria-labelledby="chart-title chart-desc"><title id="chart-title">Time and space resolution of brain imaging methods</title><desc id="chart-desc">The same data are listed in the table below the chart.</desc></svg></div>
+      <p class="chart-caption" id="chart-caption"></p>
+      <p class="chart-note">Where a source gives a single value, the box is drawn a little wider so it can be seen. EEG and MEG share the same cited range, so they are drawn side by side.</p>
+      <div class="picker" id="picker" role="group" aria-label="Choose a method"></div>
+      <div id="res-detail" aria-live="polite"></div>
+      <div class="tbl-wrap">
+        <table id="res-table">
+          <caption>Approximate resolution of each method, as given by the cited sources</caption>
+          <thead><tr><th scope="col">Method</th><th scope="col">Finest detail</th><th scope="col">Finest timing</th><th scope="col">In plain words</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section id="methods" aria-labelledby="h-methods">
+    <h2 id="h-methods">The methods, one by one</h2>
+    <p class="lede">Each drawing is an illustration, not a real scan and not to scale.</p>
+    <div id="cards"></div>
+  </section>
+
+  <section id="eeg" aria-labelledby="h-eeg">
+    <h2 id="h-eeg">EEG explorer</h2>
+    <p class="lede" id="eeg-system"></p>
+    <div class="eeg-grid">
+      <div class="card">
+        <h3 style="font-size:1.05rem;margin-bottom:4px">Electrodes, seen from above</h3>
+        <p class="illus">Illustration, not to scale. Nose at the top. Positions are approximate.</p>
+        <div id="head-box" role="group" aria-label="EEG electrodes in the 10–20 system">
+          <svg viewBox="-1.25 -1.3 2.5 2.6" aria-hidden="true" focusable="false">
+            <path d="M-0.13,-0.985 L0,-1.17 L0.13,-0.985" fill="none" stroke="#9aa5bd" stroke-width="0.02" stroke-linejoin="round"/>
+            <ellipse cx="-1.02" cy="0" rx="0.08" ry="0.2" fill="none" stroke="#9aa5bd" stroke-width="0.02"/>
+            <ellipse cx="1.02" cy="0" rx="0.08" ry="0.2" fill="none" stroke="#9aa5bd" stroke-width="0.02"/>
+            <circle cx="0" cy="0" r="1" fill="#0e1628" stroke="#9aa5bd" stroke-width="0.02"/>
+            <line x1="0" y1="-1" x2="0" y2="1" stroke="rgba(148,163,209,.22)" stroke-width="0.01" stroke-dasharray="0.04 0.03"/>
+            <line x1="-1" y1="0" x2="1" y2="0" stroke="rgba(148,163,209,.22)" stroke-width="0.01" stroke-dasharray="0.04 0.03"/>
+            <circle cx="0" cy="0" r="0.8" fill="none" stroke="rgba(148,163,209,.18)" stroke-width="0.01"/>
+            <text x="0" y="-1.2" text-anchor="middle" font-size="0.09" fill="#9aa5bd">nose</text>
+            <text x="-1.16" y="0.33" text-anchor="middle" font-size="0.08" fill="#9aa5bd">left</text>
+            <text x="1.16" y="0.33" text-anchor="middle" font-size="0.08" fill="#9aa5bd">right</text>
+          </svg>
+        </div>
+        <div id="el-detail" aria-live="polite"></div>
+      </div>
+      <div class="card">
+        <h3 style="font-size:1.05rem;margin-bottom:4px">Brain rhythms</h3>
+        <p class="illus">Synthetic signal for illustration. Real EEG is far less regular.</p>
+        <div class="bands" id="bands" role="group" aria-label="Choose a frequency band"></div>
+        <canvas id="wave" width="640" height="170" role="img" aria-label="Synthetic wave"></canvas>
+        <div class="wave-row">
+          <span class="note-small" id="wave-note" style="margin:0"></span>
+          <button type="button" class="btn" id="wave-play">Pause</button>
+        </div>
+        <p id="band-text" aria-live="polite" style="margin-top:10px"></p>
+        <p id="band-note" class="note-small"></p>
+      </div>
+    </div>
+    <div class="card" id="depth"></div>
+  </section>
+
+  <section id="quiz" aria-labelledby="h-quiz">
+    <h2 id="h-quiz">Which tool would you use?</h2>
+    <p class="lede">Pick the best method for each research question. Each answer names the trade-off.</p>
+    <div class="card" id="quiz-card">
+      <p class="progress" id="quiz-progress"></p>
+      <p class="q" id="quiz-q"></p>
+      <div class="opts" id="quiz-opts" role="group" aria-label="Answer options"></div>
+      <div id="quiz-fb" aria-live="polite"></div>
+      <div class="quiz-actions"><button type="button" class="btn primary" id="quiz-next" hidden>Next question</button></div>
+    </div>
+  </section>
+
+  <section id="glossary" aria-labelledby="h-gloss">
+    <h2 id="h-gloss">Glossary</h2>
+    <dl class="gloss" id="gloss"></dl>
+  </section>
+
+  <section id="sources" aria-labelledby="h-src">
+    <h2 id="h-src">Sources</h2>
+    <p class="lede" id="src-note"></p>
+    <ol class="srcs" id="src-list"></ol>
+    <h2 style="font-size:1.3rem;margin-top:34px">Keep exploring</h2>
+    <div class="closing">
+      <a class="btn primary" href="./atlas-viewer.html">Explore the whole brain</a>
+      <a class="btn" href="./neuron.html">Look inside a neuron</a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <span>Educational use only; not medical advice.</span>
+  <button type="button" class="btn" id="foot-src-btn" aria-expanded="false" aria-controls="foot-sources">Sources</button>
+</footer>
+<div id="foot-sources" hidden><ol class="srcs" id="foot-src-list"></ol></div>
+
+<div id="cite-pop" role="dialog" aria-label="Source" hidden></div>
+
+<script type="module">
+const PROFILE_KEY = 'neuroapp.profile.v1';
+const SVGNS = 'http://www.w3.org/2000/svg';
+const COLORS = { mri:'#a78bfa', dti:'#f472b6', ct:'#fbbf24', fmri:'#22d3ee', pet:'#fb923c', eeg:'#34d399', meg:'#c084fc' };
+const reducedMQ = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+let data = null;
+let level = 'beginner';
+let citeNum = new Map();
+let selectedMethod = null;
+
+// Only http(s) links may be built from data files (blocks javascript:, data:, etc.)
+function safeUrl(u) {
+  try {
+    const url = new URL(String(u), window.location.href);
+    return (url.protocol === 'https:' || url.protocol === 'http:') ? url.href : null;
+  } catch (e) { return null; }
+}
+
+function el(tag, attrs, ...kids) {
+  const n = document.createElement(tag);
+  if (attrs) for (const [k, v] of Object.entries(attrs)) {
+    if (v == null || v === false) continue;
+    if (k === 'class') n.className = v;
+    else if (k === 'text') n.textContent = v;
+    else if (k.startsWith('on')) n.addEventListener(k.slice(2), v);
+    else n.setAttribute(k, v === true ? '' : v);
+  }
+  for (const c of kids.flat()) if (c != null) n.append(c instanceof Node ? c : document.createTextNode(String(c)));
+  return n;
+}
+function sv(tag, attrs, ...kids) {
+  const n = document.createElementNS(SVGNS, tag);
+  if (attrs) for (const [k, v] of Object.entries(attrs)) if (v != null) {
+    if (k === 'text') n.textContent = v; else n.setAttribute(k, v);
+  }
+  for (const c of kids.flat()) if (c != null) n.append(c);
+  return n;
+}
+
+// ── level (shared with the atlas viewer) ──
+function readProfile() {
+  try { const raw = localStorage.getItem(PROFILE_KEY); const p = raw ? JSON.parse(raw) : null;
+    return (p && typeof p === 'object' && !Array.isArray(p)) ? p : {}; } catch (e) { return {}; }
+}
+function loadLevel() {
+  const p = readProfile();
+  // the viewer also has "some" (some background); this page has two levels, so it shows the expert text
+  level = (p.level === 'expert' || p.level === 'some') ? 'expert' : 'beginner';
+}
+function saveLevel(l) {
+  try {
+    const p = readProfile();
+    p.level = l;
+    if (!p.seen) p.seen = {};
+    localStorage.setItem(PROFILE_KEY, JSON.stringify(p));
+  } catch (e) { /* storage unavailable: keep level in memory */ }
+}
+
+// ── citations ──
+function citeButtons(ids) {
+  return (ids || []).filter(id => data.sources[id]).map(id => {
+    const n = citeNum.get(id);
+    return el('button', { type: 'button', class: 'cite', 'data-src': id, 'aria-label': 'Source ' + n + ': ' + data.sources[id].citation, 'aria-expanded': 'false', text: String(n) });
+  });
+}
+function withCites(tag, text, cite, attrs) {
+  return el(tag, attrs || null, text, ' ', ...citeButtons(cite));
+}
+
+const pop = document.getElementById('cite-pop');
+let popOwner = null;
+function closePop(returnFocus) {
+  if (pop.hidden) return;
+  pop.hidden = true;
+  if (popOwner) { popOwner.setAttribute('aria-expanded', 'false'); if (returnFocus) popOwner.focus(); }
+  popOwner = null;
+}
+function openPop(btn) {
+  const id = btn.dataset.src, s = data.sources[id];
+  if (!s) return;
+  if (popOwner === btn) { closePop(true); return; }
+  closePop(false);
+  pop.replaceChildren();
+  pop.append(el('button', { type: 'button', class: 'close', 'aria-label': 'Close', text: '×', onclick: () => closePop(true) }));
+  pop.append(el('p', { text: '[' + citeNum.get(id) + '] ' + s.citation }));
+  const href = safeUrl(s.url);
+  if (href) pop.append(el('p', null, el('a', { href, target: '_blank', rel: 'noopener noreferrer', text: href })));
+  pop.hidden = false;
+  const r = btn.getBoundingClientRect();
+  const pw = pop.offsetWidth, ph = pop.offsetHeight;
+  let left = r.left + window.scrollX - 20;
+  left = Math.max(window.scrollX + 12, Math.min(left, window.scrollX + document.documentElement.clientWidth - pw - 12));
+  let top = r.bottom + window.scrollY + 8;
+  if (r.bottom + ph + 16 > window.innerHeight && r.top > ph + 16) top = r.top + window.scrollY - ph - 8;
+  pop.style.left = left + 'px'; pop.style.top = top + 'px';
+  popOwner = btn; btn.setAttribute('aria-expanded', 'true');
+  const a = pop.querySelector('a'); (a || pop.querySelector('.close')).focus();
+}
+document.addEventListener('click', e => {
+  const b = e.target.closest('.cite');
+  if (b) { e.preventDefault(); openPop(b); return; }
+  if (!pop.hidden && !pop.contains(e.target)) closePop(false);
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closePop(true); });
+
+// ── opening, families ──
+function methodById(id) { return data.methods.find(m => m.id === id); }
+function renderIntro() {
+  const p = document.getElementById('intro');
+  p.replaceChildren(data.intro[level], ' ', ...citeButtons(data.intro.cite));
+}
+function renderChips() {
+  const box = document.getElementById('chips');
+  box.replaceChildren(...data.methods.map(m =>
+    el('a', { class: 'chip', href: '#m-' + m.id, 'data-method': m.id, onclick: () => openCard(m.id) },
+      el('span', { class: 'dot', style: 'background:' + COLORS[m.id], 'aria-hidden': 'true' }), m.name)));
+}
+function renderFamilies() {
+  const box = document.getElementById('fam');
+  box.replaceChildren(...data.families.map(f => el('div', { class: 'card ' + f.id },
+    el('h3', { text: f.title }),
+    withCites('p', f.text, f.cite),
+    el('div', { class: 'mini' }, ...(f.methods || []).map(id => {
+      const m = methodById(id);
+      return el('a', { href: '#m-' + id, onclick: () => openCard(id) }, m ? m.name : id);
+    })))));
+}
+
+// ── trade-off chart ──
+const T_MIN = 0.0002, T_MAX = 1000, S_MIN = 0.5, S_MAX = 50;
+function fmtSpace(r) {
+  if (!r) return 'Varies by scanner';
+  const f = v => v >= 10 ? (v / 10) + ' cm' : v + ' mm';
+  return r[0] === r[1] ? 'about ' + f(r[0]) : 'about ' + f(r[0]) + ' to ' + f(r[1]);
+}
+function fmtTime(r) {
+  if (!r) return 'Still picture (one image)';
+  const f = v => v < 1 ? (v * 1000) + ' ms' : v < 60 ? v + ' s' : (v / 60) + ' min';
+  return r[0] === r[1] ? 'about ' + f(r[0]) : 'about ' + f(r[0]) + ' to ' + f(r[1]);
+}
+function renderChart() {
+  const svg = document.getElementById('chart');
+  const keep = [svg.querySelector('title'), svg.querySelector('desc')];
+  svg.replaceChildren(...keep);
+  const W = Math.max(300, Math.round(document.getElementById('chart-wrap').clientWidth - 20));
+  const narrow = W < 560;
+  const H = narrow ? 420 : 430;
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  svg.setAttribute('width', W); svg.setAttribute('height', H);
+  const L = narrow ? 50 : 104, T = 40, B = narrow ? 58 : 70;
+  const stripW = narrow ? 64 : 120, gap = narrow ? 12 : 22;
+  const x0 = L, x1 = W - stripW - gap - 6, sx0 = x1 + gap, sx1 = W - 6;
+  const y0 = H - B, y1 = T;
+  const lg = Math.log10;
+  const X = t => x0 + (lg(t) - lg(T_MIN)) / (lg(T_MAX) - lg(T_MIN)) * (x1 - x0);
+  const Y = s => y0 - (lg(s) - lg(S_MIN)) / (lg(S_MAX) - lg(S_MIN)) * (y0 - y1);
+  const fs = narrow ? 10.5 : 12;
+
+  // plot backgrounds
+  svg.append(sv('rect', { x: x0, y: y1, width: x1 - x0, height: y0 - y1, fill: 'rgba(255,255,255,.025)', stroke: 'rgba(148,163,209,.25)', rx: 6 }));
+  svg.append(sv('rect', { x: sx0, y: y1, width: sx1 - sx0, height: y0 - y1, fill: 'rgba(139,108,255,.06)', stroke: 'rgba(148,163,209,.25)', rx: 6 }));
+  svg.append(sv('text', { x: (sx0 + sx1) / 2, y: y1 - 10, 'text-anchor': 'middle', 'font-size': fs, 'font-weight': 600, style: 'fill:#e8ecf6', text: 'Still pictures' }));
+  svg.append(sv('text', { x: (x0 + x1) / 2, y: y1 - 10, 'text-anchor': 'middle', 'font-size': fs, 'font-weight': 600, style: 'fill:#e8ecf6', text: 'Activity over time' }));
+
+  // ticks
+  const xt = narrow
+    ? [[0.001, '1 ms'], [1, '1 s'], [60, '1 min']]
+    : [[0.001, 'a thousandth', 'of a second'], [0.1, 'a tenth', 'of a second'], [1, 'one second'], [60, 'one minute'], [600, 'ten minutes']];
+  for (const [t, a, b] of xt) {
+    const x = X(t);
+    svg.append(sv('line', { x1: x, x2: x, y1: y1, y2: y0, stroke: 'rgba(148,163,209,.14)' }));
+    svg.append(sv('text', { x, y: y0 + 16, 'text-anchor': 'middle', 'font-size': fs, text: a }));
+    if (b) svg.append(sv('text', { x, y: y0 + 30, 'text-anchor': 'middle', 'font-size': fs, text: b }));
+  }
+  const yt = narrow ? [[1, '1 mm'], [5, '5 mm'], [10, '1 cm'], [50, '5 cm']]
+                    : [[1, 'a millimetre'], [5, '5 mm'], [10, 'a centimetre'], [50, '5 cm']];
+  for (const [s, a] of yt) {
+    const y = Y(s);
+    svg.append(sv('line', { x1: x0, x2: x1, y1: y, y2: y, stroke: 'rgba(148,163,209,.14)' }));
+    svg.append(sv('line', { x1: sx0, x2: sx1, y1: y, y2: y, stroke: 'rgba(148,163,209,.14)' }));
+    svg.append(sv('text', { x: x0 - 6, y: y + 4, 'text-anchor': 'end', 'font-size': fs, text: a }));
+  }
+  svg.append(sv('text', { x: (x0 + x1) / 2, y: H - 8, 'text-anchor': 'middle', 'font-size': fs, style: 'fill:#e8ecf6', text: narrow ? 'Timing (finer to the left)' : 'How finely it can time events (finer to the left)' }));
+  svg.append(sv('text', { x: 12, y: (y0 + y1) / 2, 'text-anchor': 'middle', 'font-size': fs, style: 'fill:#e8ecf6', transform: `rotate(-90 12 ${(y0 + y1) / 2})`, text: narrow ? 'Detail (finer lower)' : 'Smallest detail it can locate (finer lower)' }));
+
+  // group identical extents so overlapping boxes are drawn side by side
+  const moving = data.methods.filter(m => m.resolution.spatial_mm && m.resolution.temporal_s);
+  const groups = new Map();
+  for (const m of moving) {
+    const k = JSON.stringify([m.resolution.spatial_mm, m.resolution.temporal_s]);
+    if (!groups.has(k)) groups.set(k, []);
+    groups.get(k).push(m);
+  }
+  const pad = (lo, hi, minDec) => {
+    let a = lg(lo), b = lg(hi);
+    if (b - a < minDec) { const c = (a + b) / 2; a = c - minDec / 2; b = c + minDec / 2; }
+    return [Math.pow(10, a), Math.pow(10, b)];
+  };
+  const bars = [];
+  for (const ms of groups.values()) {
+    const r = ms[0].resolution;
+    const [t0, t1] = pad(r.temporal_s[0], r.temporal_s[1], narrow ? 0.7 : 0.6);
+    const [s0, s1] = pad(r.spatial_mm[0], r.spatial_mm[1], 0.14);
+    const bx0 = X(t0), bx1 = X(t1), by0 = Y(s1), by1 = Y(s0);
+    const w = (bx1 - bx0) / ms.length;
+    ms.forEach((m, i) => bars.push({ m, x: bx0 + i * w, y: by0, w: w - (ms.length > 1 ? 2 : 0), h: by1 - by0, below: ms.length > 1 && i % 2 === 1 }));
+  }
+  const dti = data.methods.filter(m => m.resolution.spatial_mm && !m.resolution.temporal_s);
+  for (const m of dti) {
+    const [s0, s1] = pad(m.resolution.spatial_mm[0], m.resolution.spatial_mm[1], 0.14);
+    bars.push({ m, x: sx0 + 10, y: Y(s1), w: sx1 - sx0 - 20, h: Y(s0) - Y(s1) });
+  }
+  for (const b of bars) {
+    const c = COLORS[b.m.id];
+    const g = sv('g', { class: 'bar', tabindex: '0', role: 'button', 'data-method': b.m.id,
+      'aria-label': b.m.name + ': ' + fmtSpace(b.m.resolution.spatial_mm) + ', ' + fmtTime(b.m.resolution.temporal_s) });
+    g.append(sv('rect', { class: 'hit', x: b.x, y: b.y, width: Math.max(b.w, 6), height: Math.max(b.h, 6), rx: 8, fill: c, 'fill-opacity': 0.22, stroke: c, 'stroke-width': 2 }));
+    const label = sv('text', { x: b.x + b.w / 2, y: b.below ? b.y + b.h + fs + 4 : b.y - 6, 'text-anchor': 'middle', 'font-size': fs + 1, 'font-weight': 700, style: 'fill:' + c, text: b.m.name });
+    g.append(label);
+    g.addEventListener('click', () => selectMethod(b.m.id));
+    g.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectMethod(b.m.id); } });
+    svg.append(g);
+  }
+  // structural methods without a cited figure
+  const none = data.methods.filter(m => m.family === 'structure' && !m.resolution.spatial_mm).map(m => m.name);
+  if (none.length) {
+    const ty = Y(30);
+    svg.append(sv('text', { x: (sx0 + sx1) / 2, y: ty, 'text-anchor': 'middle', 'font-size': fs - 1, text: none.join(', ') + ':' }));
+    svg.append(sv('text', { x: (sx0 + sx1) / 2, y: ty + fs + 2, 'text-anchor': 'middle', 'font-size': fs - 1, text: narrow ? 'varies' : 'varies by scanner' }));
+  }
+  applySelectionStyles();
+}
+function applySelectionStyles() {
+  document.querySelectorAll('#chart .bar').forEach(g => {
+    g.classList.toggle('dim', !!selectedMethod && g.dataset.method !== selectedMethod);
+    g.setAttribute('aria-pressed', String(g.dataset.method === selectedMethod));
+  });
+  document.querySelectorAll('#picker button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.method === selectedMethod)));
+}
+function selectMethod(id) {
+  selectedMethod = id;
+  applySelectionStyles();
+  const m = methodById(id);
+  const box = document.getElementById('res-detail');
+  box.replaceChildren(el('strong', { text: m.name + ' (' + m.full + '): ' }), m.resolution.text, ' ', ...citeButtons(m.resolution.cite),
+    ' ', el('a', { href: '#m-' + id, onclick: () => openCard(id), text: 'Read about ' + m.name }));
+}
+function renderPicker() {
+  const box = document.getElementById('picker');
+  box.replaceChildren(...data.methods.map(m => el('button', { type: 'button', 'data-method': m.id, 'aria-pressed': 'false', onclick: () => selectMethod(m.id) },
+    el('span', { class: 'dot', style: 'background:' + COLORS[m.id], 'aria-hidden': 'true' }), m.name)));
+  const cap = document.getElementById('chart-caption');
+  cap.replaceChildren(data.chart.caption.text, ' ', ...citeButtons(data.chart.caption.cite));
+}
+function renderTable() {
+  const tb = document.querySelector('#res-table tbody');
+  tb.replaceChildren(...data.methods.map(m => el('tr', null,
+    el('th', { scope: 'row', text: m.name }),
+    el('td', { text: fmtSpace(m.resolution.spatial_mm) }),
+    el('td', { text: fmtTime(m.resolution.temporal_s) }),
+    el('td', null, m.resolution.text, ' ', ...citeButtons(m.resolution.cite)))));
+}
+
+// ── schematics (illustrations, not to scale) ──
+const ST = { fill: 'none', stroke: '#9aa5bd', 'stroke-width': 2, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' };
+function S(tag, a) { return sv(tag, Object.assign({}, ST, a)); }
+function lbl(x, y, t, anchor) { return sv('text', { x, y, 'text-anchor': anchor || 'middle', text: t }); }
+function person(x, y) { // lying person, head to the right
+  return [S('circle', { cx: x + 70, cy: y - 12, r: 10 }), S('path', { d: `M${x} ${y - 6} L${x + 58} ${y - 6} M${x} ${y - 6} L${x} ${y + 2}` })];
+}
+function scanner(accent, ringW) {
+  return [
+    S('rect', { x: 150, y: 30, width: 70, height: 120, rx: 18, stroke: accent }),
+    S('ellipse', { cx: 185, cy: 90, rx: ringW || 18, ry: 34, stroke: accent }),
+    S('path', { d: 'M40 118 L250 118 M60 118 L60 140 M230 118 L230 140' }),
+    ...person(90, 112)
+  ];
+}
+function schematic(id) {
+  const c = COLORS[id];
+  const svg = sv('svg', { viewBox: '0 0 280 190', role: 'img', 'aria-label': 'Illustration of a ' + id.toUpperCase() + ' setup, not to scale' });
+  const add = (...n) => n.flat().forEach(x => svg.append(x));
+  if (id === 'mri' || id === 'dti' || id === 'fmri') {
+    add(scanner(c));
+    add(lbl(185, 22, id === 'mri' ? 'magnet' : 'MRI scanner'));
+    add(lbl(140, 170, 'patient table'));
+    if (id === 'dti') add(S('path', { d: 'M20 40 C45 30, 60 55, 90 45 M20 52 C45 42, 60 67, 90 57 M20 64 C45 54, 60 79, 90 69', stroke: c }), lbl(55, 95, 'fibre bundles'));
+    if (id === 'fmri') add(S('rect', { x: 18, y: 30, width: 70, height: 46, rx: 4, stroke: c }), S('path', { d: 'M53 76 L53 92', stroke: c }), lbl(53, 108, 'task screen'));
+  } else if (id === 'ct') {
+    add(S('rect', { x: 160, y: 34, width: 50, height: 112, rx: 22, stroke: c }), S('ellipse', { cx: 185, cy: 90, rx: 12, ry: 34, stroke: c }));
+    add(S('path', { d: 'M40 118 L250 118 M60 118 L60 140 M230 118 L230 140' }), person(90, 112));
+    add(S('circle', { cx: 185, cy: 40, r: 6, stroke: c }), S('path', { d: 'M185 46 L185 74', stroke: c, 'stroke-dasharray': '4 4' }));
+    add(lbl(185, 24, 'rotating X-ray source'), lbl(140, 170, 'patient table'));
+  } else if (id === 'pet') {
+    add(S('rect', { x: 160, y: 34, width: 50, height: 112, rx: 22, stroke: c }), S('ellipse', { cx: 185, cy: 90, rx: 14, ry: 34, stroke: c }));
+    add(S('path', { d: 'M40 118 L250 118 M60 118 L60 140 M230 118 L230 140' }), person(90, 112));
+    add(S('path', { d: 'M28 40 L70 40 M70 34 L70 46 M28 36 L28 44 M70 40 L84 40', stroke: c }), lbl(56, 62, 'tracer injection'));
+    add(lbl(185, 24, 'detector ring'), lbl(140, 170, 'patient table'));
+  } else if (id === 'eeg') {
+    add(S('ellipse', { cx: 140, cy: 100, rx: 52, ry: 62 }), S('path', { d: 'M88 104 Q80 112 90 120 M192 104 Q200 112 190 120' }));
+    const pts = [[140, 42], [110, 52], [170, 52], [96, 80], [184, 80], [140, 70], [118, 95], [162, 95], [140, 98]];
+    pts.forEach(([x, y]) => add(sv('circle', { cx: x, cy: y, r: 5, fill: c })));
+    add(S('path', { d: 'M140 42 C150 20, 210 20, 240 40 M170 52 C200 35, 225 45, 240 48 M184 80 C215 70, 230 60, 240 56', stroke: c }));
+    add(S('rect', { x: 236, y: 34, width: 30, height: 30, rx: 4, stroke: c }), lbl(251, 82, 'amplifier'));
+    add(lbl(140, 182, 'electrodes on the scalp'));
+  } else if (id === 'meg') {
+    add(S('rect', { x: 10, y: 4, width: 262, height: 180, rx: 8, 'stroke-dasharray': '6 5' }), lbl(140, 174, 'magnetically shielded room'));
+    add(S('path', { d: 'M100 110 L100 60 Q100 26 140 26 Q180 26 180 60 L180 110', stroke: c }), S('path', { d: 'M100 110 L180 110', stroke: c }));
+    add(S('rect', { x: 118, y: 2 + 10, width: 44, height: 16, rx: 4, stroke: c }), lbl(186, 40, 'helium-cooled', 'start'), lbl(186, 54, 'sensors', 'start'));
+    add(S('ellipse', { cx: 140, cy: 96, rx: 28, ry: 32 }), S('path', { d: 'M140 128 L140 150 M110 150 L170 150' }));
+  }
+  return svg;
+}
+
+// ── method cards ──
+function tagFor(m) {
+  if (m.direct === true) return el('span', { class: 'tag direct', text: 'Direct: electrical or magnetic activity' });
+  if (m.direct === false) return el('span', { class: 'tag indirect', text: 'Indirect: via blood or metabolism' });
+  return el('span', { class: 'tag anat', text: 'Anatomy, not activity' });
+}
+function listOf(items) { return el('ul', null, ...items.map(it => withCites('li', it.text, it.cite))); }
+function openCard(id) {
+  const c = document.getElementById('m-' + id);
+  if (c) { c.classList.add('open'); const t = c.querySelector('.mtoggle'); if (t) { t.setAttribute('aria-expanded', 'true'); t.textContent = 'Hide'; } }
+}
+function renderCards() {
+  const box = document.getElementById('cards');
+  const openIds = new Set([...box.querySelectorAll('.mcard.open')].map(c => c.dataset.method));
+  box.replaceChildren(...data.methods.map(m => {
+    const lv = m.levels[level];
+    const bodyId = 'mb-' + m.id;
+    const toggle = el('button', { type: 'button', class: 'mtoggle', 'aria-expanded': String(openIds.has(m.id)), 'aria-controls': bodyId, text: openIds.has(m.id) ? 'Hide' : 'Show' });
+    const card = el('article', { class: 'card mcard' + (openIds.has(m.id) ? ' open' : ''), id: 'm-' + m.id, 'data-method': m.id, 'aria-labelledby': 'mh-' + m.id, style: 'border-left:4px solid ' + COLORS[m.id] },
+      el('div', { class: 'mhead' },
+        el('div', null, el('h3', { id: 'mh-' + m.id, text: m.name }), el('div', { class: 'full', text: m.full })),
+        el('span', { class: 'tg' }, tagFor(m)),
+        toggle),
+      el('div', { class: 'mbody', id: bodyId },
+        el('div', null,
+          el('div', { class: 'schem' }, schematic(m.id)),
+          el('p', { class: 'illus', style: 'margin-top:6px', text: 'Illustration, not a real scan; not to scale.' })),
+        el('div', { class: 'mcol' },
+          el('h4', { text: 'What it measures' }),
+          withCites('p', m.measures.text, m.measures.cite),
+          el('h4', { text: level === 'expert' ? 'In depth' : 'The basics' }),
+          el('p', { class: 'summary', text: lv.summary }),
+          listOf(lv.points),
+          level === 'expert' && lv.caveat ? el('p', { class: 'caveat' }, el('strong', { text: 'Simplification note: ' }), lv.caveat) : null,
+          el('div', { class: 'twocol' },
+            el('div', null, el('h4', { text: 'Good for' }), listOf(m.good_for)),
+            el('div', null, el('h4', { text: 'Limits' }), listOf(m.limits))),
+          el('h4', { text: 'What it is like' }),
+          withCites('p', m.experience.text, m.experience.cite),
+          el('h4', { text: 'Resolution' }),
+          withCites('p', m.resolution.text, m.resolution.cite),
+          el('div', { class: 'mixup' },
+            el('h4', { style: 'margin-top:0', text: 'Common mix-up' }),
+            el('p', { class: 'claim' }, el('s', { text: m.misconception.claim })),
+            withCites('p', m.misconception.correction, m.misconception.cite)))));
+    toggle.addEventListener('click', () => {
+      const open = card.classList.toggle('open');
+      toggle.setAttribute('aria-expanded', String(open));
+      toggle.textContent = open ? 'Hide' : 'Show';
+    });
+    return card;
+  }));
+}
+
+// ── EEG explorer ──
+let selectedEl = null;
+function decode(id) {
+  const letters = data.eeg.letters;
+  const pre = letters.filter(l => l.letter !== 'z').sort((a, b) => b.letter.length - a.letter.length).find(l => id.startsWith(l.letter));
+  const rest = pre ? id.slice(pre.letter.length) : id;
+  const parts = [], cites = new Set();
+  if (pre) { parts.push(pre.letter + ' = ' + pre.meaning); pre.cite.forEach(c => cites.add(c)); }
+  if (rest === 'z') { const z = letters.find(l => l.letter === 'z'); parts.push('z = ' + z.meaning); z.cite.forEach(c => cites.add(c)); }
+  else if (/^\d+$/.test(rest)) { parts.push(rest + ' = ' + (Number(rest) % 2 ? 'left side (odd number)' : 'right side (even number)')); data.eeg.system.cite.forEach(c => cites.add(c)); }
+  return { text: parts.join(', '), cite: [...cites] };
+}
+function renderHead() {
+  const box = document.getElementById('head-box');
+  box.querySelectorAll('.el').forEach(b => b.remove());
+  for (const e of data.eeg.electrodes) {
+    // svg viewBox is -1.25..1.25 wide and -1.3..1.3 tall; nose is up (+y in data)
+    const left = ((e.x + 1.25) / 2.5) * 100, top = ((-e.y + 1.3) / 2.6) * 100;
+    const b = el('button', { type: 'button', class: 'el' + (e.id[0] === 'A' ? ' ref' : ''), 'data-el': e.id, 'aria-pressed': 'false',
+      'aria-label': e.id, style: `left:${left}%;top:${top}%` }, el('span', { text: e.id }));
+    b.addEventListener('click', () => selectElectrode(e.id));
+    box.append(b);
+  }
+}
+function selectElectrode(id) {
+  selectedEl = id;
+  document.querySelectorAll('#head-box .el').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.el === id)));
+  const e = data.eeg.electrodes.find(x => x.id === id);
+  const d = decode(id);
+  document.getElementById('el-detail').replaceChildren(
+    el('div', { class: 'big', text: id }),
+    withCites('p', d.text, d.cite),
+    el('p', null, 'Over the ', el('strong', { text: e.region }), '.'));
+}
+let band = 'alpha', phase = 0, playing = false, raf = 0, lastT = 0, waveVisible = true;
+const REP_HZ = { delta: 2, theta: 6, alpha: 10, beta: 20, gamma: 40 }; // drawing choice, inside each band
+function bandHz(b) {
+  const hz = REP_HZ[b.id];
+  return (hz && hz >= b.hz[0] && hz <= b.hz[1]) ? hz : Math.round((b.hz[0] + b.hz[1]) / 2);
+}
+function renderBands() {
+  const box = document.getElementById('bands');
+  box.replaceChildren(...data.eeg.bands.map(b => el('button', { type: 'button', 'data-band': b.id, 'aria-pressed': String(b.id === band), onclick: () => selectBand(b.id) }, b.name)));
+  const n = data.eeg.bands_note;
+  document.getElementById('band-note').replaceChildren(n.text, ' ', ...citeButtons(n.cite));
+  selectBand(band);
+}
+function selectBand(id) {
+  band = id;
+  document.querySelectorAll('#bands button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.band === id)));
+  const b = data.eeg.bands.find(x => x.id === id);
+  const hz = bandHz(b);
+  document.getElementById('band-text').replaceChildren(el('strong', { text: b.name + ': ' }), b.text, ' ', ...citeButtons(b.cite));
+  document.getElementById('wave-note').textContent = 'Drawn at ' + hz + ' Hz; one second shown.';
+  document.getElementById('wave').setAttribute('aria-label', 'Synthetic ' + b.name + ' wave at ' + hz + ' cycles per second, for illustration');
+  drawWave();
+}
+function drawWave() {
+  const cv = document.getElementById('wave');
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const w = cv.clientWidth || 600, h = cv.clientHeight || 170;
+  if (cv.width !== Math.round(w * dpr) || cv.height !== Math.round(h * dpr)) { cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr); }
+  const ctx = cv.getContext('2d');
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, w, h);
+  ctx.strokeStyle = 'rgba(148,163,209,.18)'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(0, h / 2); ctx.lineTo(w, h / 2); ctx.stroke();
+  ctx.fillStyle = '#9aa5bd'; ctx.font = '11px Inter, sans-serif';
+  ctx.fillText('0 s', 6, h - 8); ctx.fillText('1 s', w - 24, h - 8);
+  const b = data.eeg.bands.find(x => x.id === band);
+  const hz = bandHz(b);
+  const amp = (h / 2 - 22) * (band === 'delta' ? 1 : band === 'theta' ? 0.85 : band === 'alpha' ? 0.8 : band === 'beta' ? 0.5 : 0.35);
+  ctx.strokeStyle = '#34d399'; ctx.lineWidth = 1.6; ctx.beginPath();
+  const N = Math.max(400, Math.round(w * 2));
+  for (let i = 0; i <= N; i++) {
+    const t = i / N; // seconds
+    const v = Math.sin(2 * Math.PI * hz * t + phase) + 0.18 * Math.sin(2 * Math.PI * hz * 1.9 * t + 1.3 + phase * 1.9) + 0.1 * Math.sin(2 * Math.PI * 0.7 * t + 0.4);
+    const x = t * w, y = h / 2 - v * amp * 0.85;
+    i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+  }
+  ctx.stroke();
+}
+function tick(t) {
+  raf = 0;
+  if (!playing || document.hidden || !waveVisible) return;
+  const dt = lastT ? Math.min(0.05, (t - lastT) / 1000) : 0; lastT = t;
+  phase -= dt * 2 * Math.PI * 0.6; // slow scroll so fast bands stay readable
+  drawWave();
+  raf = requestAnimationFrame(tick);
+}
+function setPlaying(p) {
+  playing = p;
+  document.getElementById('wave-play').textContent = p ? 'Pause' : 'Play';
+  document.getElementById('wave-play').setAttribute('aria-pressed', String(p));
+  if (p && !raf) { lastT = 0; raf = requestAnimationFrame(tick); }
+}
+document.getElementById('wave-play').addEventListener('click', () => setPlaying(!playing));
+document.addEventListener('visibilitychange', () => { if (!document.hidden && playing && !raf) { lastT = 0; raf = requestAnimationFrame(tick); } });
+reducedMQ.addEventListener('change', () => { if (reducedMQ.matches) setPlaying(false); });
+if ('IntersectionObserver' in window) {
+  new IntersectionObserver(es => { waveVisible = es[0].isIntersecting; if (waveVisible && playing && !raf) { lastT = 0; raf = requestAnimationFrame(tick); } })
+    .observe(document.getElementById('wave'));
+}
+
+// ── chooser quiz ──
+let qi = 0, score = 0;
+function renderQuiz() {
+  const q = data.chooser[qi];
+  const fb = document.getElementById('quiz-fb'); fb.replaceChildren();
+  document.getElementById('quiz-next').hidden = true;
+  if (!q) {
+    document.getElementById('quiz-progress').textContent = 'Finished';
+    document.getElementById('quiz-q').textContent = 'You chose the best tool for ' + score + ' of ' + data.chooser.length + ' questions.';
+    const again = el('button', { type: 'button', class: 'btn primary', text: 'Try again', onclick: () => { qi = 0; score = 0; renderQuiz(); document.getElementById('quiz-q').focus(); } });
+    document.getElementById('quiz-opts').replaceChildren(again);
+    fb.textContent = 'Score: ' + score + ' of ' + data.chooser.length + '.';
+    return;
+  }
+  document.getElementById('quiz-progress').textContent = 'Question ' + (qi + 1) + ' of ' + data.chooser.length + ' · score ' + score;
+  const qp = document.getElementById('quiz-q'); qp.textContent = q.q; qp.setAttribute('tabindex', '-1');
+  document.getElementById('quiz-opts').replaceChildren(...q.options.map(o => {
+    const m = methodById(o);
+    return el('button', { type: 'button', 'data-opt': o, onclick: () => answer(o) }, m ? m.name : o);
+  }));
+}
+function answer(o) {
+  const q = data.chooser[qi];
+  const ok = o === q.answer;
+  if (ok) score++;
+  document.querySelectorAll('#quiz-opts button').forEach(b => {
+    b.disabled = true;
+    if (b.dataset.opt === q.answer) b.classList.add('right');
+    else if (b.dataset.opt === o) b.classList.add('wrong');
+  });
+  const best = methodById(q.answer);
+  document.getElementById('quiz-fb').replaceChildren(
+    el('p', null, el('span', { class: 'verdict ' + (ok ? 'ok' : 'no'), text: ok ? 'Correct. ' : 'Not quite. The best choice is ' + best.name + '. ' })),
+    withCites('p', q.explain, q.cite));
+  const next = document.getElementById('quiz-next');
+  next.hidden = false; next.textContent = qi + 1 < data.chooser.length ? 'Next question' : 'See your score';
+  next.focus();
+}
+document.getElementById('quiz-next').addEventListener('click', () => { qi++; renderQuiz(); const f = document.querySelector('#quiz-opts button'); if (f) f.focus(); });
+
+// ── glossary, sources, footer ──
+function renderGlossary() {
+  document.getElementById('gloss').replaceChildren(...data.glossary.map(g => el('div', null, el('dt', { text: g.term }), withCites('dd', g.definition, g.cite))));
+}
+function sourceItems() {
+  return [...citeNum.entries()].map(([id, n]) => {
+    const s = data.sources[id];
+    const href = safeUrl(s.url);
+    return el('li', { value: String(n), id: null }, s.citation, ' ', href ? el('a', { href, target: '_blank', rel: 'noopener noreferrer', text: href }) : null);
+  });
+}
+function renderSources() {
+  document.getElementById('src-note').textContent = data.note;
+  document.getElementById('src-list').replaceChildren(...sourceItems());
+  document.getElementById('foot-src-list').replaceChildren(...sourceItems());
+}
+const fBtn = document.getElementById('foot-src-btn');
+fBtn.addEventListener('click', () => {
+  const box = document.getElementById('foot-sources');
+  box.hidden = !box.hidden; fBtn.setAttribute('aria-expanded', String(!box.hidden));
+  if (!box.hidden) box.scrollIntoView({ block: 'nearest', behavior: reducedMQ.matches ? 'auto' : 'smooth' });
+});
+
+// ── level-dependent rendering ──
+function renderLevel() {
+  document.querySelectorAll('.seg button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.level === level)));
+  renderIntro();
+  renderCards();
+}
+document.querySelectorAll('.seg button').forEach(b => b.addEventListener('click', () => {
+  if (level === b.dataset.level) return;
+  level = b.dataset.level; saveLevel(level); closePop(false); renderLevel();
+}));
+
+let rsT = 0;
+window.addEventListener('resize', () => { clearTimeout(rsT); rsT = setTimeout(() => { renderChart(); drawWave(); }, 120); });
+
+async function init() {
+  loadLevel();
+  try {
+    const res = await fetch('./content/imaging.json', { cache: 'no-cache' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    data = await res.json();
+  } catch (e) {
+    document.getElementById('load-err').hidden = false;
+    return;
+  }
+  Object.keys(data.sources).forEach((id, i) => citeNum.set(id, i + 1));
+  renderChips(); renderFamilies(); renderPicker(); renderTable(); renderChart();
+  renderLevel();
+  data.eeg && document.getElementById('eeg-system').replaceChildren(data.eeg.system.text, ' ', ...citeButtons(data.eeg.system.cite));
+  renderHead(); selectElectrode('Cz');
+  renderBands();
+  document.getElementById('depth').replaceChildren(el('h3', { style: 'font-size:1.05rem;margin-bottom:6px', text: 'Why scalp EEG mostly sees the cortex' }), withCites('p', data.eeg.depth.text, data.eeg.depth.cite));
+  renderQuiz(); renderGlossary(); renderSources();
+  setPlaying(!reducedMQ.matches);
+  if (location.hash.startsWith('#m-')) { openCard(location.hash.slice(3)); document.getElementById(location.hash.slice(1))?.scrollIntoView(); }
+  document.body.dataset.ready = '1';
+}
+init();
+</script>
+</body>
+</html>
