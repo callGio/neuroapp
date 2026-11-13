@@ -1,0 +1,613 @@
+{
+  "version": 1,
+  "note": "Paraphrased from the cited sources. Educational use only; not medical advice.",
+  "sources": {
+    "ap_12_2": {
+      "citation": "Betts, J. G., Young, K. A., Wise, J. A., Johnson, E., Poe, B., Kruse, D. H., Korol, O., Johnson, J. E., Womble, M., & DeSaix, P. (2013). Anatomy and physiology (Section 12.2, Nervous tissue). OpenStax.",
+      "url": "https://openstax.org/books/anatomy-and-physiology/pages/12-2-nervous-tissue",
+      "license": "CC BY 4.0"
+    },
+    "ap_12_4": {
+      "citation": "Betts, J. G., Young, K. A., Wise, J. A., Johnson, E., Poe, B., Kruse, D. H., Korol, O., Johnson, J. E., Womble, M., & DeSaix, P. (2013). Anatomy and physiology (Section 12.4, The action potential). OpenStax.",
+      "url": "https://openstax.org/books/anatomy-and-physiology/pages/12-4-the-action-potential",
+      "license": "CC BY 4.0"
+    },
+    "ap_12_5": {
+      "citation": "Betts, J. G., Young, K. A., Wise, J. A., Johnson, E., Poe, B., Kruse, D. H., Korol, O., Johnson, J. E., Womble, M., & DeSaix, P. (2013). Anatomy and physiology (Section 12.5, Communication between neurons). OpenStax.",
+      "url": "https://openstax.org/books/anatomy-and-physiology/pages/12-5-communication-between-neurons",
+      "license": "CC BY 4.0"
+    },
+    "bio_35_1": {
+      "citation": "Rye, C., Wise, R., Jurukovski, V., DeSaix, J., Choi, J., & Avissar, Y. (2016). Biology (Section 35.1, Neurons and glial cells). OpenStax.",
+      "url": "https://openstax.org/books/biology/pages/35-1-neurons-and-glial-cells",
+      "license": "CC BY 4.0"
+    },
+    "bio_35_2": {
+      "citation": "Rye, C., Wise, R., Jurukovski, V., DeSaix, J., Choi, J., & Avissar, Y. (2016). Biology (Section 35.2, How neurons communicate). OpenStax.",
+      "url": "https://openstax.org/books/biology/pages/35-2-how-neurons-communicate",
+      "license": "CC BY 4.0"
+    },
+    "bio2e_4_3": {
+      "citation": "Clark, M. A., Douglas, M., & Choi, J. (2018). Biology 2e (Section 4.3, Eukaryotic cells). OpenStax.",
+      "url": "https://openstax.org/books/biology-2e/pages/4-3-eukaryotic-cells",
+      "license": "CC BY 4.0"
+    },
+    "psych_3_2": {
+      "citation": "Spielman, R. M., Jenkins, W. J., & Lovett, M. D. (2020). Psychology 2e (Section 3.2, Cells of the nervous system). OpenStax.",
+      "url": "https://openstax.org/books/psychology-2e/pages/3-2-cells-of-the-nervous-system",
+      "license": "CC BY 4.0"
+    },
+    "nielsen_1_2": {
+      "citation": "Nielsen, M. A. (2015). Perceptrons. In Neural networks and deep learning (Section 1.2). Determination Press.",
+      "url": "https://eng.libretexts.org/Bookshelves/Computer_Science/Applied_Programming/Neural_Networks_and_Deep_Learning_(Nielsen)/01%3A_Using_neural_nets_to_recognize_handwritten_digits/1.02%3A_Perceptrons",
+      "license": "CC BY-NC 3.0"
+    },
+    "d2l_3_1": {
+      "citation": "Zhang, A., Lipton, Z. C., Li, M., & Smola, A. J. (2023). Linear regression. In Dive into deep learning (Section 3.1). Cambridge University Press.",
+      "url": "https://d2l.ai/chapter_linear-regression/linear-regression.html",
+      "license": "CC BY-SA 4.0"
+    },
+    "d2l_book": {
+      "citation": "Zhang, A., Lipton, Z. C., Li, M., & Smola, A. J. (2023). Dive into deep learning (Chapter 1, Introduction). arXiv. https://doi.org/10.48550/arXiv.2106.11342",
+      "url": "https://arxiv.org/pdf/2106.11342",
+      "license": "CC BY-SA 4.0"
+    }
+  },
+  "scale": {
+    "text": "Zooming in from the whole brain, which holds about 86 billion neurons, to just one. Axons are only about 1 to 20 micrometres wide, yet a human motor neuron's axon can be up to about a metre long.",
+    "cite": ["bio_35_1", "ap_12_2"]
+  },
+  "intro": {
+    "beginner": "A neuron is a nerve cell that passes messages. Its dendrites collect signals, the signals are added up where the axon begins, and if the total is big enough an electrical signal races down the axon to the next cell.",
+    "expert": "This is a stylised multipolar neuron (one axon, many dendrites), the most common neuron shape. Inputs arrive as graded postsynaptic potentials, are integrated at the axon hillock, and leave as all-or-none action potentials that end in chemical transmission at synapses.",
+    "cite": ["psych_3_2", "bio_35_2", "ap_12_2", "ap_12_4", "ap_12_5"]
+  },
+  "parts": [
+    {
+      "id": "soma",
+      "name": "Cell body (soma)",
+      "short": "Keeps the neuron alive; holds the nucleus and most organelles.",
+      "analogy": "Like a factory's head office: it keeps the instructions and makes the supplies the rest of the cell needs.",
+      "levels": {
+        "beginner": {
+          "summary": "The cell body is the rounded main part of the neuron.",
+          "points": [
+            { "text": "The cell body contains the nucleus and most of the cell's major organelles.", "cite": ["ap_12_2"] },
+            { "text": "The dendrites carry incoming signals toward the cell body.", "cite": ["bio_35_1"] },
+            { "text": "The axon, which sends the signal onward, leaves the cell body at a tapered region called the axon hillock.", "cite": ["ap_12_2"] }
+          ]
+        },
+        "expert": {
+          "summary": "The soma is the neuron's metabolic centre: nucleus plus protein-making and energy-making machinery.",
+          "points": [
+            { "text": "Besides the nucleus, the soma contains endoplasmic reticulum, Golgi apparatus and mitochondria.", "cite": ["bio_35_1"] },
+            { "text": "As in other eukaryotic cells, rough ER makes membrane and secreted proteins, the Golgi modifies proteins and lipids made by the ER, and mitochondria make ATP.", "cite": ["bio2e_4_3"] },
+            { "text": "Graded potentials that spread from the dendrites are summed where the axon begins, at the axon hillock.", "cite": ["bio_35_1", "ap_12_5"] }
+          ],
+          "caveat": "The model's soma is stylised; of its organelles, only the nucleus is drawn."
+        }
+      },
+      "related": ["nucleus", "dendrites", "axon_hillock"]
+    },
+    {
+      "id": "nucleus",
+      "name": "Nucleus",
+      "short": "Stores the cell's DNA and directs the making of proteins.",
+      "analogy": "Like a library of blueprints kept in the head office.",
+      "levels": {
+        "beginner": {
+          "summary": "The nucleus is the neuron's store of instructions, inside the cell body.",
+          "points": [
+            { "text": "The nucleus sits inside the cell body.", "cite": ["ap_12_2"] },
+            { "text": "It houses the cell's DNA and directs the making of ribosomes and proteins.", "cite": ["bio2e_4_3"] },
+            { "text": "The darker spot inside it, the nucleolus, helps assemble ribosomes.", "cite": ["bio2e_4_3"] }
+          ]
+        },
+        "expert": {
+          "summary": "A double-membraned compartment holding the genome; its nucleolus builds ribosomal subunits.",
+          "points": [
+            { "text": "A double membrane, the nuclear envelope, surrounds the nucleus; its pores control the passage of ions, molecules and RNA.", "cite": ["bio2e_4_3"] },
+            { "text": "The nucleolus gathers ribosomal RNA and proteins into ribosomal subunits, which leave through the nuclear pores.", "cite": ["bio2e_4_3"] },
+            { "text": "In a neuron the nucleus lies in the soma, alongside the ER, Golgi and mitochondria.", "cite": ["bio_35_1"] }
+          ],
+          "caveat": "These points describe eukaryotic nuclei in general; the cited sources say nothing specific to neuronal nuclei."
+        }
+      },
+      "related": ["soma"]
+    },
+    {
+      "id": "dendrites",
+      "name": "Dendrites",
+      "short": "Branching inputs that receive signals from other neurons.",
+      "analogy": "Like the branches of a tree, or antennas, catching incoming messages.",
+      "levels": {
+        "beginner": {
+          "summary": "Dendrites are the neuron's receivers.",
+          "points": [
+            { "text": "Dendrites are branching extensions that receive signals from other neurons.", "cite": ["psych_3_2", "ap_12_2"] },
+            { "text": "Messages arrive at special junctions called synapses.", "cite": ["bio_35_1"] },
+            { "text": "Dendrites carry the incoming signals toward the cell body.", "cite": ["bio_35_1"] }
+          ]
+        },
+        "expert": {
+          "summary": "The main receptive surface. Synaptic input here makes graded potentials, not all-or-none spikes.",
+          "points": [
+            { "text": "Synaptic input produces graded potentials: local, temporary voltage changes whose size depends on the stimulus.", "cite": ["ap_12_5"] },
+            { "text": "Depolarizing graded potentials often come from Na+ or Ca2+ entering; hyperpolarizing ones can come from K+ leaving or Cl- entering.", "cite": ["ap_12_5"] },
+            { "text": "Signals spread passively toward the soma and are summed at the axon hillock.", "cite": ["bio_35_1", "ap_12_5"] },
+            { "text": "A single cerebellar Purkinje cell's dendrites may receive contacts from up to 200,000 other neurons.", "cite": ["bio_35_1"] }
+          ],
+          "caveat": "The cited introductory texts describe passive spread in dendrites; this page does not go beyond them."
+        }
+      },
+      "related": ["dendritic_spines", "soma", "synapse"]
+    },
+    {
+      "id": "dendritic_spines",
+      "name": "Dendritic spines",
+      "short": "Tiny knobs on dendrites where many synapses form.",
+      "levels": {
+        "beginner": {
+          "summary": "Spines are small bumps on the dendrites.",
+          "points": [
+            { "text": "Spines are small protrusions on the dendrites.", "cite": ["bio_35_1"] },
+            { "text": "They add surface area, which leaves room for more synaptic connections.", "cite": ["bio_35_1"] },
+            { "text": "Synapses usually form on spines, though not always.", "cite": ["bio_35_2"] }
+          ]
+        },
+        "expert": {
+          "summary": "Spines are common postsynaptic sites, and synapses can strengthen or weaken with use.",
+          "points": [
+            { "text": "Synapses usually form between axon terminals and dendritic spines, but this is not universal.", "cite": ["bio_35_2"] },
+            { "text": "In long-term potentiation (LTP), a lasting strengthening of a synapse, NMDA receptors are involved and extra AMPA receptors are inserted into the postsynaptic membrane.", "cite": ["bio_35_2"] },
+            { "text": "Long-term depression (LTD) weakens a synapse by removing AMPA receptors.", "cite": ["bio_35_2"] },
+            { "text": "LTP and LTD occur in the hippocampus and are described as a basis of learning and memory.", "cite": ["bio_35_2"] }
+          ],
+          "caveat": "The source describes LTP and LTD at synapses in general; placing them on spines here is a simplification."
+        }
+      },
+      "related": ["dendrites", "synapse"]
+    },
+    {
+      "id": "axon_hillock",
+      "name": "Axon hillock",
+      "short": "Where the axon begins and inputs are added up to decide whether to fire.",
+      "analogy": "Like a vote counter: it adds the yes and no votes and acts only if the total passes a set line.",
+      "levels": {
+        "beginner": {
+          "summary": "The axon hillock is the neuron's decision point.",
+          "points": [
+            { "text": "The axon hillock is the tapered region where the axon leaves the cell body.", "cite": ["ap_12_2"] },
+            { "text": "Incoming signals from many synapses are added together here.", "cite": ["bio_35_2", "ap_12_5"] },
+            { "text": "If the total reaches threshold, the neuron fires an action potential down the axon.", "cite": ["ap_12_5", "bio_35_2"] }
+          ]
+        },
+        "expert": {
+          "summary": "The site of integration, rich in voltage-gated Na+ channels.",
+          "points": [
+            { "text": "OpenStax A&P also calls this region the initial segment.", "cite": ["ap_12_2"] },
+            { "text": "Voltage-gated Na+ channels are densely packed at the initial segment; along a myelinated axon, the next ones are at the first node of Ranvier.", "cite": ["ap_12_4"] },
+            { "text": "Graded potentials sum here, spatially (inputs at different places) and temporally (repeated input over time).", "cite": ["ap_12_5"] },
+            { "text": "Worked example: from rest at -70 mV, a net depolarization of 15 mV reaches the -55 mV threshold.", "cite": ["ap_12_5"] }
+          ],
+          "caveat": "The model draws the hillock as a simple cone. Many neuroscience texts separate the hillock from the axon initial segment just beyond it, where action potentials usually begin; the cited textbook treats the two together."
+        }
+      },
+      "related": ["soma", "axon", "dendrites"]
+    },
+    {
+      "id": "axon",
+      "name": "Axon",
+      "short": "The long cable that carries the signal away from the cell body.",
+      "analogy": "Like a row of falling dominoes: each piece triggers the next, so the signal arrives at full strength.",
+      "levels": {
+        "beginner": {
+          "summary": "The axon is the neuron's output cable.",
+          "points": [
+            { "text": "The axon carries the signal away from the cell body toward other cells.", "cite": ["psych_3_2"] },
+            { "text": "A neuron usually has one axon, which can branch at its end.", "cite": ["ap_12_2"] },
+            { "text": "Axons can be long: a human motor neuron's axon can be up to about a metre long.", "cite": ["bio_35_1"] },
+            { "text": "The signal it carries, the action potential, is all-or-none and is recreated at full strength along the axon.", "cite": ["psych_3_2"] }
+          ]
+        },
+        "expert": {
+          "summary": "Conducts all-or-none action potentials; speed depends on diameter and myelination.",
+          "points": [
+            { "text": "Axon diameters range from about 1 to 20 micrometres.", "cite": ["ap_12_2"] },
+            { "text": "A wider axon conducts faster, because depolarization spreads more easily through it.", "cite": ["ap_12_4"] },
+            { "text": "In unmyelinated axons, voltage-gated Na+ channels open along the whole length in turn (continuous conduction), which is slow.", "cite": ["ap_12_4"] },
+            { "text": "A stronger stimulus starts action potentials more often; it does not make each one bigger.", "cite": ["ap_12_4"] }
+          ],
+          "caveat": "The model's axon is drawn far shorter, relative to the cell body, than many real axons."
+        }
+      },
+      "related": ["axon_hillock", "myelin_sheath", "node_of_ranvier", "axon_terminals"]
+    },
+    {
+      "id": "myelin_sheath",
+      "name": "Myelin sheath",
+      "short": "Fatty insulation, made by glial cells, that speeds the signal.",
+      "analogy": "Like the plastic coating on an electrical wire.",
+      "levels": {
+        "beginner": {
+          "summary": "Myelin wraps the axon so the signal travels faster.",
+          "points": [
+            { "text": "Myelin is a fatty coating wrapped around the axon.", "cite": ["psych_3_2"] },
+            { "text": "It insulates the axon and speeds up the signal.", "cite": ["psych_3_2", "bio_35_1"] },
+            { "text": "The neuron does not make it: helper cells called glia do. In the brain and spinal cord these are oligodendrocytes; in the rest of the body, Schwann cells.", "cite": ["ap_12_2", "bio_35_1"] },
+            { "text": "In multiple sclerosis, the immune system attacks myelin in the brain and spinal cord.", "cite": ["ap_12_2"] }
+          ]
+        },
+        "expert": {
+          "summary": "A lipid-rich glial wrapping that limits current leak and enables saltatory conduction.",
+          "points": [
+            { "text": "Myelin is a lipid-rich sheath that insulates the axon and minimizes loss of the electrical signal.", "cite": ["ap_12_2", "bio_35_1"] },
+            { "text": "One oligodendrocyte (CNS) can myelinate segments of several axons; a Schwann cell (PNS) wraps one segment of a single axon.", "cite": ["ap_12_2"] },
+            { "text": "Each myelinated segment is about 1 to 2 mm long, 100 to 1000 times the axon's diameter.", "cite": ["ap_12_2"] },
+            { "text": "Because current does not leak through the sheath, the action potential is regenerated only at the nodes and jumps between them (saltatory conduction).", "cite": ["bio_35_2", "ap_12_4"] },
+            { "text": "Multiple sclerosis (CNS) and Guillain-Barré syndrome (PNS) are autoimmune diseases that damage myelin.", "cite": ["ap_12_2"] }
+          ],
+          "caveat": "The model shows seven short sheath segments; real segments are far longer relative to the axon's width."
+        }
+      },
+      "related": ["node_of_ranvier", "axon"]
+    },
+    {
+      "id": "node_of_ranvier",
+      "name": "Nodes of Ranvier",
+      "short": "Bare gaps in the myelin where the signal is renewed.",
+      "levels": {
+        "beginner": {
+          "summary": "Nodes are the small gaps between pieces of myelin.",
+          "points": [
+            { "text": "Nodes of Ranvier are gaps in the myelin sheath along the axon.", "cite": ["psych_3_2", "ap_12_2"] },
+            { "text": "The signal is renewed at each node, so it seems to jump from gap to gap.", "cite": ["bio_35_1", "ap_12_4"] },
+            { "text": "This jumping, called saltatory conduction, is why myelinated axons carry signals faster.", "cite": ["ap_12_4", "bio_35_2"] }
+          ]
+        },
+        "expert": {
+          "summary": "Short unmyelinated gaps packed with voltage-gated channels.",
+          "points": [
+            { "text": "Each node is about one micrometre long and contains voltage-gated Na+ and K+ channels.", "cite": ["bio_35_2"] },
+            { "text": "Under the myelin there are no voltage-gated Na+ channels; the signal has to be renewed at each node.", "cite": ["ap_12_4"] },
+            { "text": "Unmyelinated axons instead conduct continuously along their whole length, which is slower.", "cite": ["ap_12_4"] },
+            { "text": "Conduction speed also depends on axon diameter and on how much current leaks across the membrane.", "cite": ["bio_35_2"] }
+          ]
+        }
+      },
+      "related": ["myelin_sheath", "axon"]
+    },
+    {
+      "id": "axon_terminals",
+      "name": "Axon terminals",
+      "short": "Branch endings that release chemical messengers.",
+      "levels": {
+        "beginner": {
+          "summary": "The terminals are where the neuron hands its message on.",
+          "points": [
+            { "text": "At its end the axon splits into branches, each ending in a small swelling.", "cite": ["ap_12_2"] },
+            { "text": "These terminals (also called terminal buttons) hold synaptic vesicles filled with neurotransmitters, the nervous system's chemical messengers.", "cite": ["psych_3_2"] },
+            { "text": "When a signal arrives, the terminals release neurotransmitter onto the next cell.", "cite": ["ap_12_5"] }
+          ]
+        },
+        "expert": {
+          "summary": "Presynaptic endings that turn an electrical signal into a chemical one.",
+          "points": [
+            { "text": "OpenStax A&P calls the swellings synaptic end bulbs; each contacts a target cell.", "cite": ["ap_12_2"] },
+            { "text": "Targets can be other neurons, muscle or other organs.", "cite": ["bio_35_1"] },
+            { "text": "An arriving action potential opens voltage-gated Ca2+ channels; the Ca2+ that enters drives vesicle fusion and release by exocytosis.", "cite": ["ap_12_5"] },
+            { "text": "One textbook figure puts a single synaptic vesicle at about 10,000 neurotransmitter molecules.", "cite": ["psych_3_2"] }
+          ]
+        }
+      },
+      "related": ["synapse", "axon"]
+    },
+    {
+      "id": "synapse",
+      "name": "Synapse",
+      "short": "The junction where one neuron passes its signal to the next.",
+      "analogy": "Lock and key: each neurotransmitter fits particular receptors, as a key fits a lock.",
+      "levels": {
+        "beginner": {
+          "summary": "A synapse is where one neuron talks to the next, using chemicals.",
+          "points": [
+            { "text": "A synapse is the junction where a signal passes from one neuron to another.", "cite": ["psych_3_2"] },
+            { "text": "A very small gap, the synaptic cleft, separates the two cells.", "cite": ["psych_3_2"] },
+            { "text": "Neurotransmitter molecules cross the gap and attach to receptor proteins on the next cell.", "cite": ["psych_3_2", "ap_12_5"] },
+            { "text": "Leftover neurotransmitter is cleared, for example by being pumped back into the sending neuron (reuptake).", "cite": ["psych_3_2"] }
+          ]
+        },
+        "expert": {
+          "summary": "Chemical transmission: Ca2+-triggered exocytosis, receptor binding, then clearance.",
+          "points": [
+            { "text": "An action potential reaches the terminal; voltage-gated Ca2+ channels open; Ca2+ promotes vesicle fusion; neurotransmitter is released by exocytosis, diffuses across the cleft and binds postsynaptic receptors.", "cite": ["ap_12_5"] },
+            { "text": "Ionotropic receptors are ligand-gated ion channels; metabotropic receptors act through a G protein and second messengers such as cAMP or IP3.", "cite": ["ap_12_5"] },
+            { "text": "Signalling ends by enzymatic breakdown (acetylcholinesterase for acetylcholine), reuptake into neurons or glia, or diffusion away.", "cite": ["ap_12_5", "bio_35_2"] },
+            { "text": "Chemical synapses add a delay of about one millisecond; electrical synapses, which pass ions directly between cells, are virtually instantaneous.", "cite": ["bio_35_2", "ap_12_5"] },
+            { "text": "Glutamate is treated as excitatory and GABA as inhibitory, because of what their receptors do to the membrane.", "cite": ["ap_12_5"] }
+          ],
+          "caveat": "The close-up is a schematic: the cleft, vesicles and receptors are not drawn to scale."
+        }
+      },
+      "related": ["axon_terminals", "dendrites", "dendritic_spines"]
+    }
+  ],
+  "processes": [
+    {
+      "id": "resting",
+      "title": "Resting potential",
+      "parts": ["soma", "axon"],
+      "summary": {
+        "beginner": "Even when quiet, a neuron keeps a voltage across its membrane: the inside is more negative than the outside.",
+        "expert": "The resting potential comes from unequal ion distributions, a K+-dominated membrane permeability, and the Na+/K+ pump."
+      },
+      "cite": ["ap_12_4", "bio_35_2"],
+      "steps": [
+        {
+          "key": "rest",
+          "title": "At rest",
+          "text": {
+            "beginner": "At rest the inside of the neuron sits at about -70 mV compared with the outside. Sodium ions are concentrated outside the cell and potassium ions inside.",
+            "expert": "Resting potential is about -70 mV, varying between cells. The membrane is more permeable to K+ than to Na+ because there are many more K+ leak channels; large anions such as proteins stay inside. The Na+/K+ pump uses ATP to move 3 Na+ out and 2 K+ in, keeping Na+ outside at about ten times its inside level."
+          },
+          "cite": ["ap_12_4", "bio_35_2"]
+        }
+      ]
+    },
+    {
+      "id": "action-potential",
+      "title": "How a neuron fires",
+      "parts": ["axon_hillock", "axon", "node_of_ranvier", "axon_terminals"],
+      "summary": {
+        "beginner": "An action potential is a brief, all-or-none electrical pulse that travels down the axon.",
+        "expert": "Voltage-gated Na+ then K+ channels produce a stereotyped spike lasting about 2 ms, followed by refractory periods."
+      },
+      "cite": ["ap_12_4"],
+      "trace": {
+        "rest_mv": -70,
+        "threshold_mv": -55,
+        "peak_mv": 30,
+        "duration_ms": 2,
+        "labels": { "rest": "Resting, about -70 mV", "threshold": "Threshold, about -55 mV", "peak": "Peak, about +30 mV" },
+        "note": "Values from OpenStax A&P. Biology gives a peak of about +40 mV. The depth of the dip below rest is not given by the sources and is drawn for illustration.",
+        "cite": ["ap_12_4", "bio_35_2"]
+      },
+      "steps": [
+        {
+          "key": "rest",
+          "title": "At rest",
+          "text": {
+            "beginner": "The neuron waits at its resting level, about -70 mV.",
+            "expert": "The membrane sits at resting potential, about -70 mV; the activation gates of the voltage-gated Na+ channels are closed."
+          },
+          "cite": ["ap_12_4"]
+        },
+        {
+          "key": "threshold",
+          "title": "Reaching threshold",
+          "text": {
+            "beginner": "Inputs push the voltage up. If it reaches about -55 mV, the threshold, the neuron fires. If not, no signal is sent.",
+            "expert": "Depolarization to about -55 mV opens the activation gates of voltage-gated Na+ channels. A stimulus that does not reach threshold produces no action potential."
+          },
+          "cite": ["ap_12_4"]
+        },
+        {
+          "key": "depolarization",
+          "title": "Depolarization",
+          "text": {
+            "beginner": "Sodium ions rush in and the inside briefly turns positive, up to about +30 mV.",
+            "expert": "Na+ flows in down its concentration gradient and the membrane depolarizes to a peak of about +30 mV (OpenStax Biology gives about +40 mV). Within a fraction of a millisecond the Na+ channels' inactivation gates close."
+          },
+          "cite": ["ap_12_4", "bio_35_2"]
+        },
+        {
+          "key": "repolarization",
+          "title": "Repolarization",
+          "text": {
+            "beginner": "Potassium channels open and potassium ions flow out, bringing the voltage back down.",
+            "expert": "Voltage-gated K+ channels open slightly more slowly than Na+ channels, so they open as Na+ channels inactivate. K+ leaves the cell and the membrane repolarizes."
+          },
+          "cite": ["ap_12_4"]
+        },
+        {
+          "key": "hyperpolarization",
+          "title": "Hyperpolarization",
+          "text": {
+            "beginner": "The voltage briefly dips below the resting level.",
+            "expert": "The K+ channels close with a delay, so K+ keeps leaving and the membrane overshoots below -70 mV."
+          },
+          "cite": ["ap_12_4"]
+        },
+        {
+          "key": "return",
+          "title": "Back to rest",
+          "text": {
+            "beginner": "Potassium channels close and the voltage settles back to its resting level. The whole event takes about 2 milliseconds, and every action potential is the same size.",
+            "expert": "Voltage-gated K+ channels close and leak channels bring the membrane back to rest; the event lasts about 2 ms. Over the longer term the Na+/K+ pump maintains the ion gradients. In the absolute refractory period the inactivated Na+ channels block a new action potential; in the relative refractory period a stronger stimulus is needed, because outflowing K+ opposes inflowing Na+."
+          },
+          "cite": ["ap_12_4"]
+        }
+      ]
+    },
+    {
+      "id": "conduction",
+      "title": "Why myelin makes signals faster",
+      "parts": ["myelin_sheath", "node_of_ranvier", "axon"],
+      "summary": {
+        "beginner": "Myelin lets the signal skip from gap to gap instead of crawling along every bit of the axon.",
+        "expert": "Continuous conduction in unmyelinated axons versus saltatory conduction between nodes of Ranvier."
+      },
+      "cite": ["ap_12_4", "bio_35_2"],
+      "steps": [
+        {
+          "key": "continuous",
+          "title": "Without myelin",
+          "text": {
+            "beginner": "Without myelin, the signal has to be renewed at every point along the axon, which is slow.",
+            "expert": "In unmyelinated axons, voltage-gated Na+ channels open in turn along the whole length (continuous conduction). This is slow; a wider axon conducts faster."
+          },
+          "cite": ["ap_12_4"]
+        },
+        {
+          "key": "saltatory",
+          "title": "With myelin",
+          "text": {
+            "beginner": "With myelin, the signal is renewed only at the gaps (nodes of Ranvier), so it jumps from node to node and arrives sooner.",
+            "expert": "Myelin insulates the axon and limits current leak, so depolarization spreads under the sheath to the next node, where concentrated voltage-gated Na+ channels regenerate the action potential (saltatory conduction)."
+          },
+          "cite": ["ap_12_4", "bio_35_2"]
+        }
+      ]
+    },
+    {
+      "id": "synapse",
+      "title": "Passing the message on",
+      "parts": ["axon_terminals", "synapse"],
+      "summary": {
+        "beginner": "At the synapse the electrical signal becomes a chemical one, then electrical again in the next cell.",
+        "expert": "Ca2+-triggered exocytosis, diffusion across the cleft, receptor binding and clearance."
+      },
+      "cite": ["ap_12_5"],
+      "steps": [
+        {
+          "key": "arrive",
+          "title": "Signal arrives",
+          "text": {
+            "beginner": "The action potential reaches the axon terminal.",
+            "expert": "An action potential depolarizes the presynaptic terminal."
+          },
+          "cite": ["ap_12_5"]
+        },
+        {
+          "key": "calcium",
+          "title": "Calcium enters",
+          "text": {
+            "beginner": "Calcium channels open and calcium ions flow into the terminal.",
+            "expert": "Depolarization opens voltage-gated Ca2+ channels and Ca2+ enters the end bulb."
+          },
+          "cite": ["ap_12_5", "bio_35_2"]
+        },
+        {
+          "key": "release",
+          "title": "Release",
+          "text": {
+            "beginner": "The calcium makes vesicles fuse with the membrane and spill neurotransmitter into the gap.",
+            "expert": "Ca2+ promotes fusion of synaptic vesicles with the presynaptic membrane, releasing neurotransmitter by exocytosis. Chemical transmission adds a delay of about one millisecond."
+          },
+          "cite": ["ap_12_5", "bio_35_2"]
+        },
+        {
+          "key": "bind",
+          "title": "Binding",
+          "text": {
+            "beginner": "Neurotransmitter crosses the gap and attaches to receptors on the next cell, each kind fitting its receptor like a key in a lock.",
+            "expert": "Transmitter diffuses across the cleft and binds postsynaptic receptors: ionotropic (ligand-gated channels) or metabotropic (acting through a G protein and second messengers)."
+          },
+          "cite": ["ap_12_5", "psych_3_2"]
+        },
+        {
+          "key": "clear",
+          "title": "Clearing",
+          "text": {
+            "beginner": "The message is switched off: leftover neurotransmitter is broken down or pumped back into the sending neuron.",
+            "expert": "Transmitter is removed by enzymes (acetylcholinesterase breaks down acetylcholine), by reuptake into neurons or glia, or by diffusing away. Blocking acetylcholinesterase increases transmission."
+          },
+          "cite": ["ap_12_5", "bio_35_2"]
+        }
+      ]
+    },
+    {
+      "id": "summation",
+      "title": "Adding up inputs",
+      "parts": ["dendrites", "axon_hillock", "soma"],
+      "summary": {
+        "beginner": "A neuron weighs up many small pushes and only fires when they add up to enough.",
+        "expert": "EPSPs and IPSPs sum spatially and temporally at the initial segment; reaching threshold triggers an all-or-none action potential."
+      },
+      "cite": ["ap_12_5", "bio_35_2"],
+      "steps": [
+        {
+          "key": "epsp",
+          "title": "Excitatory input",
+          "text": {
+            "beginner": "An excitatory input nudges the voltage up, toward threshold, making firing more likely.",
+            "expert": "An EPSP is a depolarizing postsynaptic potential, often caused by Na+ or Ca2+ entering, that moves the membrane toward threshold."
+          },
+          "cite": ["ap_12_5", "bio_35_2"]
+        },
+        {
+          "key": "ipsp",
+          "title": "Inhibitory input",
+          "text": {
+            "beginner": "An inhibitory input pushes the voltage down, away from threshold, making firing less likely.",
+            "expert": "An IPSP usually hyperpolarizes the membrane, for example when GABA opens Cl- channels, or when K+ leaves; it moves the membrane away from threshold."
+          },
+          "cite": ["ap_12_5", "bio_35_2"]
+        },
+        {
+          "key": "threshold",
+          "title": "Adding up",
+          "text": {
+            "beginner": "Inputs add up at the axon hillock. Only if the total reaches threshold does the neuron fire, and then always at full size.",
+            "expert": "Inputs sum spatially (from different sites) and temporally (repeated in time) at the initial segment; for example a net 15 mV depolarization takes the membrane from -70 to -55 mV. Once threshold is reached, the action potential is all-or-none."
+          },
+          "cite": ["ap_12_5", "ap_12_4"]
+        }
+      ]
+    }
+  ],
+  "compare": {
+    "intro": "Artificial neurons were loosely inspired by real ones. Frank Rosenblatt developed the perceptron in the 1950s and 1960s, building on earlier work by Warren McCulloch and Walter Pitts. A perceptron multiplies each input by a weight, adds them up, and outputs 1 if the sum is above a threshold, 0 if not.",
+    "cite": ["nielsen_1_2"],
+    "rows": [
+      { "bio": "Dendrites receive signals", "ann": "Inputs x1, x2", "part": "dendrites", "node": "inputs", "note": "Dive into Deep Learning maps the dendrites to the inputs.", "cite": ["d2l_3_1"] },
+      { "bio": "Synapses set how strongly each input counts", "ann": "Weights w1, w2", "part": "synapse", "node": "weights", "note": "A weight expresses how much an input matters to the output.", "cite": ["d2l_3_1", "nielsen_1_2"] },
+      { "bio": "Inputs add up at the axon hillock", "ann": "Weighted sum w1·x1 + w2·x2", "part": "axon_hillock", "node": "sum", "note": "Dive into Deep Learning places the sum in the cell body's 'nucleus'; physiology texts place the summing at the axon hillock.", "cite": ["d2l_3_1", "ap_12_5"] },
+      { "bio": "Fires only past threshold (about -55 mV)", "ann": "Threshold", "part": "axon_hillock", "node": "threshold", "note": "Both fire only when the total passes a set line.", "cite": ["ap_12_4", "nielsen_1_2"] },
+      { "bio": "All-or-none signal down the axon", "ann": "Output 0 or 1", "part": "axon", "node": "output", "note": "The output is sent on, as the axon sends its signal to the terminals.", "cite": ["d2l_3_1", "psych_3_2"] }
+    ],
+    "caveats": [
+      { "text": "This is a simplification that inspired artificial networks, not a description of how real neurons compute. Biology gave neural networks their name, but the interpretation of biology has become less literal over time.", "cite": ["d2l_book"] },
+      { "text": "Today's deep learning draws its ideas in equal or greater measure from mathematics, statistics, computer science and other fields. Planes were inspired by birds, yet bird science has long stopped driving aircraft design.", "cite": ["d2l_3_1"] },
+      { "text": "Real neurons do much that a perceptron leaves out: inputs are graded voltages that sum over space and time, stimulus strength is coded by how often identical spikes fire, and synapses strengthen or weaken with use.", "cite": ["ap_12_5", "ap_12_4", "bio_35_2"] },
+      { "text": "Modern networks rarely use the all-or-none perceptron; smoother units such as the sigmoid neuron are more common.", "cite": ["nielsen_1_2"] }
+    ]
+  },
+  "quiz": [
+    { "type": "function", "q": "What does the myelin sheath do?", "options": ["Insulates the axon and speeds up the signal", "Stores the cell's DNA", "Receives signals from other neurons", "Releases neurotransmitter"], "answer": 0, "explain": "Myelin is a fatty coating, made by glial cells, that insulates the axon so the signal travels faster.", "cite": ["psych_3_2", "bio_35_1"] },
+    { "type": "function", "q": "Which part receives signals from other neurons?", "options": ["Axon terminals", "Dendrites", "Myelin sheath", "Nucleus"], "answer": 1, "explain": "Dendrites are branching extensions that receive signals from other neurons at synapses.", "cite": ["psych_3_2", "bio_35_1"] },
+    { "type": "function", "q": "Where are incoming signals added up to decide whether the neuron fires?", "options": ["Synaptic cleft", "Node of Ranvier", "Axon hillock", "Nucleolus"], "answer": 2, "explain": "Graded potentials sum at the axon hillock (initial segment); if the total reaches threshold, the neuron fires.", "cite": ["ap_12_5", "bio_35_2"] },
+    { "type": "function", "q": "Which cells make myelin in the brain and spinal cord?", "options": ["Schwann cells", "Oligodendrocytes", "Microglia", "Red blood cells"], "answer": 1, "explain": "Oligodendrocytes myelinate axons in the central nervous system; Schwann cells do it in the peripheral nervous system.", "cite": ["ap_12_2", "bio_35_1"] },
+    { "type": "function", "q": "What do synaptic vesicles in the axon terminals contain?", "options": ["Neurotransmitter", "DNA", "Myelin", "Ribosomes"], "answer": 0, "explain": "Terminal buttons hold synaptic vesicles filled with neurotransmitters, the chemical messengers of the nervous system.", "cite": ["psych_3_2"] },
+    { "type": "function", "q": "What is a node of Ranvier?", "options": ["A branch of a dendrite", "A gap in the myelin sheath", "A receptor protein", "Part of the nucleus"], "answer": 1, "explain": "Nodes of Ranvier are the bare gaps between myelin segments, where the signal is renewed.", "cite": ["psych_3_2", "ap_12_2"] },
+    { "type": "function", "q": "What does the nucleus hold?", "options": ["Neurotransmitter", "The cell's DNA", "Calcium for release", "Myelin"], "answer": 1, "explain": "The nucleus houses the cell's DNA and directs the making of ribosomes and proteins.", "cite": ["bio2e_4_3"] },
+    { "type": "process", "q": "About what is the resting potential of a typical neuron?", "options": ["About +30 mV", "About 0 mV", "About -70 mV", "About -150 mV"], "answer": 2, "explain": "At rest the inside sits at about -70 mV relative to the outside; the exact value varies between cells.", "cite": ["ap_12_4", "bio_35_2"] },
+    { "type": "process", "q": "Which ions rush in during depolarization?", "options": ["Sodium (Na+)", "Potassium (K+)", "Chloride (Cl-)", "Calcium (Ca2+) only"], "answer": 0, "explain": "At threshold, voltage-gated Na+ channels open and Na+ flows in, so the inside turns positive.", "cite": ["ap_12_4"] },
+    { "type": "process", "q": "What makes vesicles release neurotransmitter at the terminal?", "options": ["Potassium leaving the cell", "Calcium entering the terminal", "Myelin breaking down", "The nucleus sending RNA"], "answer": 1, "explain": "The action potential opens voltage-gated Ca2+ channels; the Ca2+ that enters promotes vesicle fusion and release.", "cite": ["ap_12_5"] },
+    { "type": "process", "q": "What happens when a stimulus gets stronger (but already reaches threshold)?", "options": ["Each action potential gets bigger", "Action potentials fire more often, at the same size", "The resting potential rises to 0 mV", "The axon grows myelin"], "answer": 1, "explain": "Action potentials are all-or-none: a stronger stimulus starts them more often, but each one is the same size.", "cite": ["ap_12_4"] },
+    { "type": "process", "q": "An inhibitory postsynaptic potential (IPSP) makes a neuron...", "options": ["More likely to fire", "Less likely to fire", "Fire twice", "Release more myelin"], "answer": 1, "explain": "An IPSP hyperpolarizes the membrane, moving it away from threshold.", "cite": ["ap_12_5", "bio_35_2"] },
+    { "type": "process", "q": "Why does myelin make signals travel faster?", "options": ["It adds more sodium channels along the whole axon", "The signal is renewed only at the nodes and jumps between them", "It makes the axon shorter", "It releases neurotransmitter along the way"], "answer": 1, "explain": "Myelin limits current leak, so the action potential is regenerated only at the nodes of Ranvier and jumps between them (saltatory conduction).", "cite": ["ap_12_4", "bio_35_2"] },
+    { "type": "process", "q": "Which of these clears acetylcholine from the synapse?", "options": ["Acetylcholinesterase", "Myelin", "The nucleolus", "Sodium channels"], "answer": 0, "explain": "The enzyme acetylcholinesterase breaks down acetylcholine; other transmitters are cleared by reuptake or diffusion.", "cite": ["ap_12_5", "bio_35_2"] },
+    { "type": "compare", "q": "In a perceptron, what plays the role of synaptic strength?", "options": ["The inputs", "The weights", "The output", "The threshold"], "answer": 1, "explain": "Weights set how much each input counts, much as synapses set how strongly each input affects a neuron.", "cite": ["d2l_3_1", "nielsen_1_2"] }
+  ],
+  "glossary": [
+    { "term": "Action potential", "definition": "A brief, all-or-none electrical pulse that travels along the axon; about 2 ms long.", "cite": ["ap_12_4"] },
+    { "term": "Resting potential", "definition": "The voltage across the membrane of a neuron at rest, about -70 mV.", "cite": ["ap_12_4"] },
+    { "term": "Threshold", "definition": "The voltage, about -55 mV, at which an action potential starts.", "cite": ["ap_12_4"] },
+    { "term": "Depolarization", "definition": "A change that makes the inside of the cell less negative, for example when Na+ enters.", "cite": ["ap_12_4", "ap_12_5"] },
+    { "term": "Hyperpolarization", "definition": "A change that makes the inside more negative than at rest.", "cite": ["ap_12_4", "ap_12_5"] },
+    { "term": "All-or-none", "definition": "Once threshold is reached the action potential happens at full size; below threshold it does not happen.", "cite": ["ap_12_4", "psych_3_2"] },
+    { "term": "Refractory period", "definition": "A short time after an action potential when a new one cannot start (absolute) or needs a stronger stimulus (relative).", "cite": ["ap_12_4"] },
+    { "term": "Graded potential", "definition": "A local, temporary change in membrane voltage whose size depends on the stimulus.", "cite": ["ap_12_5"] },
+    { "term": "EPSP", "definition": "Excitatory postsynaptic potential: a depolarization that moves the membrane toward threshold.", "cite": ["ap_12_5"] },
+    { "term": "IPSP", "definition": "Inhibitory postsynaptic potential: a change, usually a hyperpolarization, that moves the membrane away from threshold.", "cite": ["ap_12_5"] },
+    { "term": "Saltatory conduction", "definition": "Conduction in myelinated axons, where the action potential jumps from node to node.", "cite": ["ap_12_4"] },
+    { "term": "Neurotransmitter", "definition": "A chemical messenger released at the synapse that binds receptors on the next cell.", "cite": ["psych_3_2"] },
+    { "term": "Synaptic cleft", "definition": "The very small gap between the sending and receiving cells at a synapse.", "cite": ["psych_3_2"] },
+    { "term": "Reuptake", "definition": "Pumping leftover neurotransmitter back into neurons or nearby glial cells.", "cite": ["psych_3_2"] },
+    { "term": "Glia", "definition": "Non-neuron cells of the nervous system that support neurons, make myelin and take part in immune defence.", "cite": ["psych_3_2", "ap_12_2"] },
+    { "term": "Oligodendrocyte", "definition": "A glial cell that myelinates axons in the brain and spinal cord.", "cite": ["ap_12_2"] },
+    { "term": "Schwann cell", "definition": "A glial cell that myelinates one segment of one axon outside the brain and spinal cord.", "cite": ["ap_12_2"] },
+    { "term": "Multipolar neuron", "definition": "A neuron with one axon and two or more dendrites; the most common shape.", "cite": ["ap_12_2", "bio_35_1"] }
+  ]
+}

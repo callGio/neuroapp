@@ -82,6 +82,11 @@
    "citation": "Bear, M. H., Reddy, V., & Bollu, P. C. (2022). Neuroanatomy, hypothalamus. In StatPearls. StatPearls Publishing.",
    "url": "https://www.ncbi.nlm.nih.gov/books/NBK525993/",
    "license": "CC BY-NC-ND 4.0"
+  },
+  "os_ap_14_2": {
+   "citation": "Betts, J. G., Young, K. A., Wise, J. A., Johnson, E., Poe, B., Kruse, D. H., Korol, O., Johnson, J. E., Womble, M., & DeSaix, P. (2022). Central processing (Section 14.2). In Anatomy and physiology (2nd ed.). OpenStax.",
+   "url": "https://openstax.org/books/anatomy-and-physiology-2e/pages/14-2-central-processing",
+   "license": "CC BY 4.0"
   }
  },
  "glossary": [
@@ -4142,6 +4147,249 @@
      "cite": [
       "sp_amygdala",
       "os_ap_13_2"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "seeing",
+   "title": "From eye to sight: the visual pathway",
+   "level": "beginner",
+   "steps": [
+    {
+     "atlas_ids": [
+      "left_eyeball",
+      "right_eyeball"
+     ],
+     "groups": [],
+     "view": "anterior",
+     "predict": "Where in the brain do you think seeing happens: just behind the eyes, or somewhere else?",
+     "text": "Light is detected in the retina at the back of each eye, but seeing happens much farther back, in the visual cortex of the occipital lobe. This tour follows the signal there.",
+     "cite": [
+      "os_ap_14_2"
+     ]
+    },
+    {
+     "atlas_ids": [
+      "left_optic_nerve",
+      "right_optic_nerve"
+     ],
+     "groups": [],
+     "view": "inferior",
+     "text": "Each retina sends its signals out of the eye along an optic nerve.",
+     "cite": [
+      "os_ap_14_2"
+     ]
+    },
+    {
+     "atlas_ids": [
+      "optic_chiasm"
+     ],
+     "groups": [],
+     "view": "inferior",
+     "predict": "Does each eye report only to its own side of the brain?",
+     "text": "The two optic nerves meet at the optic chiasm. Fibres from the nose-side half of each retina cross to the other side here; fibres from the outer half stay on their own side.",
+     "cite": [
+      "os_ap_14_2"
+     ]
+    },
+    {
+     "atlas_ids": [
+      "left_optic_tract",
+      "right_optic_tract"
+     ],
+     "groups": [],
+     "view": "inferior",
+     "text": "Behind the chiasm the fibres continue as the optic tracts. Because of the partial crossing, each side of the brain now carries the opposite half of what you see: the left side handles the right half of your view.",
+     "cite": [
+      "os_ap_14_2"
+     ]
+    },
+    {
+     "atlas_ids": [
+      "left_lateral_geniculate_body",
+      "right_lateral_geniculate_body"
+     ],
+     "groups": [],
+     "view": "posterior",
+     "text": "Most optic tract fibres end in the lateral geniculate nucleus of the thalamus, the relay station on the way to the cortex.",
+     "cite": [
+      "os_ap_14_2"
+     ]
+    },
+    {
+     "atlas_ids": [
+      "left_superior_colliculus",
+      "right_superior_colliculus"
+     ],
+     "groups": [],
+     "view": "posterior",
+     "text": "Some fibres go to the superior colliculus in the midbrain instead. It combines sight, sound and touch and helps turn the head toward something that grabs your attention.",
+     "cite": [
+      "os_ap_14_2"
+     ]
+    },
+    {
+     "atlas_ids": [
+      "left_calcarine_sulcus",
+      "right_calcarine_sulcus"
+     ],
+     "groups": [
+      "left_occipital_lobe",
+      "right_occipital_lobe"
+     ],
+     "view": "posterior",
+     "predict": "If something is at the top of your view, do you think the top or the bottom of the visual cortex handles it?",
+     "text": "Neurons in the lateral geniculate nucleus send their axons to the primary visual cortex in the occipital lobe, mostly on its inner wall along the calcarine sulcus. The map is flipped: the upper part of the visual cortex handles the lower part of your view.",
+     "cite": [
+      "os_ap_14_2",
+      "sp_thalamic_nuclei"
+     ]
+    },
+    {
+     "atlas_ids": [],
+     "groups": [
+      "left_temporal_lobe",
+      "left_parietal_lobe"
+     ],
+     "view": "left",
+     "text": "From the visual cortex, information flows along two streams. A lower stream into the temporal lobe works out what you are looking at; an upper stream into the parietal lobe works out where it is and guides your movements.",
+     "cite": [
+      "os_ap_14_2"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "hearing",
+   "title": "How a sound reaches the cortex",
+   "level": "beginner",
+   "steps": [
+    {
+     "atlas_ids": [
+      "medulla_oblongata"
+     ],
+     "groups": [],
+     "view": "left",
+     "predict": "A sound arrives at your right ear a split second before your left. What could the brain use that for?",
+     "text": "Signals from the inner ear enter the brain stem at the cochlear nuclei, in the upper medulla. Brain stem nuclei then combine input from both ears and use the small differences in timing and loudness to work out where a sound came from.",
+     "cite": [
+      "os_ap_14_2"
+     ]
+    },
+    {
+     "atlas_ids": [
+      "left_inferior_colliculus__0",
+      "left_inferior_colliculus__1",
+      "right_inferior_colliculus"
+     ],
+     "groups": [],
+     "view": "posterior",
+     "text": "Auditory signals continue up to the inferior colliculus in the midbrain.",
+     "cite": [
+      "os_ap_14_2"
+     ]
+    },
+    {
+     "atlas_ids": [
+      "left_superior_colliculus",
+      "right_superior_colliculus"
+     ],
+     "groups": [],
+     "view": "posterior",
+     "text": "One branch goes to the superior colliculus, which helps turn your head and neck toward the sound.",
+     "cite": [
+      "os_ap_14_2"
+     ]
+    },
+    {
+     "atlas_ids": [
+      "left_medial_geniculate_body",
+      "right_medial_geniculate_body"
+     ],
+     "groups": [],
+     "view": "posterior",
+     "text": "The main branch goes to the medial geniculate nucleus of the thalamus, the relay for hearing.",
+     "cite": [
+      "os_ap_14_2"
+     ]
+    },
+    {
+     "atlas_ids": [],
+     "groups": [
+      "left_temporal_lobe"
+     ],
+     "view": "left",
+     "text": "The medial geniculate nucleus passes the signal to the auditory cortex in the temporal lobe, where sound is consciously heard.",
+     "cite": [
+      "os_ap_14_2"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "touch",
+   "title": "How a touch reaches awareness",
+   "level": "intermediate",
+   "steps": [
+    {
+     "atlas_ids": [
+      "medulla_oblongata"
+     ],
+     "groups": [],
+     "view": "posterior",
+     "predict": "If you touch something with your left hand, which side of the brain do you think feels it?",
+     "text": "Fine touch and body-position signals climb the back of the spinal cord in the dorsal column system and reach two nuclei in the medulla, the nucleus gracilis and nucleus cuneatus. The next neuron's axon crosses the midline here, so touch on the left side of the body is handled by the right side of the brain.",
+     "cite": [
+      "os_ap_14_2"
+     ]
+    },
+    {
+     "atlas_ids": [],
+     "groups": [
+      "left_thalamus",
+      "right_thalamus"
+     ],
+     "view": "left",
+     "text": "After crossing, the axons rise through the brain stem as a bundle called the medial lemniscus and end in the thalamus, where they connect with the third neuron of the pathway.",
+     "cite": [
+      "os_ap_14_2"
+     ]
+    },
+    {
+     "atlas_ids": [
+      "left_postcentral_gyrus",
+      "right_postcentral_gyrus"
+     ],
+     "groups": [],
+     "view": "superior",
+     "text": "The third neuron projects to the postcentral gyrus, where the touch is first processed by the cortex and becomes a conscious sensation.",
+     "cite": [
+      "os_ap_14_2"
+     ]
+    },
+    {
+     "atlas_ids": [
+      "left_postcentral_gyrus"
+     ],
+     "groups": [],
+     "view": "left",
+     "predict": "Do you think your back or your fingertips get more cortex?",
+     "text": "The postcentral gyrus holds a map of the body, but not a scale model: sensitive areas such as the fingers and lower face take up far more cortex than the shoulders and back.",
+     "cite": [
+      "os_ap_14_2"
+     ]
+    },
+    {
+     "atlas_ids": [
+      "medulla_oblongata",
+      "pons"
+     ],
+     "groups": [],
+     "view": "left",
+     "text": "Pain and temperature take a different route, the spinothalamic tract, which crosses in the spinal cord at the level where the signal enters instead of in the medulla.",
+     "cite": [
+      "os_ap_14_2"
      ]
     }
    ]
