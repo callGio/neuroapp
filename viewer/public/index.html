@@ -197,8 +197,8 @@ body::after{
 }
 .hero-brain-img{
   position:relative;z-index:1;
-  max-width:100%;width:460px;
-  border-radius:12px;
+  max-width:100%;width:480px;height:auto;
+  filter:drop-shadow(0 24px 50px rgba(34,211,238,.18)) drop-shadow(0 0 60px rgba(139,108,255,.28));
   animation:float 6s ease-in-out infinite;
 }
 @keyframes float{
@@ -257,8 +257,6 @@ body::after{
   border-radius:var(--radius);
   padding:28px 24px;
   display:flex;gap:20px;
-  opacity:0;transform:translateY(20px);
-  transition:opacity .4s ease,transform .4s ease;
 }
 .feature-card.visible{opacity:1;transform:none}
 @media(prefers-reduced-motion:reduce){
@@ -403,6 +401,123 @@ footer a:hover{color:var(--text)}
 @media(max-width:480px){
   #topbar .btn{font-size:.78rem;padding:7px 13px}
 }
+
+/* ══ MOTION ══ (only active once the script adds .motion to <html>) */
+html{scroll-behavior:smooth}
+@keyframes fxUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes fxRight{from{opacity:0;transform:translateX(45px)}to{opacity:1;transform:none}}
+@keyframes wordIn{from{opacity:0;transform:translateY(60%)}to{opacity:1;transform:none}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+
+.hero-pill{display:inline-flex;align-items:center;gap:9px;align-self:flex-start;padding:7px 16px;border-radius:999px;
+  background:rgba(139,108,255,.10);border:1px solid rgba(139,108,255,.32);color:#c9bcff;font-size:.84rem;font-weight:500}
+.hero-pill .dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green)}
+.hero-heading .w{display:inline-block;white-space:pre}
+
+.motion .hero-pill{animation:fxUp .45s cubic-bezier(.16,1,.3,1) both}
+.motion .hero-pill .dot{animation:dotPulse 2.2s ease-in-out infinite}
+.motion .hero-heading .w{animation:wordIn .7s cubic-bezier(.16,1,.3,1) both;animation-delay:calc(.12s + var(--i) * .075s)}
+.motion .fx{animation:fxUp .6s cubic-bezier(.16,1,.3,1) both;animation-delay:var(--d,.5s)}
+.motion .hero-image-wrap{animation:fxRight .9s cubic-bezier(.16,1,.3,1) .35s both}
+
+/* connections from the labels into the brain, each carrying a pulse */
+.links{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:none;overflow:visible}
+.links path{fill:none;vector-effect:non-scaling-stroke;stroke-linecap:round}
+.links .ln{stroke:rgba(148,163,209,.30);stroke-width:1}
+.links .pu{stroke:var(--cyan);stroke-width:2.2;stroke-dasharray:7 200;stroke-dashoffset:7;opacity:0;filter:drop-shadow(0 0 4px var(--cyan))}
+@keyframes pulseRun{0%{stroke-dashoffset:7;opacity:0}8%{opacity:1}55%{opacity:1}70%,100%{stroke-dashoffset:-60;opacity:0}}
+.motion .links .pu{animation:pulseRun 3.4s linear infinite;animation-delay:calc(1.6s + var(--d))}
+.motion .links .ln{animation:fxUp .8s ease both;animation-delay:1.2s}
+.chip{position:absolute;z-index:2;padding:6px 12px;border-radius:999px;font-size:.76rem;font-weight:500;color:var(--text);
+  background:rgba(16,24,42,.82);border:1px solid var(--border);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);white-space:nowrap;
+  box-shadow:0 6px 22px rgba(0,0,0,.35)}
+.chip::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:7px;background:var(--c,var(--violet))}
+.chip.c1{left:-2%;top:14%;--c:var(--pink)}
+.chip.c2{right:-4%;top:26%;--c:var(--cyan)}
+.chip.c3{left:4%;bottom:12%;--c:var(--amber)}
+.chip.c4{right:2%;bottom:20%;--c:var(--green)}
+.motion .chip{animation:fxUp .6s cubic-bezier(.16,1,.3,1) both,bob 5s ease-in-out infinite;animation-delay:var(--d,1s),calc(var(--d,1s) + .6s)}
+@media(max-width:820px){.chip.c1,.chip.c3{display:none}.links path:nth-child(4n+1),.links path:nth-child(4n+3){display:none}}
+
+/* scroll reveal */
+.motion .reveal{opacity:0;transform:translateY(32px);transition:opacity .65s ease,transform .65s ease;transition-delay:var(--d,0s)}
+.motion .reveal.revealed{opacity:1;transform:none}
+
+/* hover lift */
+.btn{transition:transform .25s ease,box-shadow .25s ease,background .25s ease,border-color .25s ease}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 0 44px rgba(139,108,255,.5),0 8px 25px rgba(0,0,0,.3)}
+.btn-secondary:hover{transform:translateY(-3px);border-color:rgba(34,211,238,.55);box-shadow:0 0 22px rgba(34,211,238,.18);background:rgba(34,211,238,.06)}
+.mode-card,.feature-card,.stat-item{transition:transform .4s ease,border-color .4s ease,box-shadow .4s ease,opacity .65s ease}
+.mode-card{position:relative;overflow:hidden}
+.mode-card::before{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:var(--grad);transform:scaleX(0);transform-origin:left;transition:transform .4s ease}
+.mode-card:hover::before,.mode-card:focus-visible::before{transform:scaleX(1)}
+.mode-card:hover,.mode-card:focus-visible{transform:translateY(-10px);border-color:rgba(139,108,255,.45);box-shadow:0 24px 70px rgba(139,108,255,.16)}
+.mode-card .icon-wrap{transition:transform .4s ease}
+.mode-card:hover .icon-wrap{transform:scale(1.08)}
+.mode-go{display:inline-block;transition:transform .4s ease}
+.mode-card:hover .mode-go{transform:translateX(6px)}
+.feature-card:hover{transform:translateY(-8px);border-color:rgba(34,211,238,.4);box-shadow:0 20px 60px rgba(34,211,238,.10)}
+.stat-item:hover{transform:translateY(-6px)}
+
+/* top bar: clear at the top of the page, solid once you scroll */
+#topbar{transition:background .3s ease,box-shadow .3s ease,border-color .3s ease}
+.motion #topbar:not(.scrolled){background:transparent;border-bottom-color:transparent;backdrop-filter:none;-webkit-backdrop-filter:none}
+#topbar.scrolled{box-shadow:0 8px 30px rgba(0,0,0,.35)}
+
+/* ══ GUIDE (Oron) ══ */
+#guide{position:fixed;right:18px;bottom:18px;z-index:200;display:flex;flex-direction:column;align-items:flex-end;gap:10px;pointer-events:none}
+#guide>*{pointer-events:auto}
+#guide-launch{width:72px;height:90px;padding:4px;border:none;background:transparent;cursor:pointer;border-radius:18px;
+  display:flex;align-items:center;justify-content:center;filter:drop-shadow(0 10px 18px rgba(0,0,0,.55)) drop-shadow(0 0 16px rgba(139,108,255,.35));transition:transform .25s ease,filter .25s ease}
+#guide-launch:hover{transform:translateY(-4px);filter:drop-shadow(0 14px 22px rgba(0,0,0,.55)) drop-shadow(0 0 26px rgba(139,108,255,.6))}
+@keyframes oronWave{0%,60%,100%{transform:rotate(0)}70%{transform:rotate(-14deg)}80%{transform:rotate(8deg)}90%{transform:rotate(-10deg)}}
+.motion #guide-launch svg{animation:bob 3.2s ease-in-out infinite}
+.oron-wave{transform-origin:47px 34px}
+.motion .oron-wave{animation:oronWave 4.5s ease-in-out infinite}
+#guide-hello{max-width:250px;padding:12px 34px 12px 14px;border-radius:16px 16px 4px 16px;background:var(--surface-solid);border:1px solid var(--border);
+  box-shadow:var(--shadow);font-size:.88rem;line-height:1.45;color:var(--text);position:relative;cursor:pointer}
+#guide-hello[hidden]{display:none}
+.motion #guide-hello{animation:fxUp .5s cubic-bezier(.16,1,.3,1) both}
+#guide-hello-x{position:absolute;right:4px;top:4px;width:28px;height:28px;border:none;background:transparent;color:var(--muted);cursor:pointer;font-size:1rem;border-radius:50%}
+#guide-hello-x:hover{color:var(--text);background:rgba(255,255,255,.06)}
+#guide-panel{width:min(380px,calc(100vw - 24px));height:min(540px,calc(100dvh - 110px));display:flex;flex-direction:column;border-radius:18px;overflow:hidden;
+  background:#0c1322;border:1px solid var(--border);box-shadow:0 24px 80px rgba(0,0,0,.6)}
+#guide-panel[hidden]{display:none}
+.motion #guide-panel{animation:fxUp .35s cubic-bezier(.16,1,.3,1) both}
+#guide-head{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--border);background:rgba(139,108,255,.08)}
+#guide-head h2{font-family:"Space Grotesk",sans-serif;font-size:1rem;font-weight:600;margin:0;flex:1}
+#guide-head h2 small{display:block;font-family:"Inter",sans-serif;font-size:.74rem;font-weight:400;color:var(--muted)}
+#guide-close{min-width:44px;min-height:36px;border:1px solid var(--border);border-radius:999px;background:transparent;color:var(--text);cursor:pointer;font:inherit;font-size:.82rem}
+#guide-log{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px}
+.g-msg{max-width:88%;padding:10px 13px;border-radius:14px;font-size:.9rem;line-height:1.5}
+.g-bot{align-self:flex-start;background:var(--surface-solid);border:1px solid var(--border);border-bottom-left-radius:4px}
+.g-me{align-self:flex-end;background:rgba(139,108,255,.22);border:1px solid rgba(139,108,255,.4);border-bottom-right-radius:4px}
+.g-msg strong{display:block;font-family:"Space Grotesk",sans-serif;margin-bottom:2px}
+.g-msg a{display:inline-block;margin-top:8px;color:var(--cyan);font-weight:600;text-decoration:none}
+.g-msg a:hover{text-decoration:underline}
+.g-msg .g-src{display:block;margin-top:6px;font-size:.76rem;color:var(--muted)}
+.motion .g-msg{animation:fxUp .3s ease both}
+#guide-chips{display:flex;flex-wrap:wrap;gap:6px;padding:0 12px 12px}
+.g-chip{padding:7px 12px;min-height:36px;border-radius:999px;border:1px solid var(--border);background:transparent;color:var(--text);font:inherit;font-size:.8rem;cursor:pointer;transition:border-color .2s,background .2s}
+.g-chip:hover{border-color:rgba(34,211,238,.55);background:rgba(34,211,238,.07)}
+#guide-form{display:flex;gap:8px;padding:10px 12px;border-top:1px solid var(--border)}
+#guide-input{flex:1;min-height:44px;padding:0 14px;border-radius:999px;border:1px solid var(--border);background:var(--surface-solid);color:var(--text);font:inherit;font-size:.9rem}
+#guide-send{min-width:64px;min-height:44px;border-radius:999px;border:none;background:var(--grad);color:#060912;font:inherit;font-weight:600;cursor:pointer}
+@media(max-width:520px){#guide{right:10px;bottom:10px}#guide-panel{height:min(520px,calc(100dvh - 96px))}}
+
+#guide-close,.g-chip{min-height:44px}
+#guide-hello-x{width:44px;height:44px;right:-6px;top:-6px}
+#guide-chips{max-height:104px;overflow-y:auto}
+body{padding-bottom:96px}
+@media(max-width:820px){.chip,.links{display:none}}
+@media(max-width:760px){#guide-hello{display:none!important}#guide-launch{width:56px;height:70px}#guide-launch svg{width:46px;height:62px}}
+.hero-off #hero *,.hero-off #hero{animation-play-state:paused!important}
+@keyframes dotPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.45);opacity:.7}}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .btn:hover,.mode-card:hover,.feature-card:hover,.stat-item:hover,#guide-launch:hover{transform:none}
+  .mode-card:hover .mode-go,.mode-card:hover .icon-wrap{transform:none}
+}
 </style>
 </head>
 <body>
@@ -444,17 +559,16 @@ footer a:hover{color:var(--text)}
   <canvas id="neural-bg" aria-hidden="true"></canvas>
   <div class="hero-inner">
     <div class="hero-text">
-      <h1 class="hero-heading">
-        Explore the human brain in 3D
-      </h1>
-      <p class="hero-subtitle">
+      <p class="hero-pill"><span class="dot" aria-hidden="true"></span>New: neuron mode and brain imaging</p>
+      <h1 class="hero-heading" id="hero-heading">Explore the human brain in 3D</h1>
+      <p class="hero-subtitle fx" style="--d:.75s">
         Spin, slice and click through 300+ structures. Learn what each part does
         with cited lessons, take a guided tour, and quiz yourself with questions
         that adapt to you.
       </p>
 
       <!-- Level picker -->
-      <div class="level-picker" aria-label="Experience level picker">
+      <div class="level-picker fx" style="--d:.9s" aria-label="Experience level picker">
         <span class="level-label" id="level-label">How familiar are you with neuroscience?</span>
         <div class="level-pills" role="group" aria-labelledby="level-label">
           <button type="button" class="pill-btn" aria-pressed="false" data-level="beginner">New to it</button>
@@ -463,21 +577,35 @@ footer a:hover{color:var(--text)}
         </div>
       </div>
 
-      <div class="hero-cta">
+      <div class="hero-cta fx" style="--d:1.05s">
         <a href="./atlas-viewer.html" class="btn btn-primary" id="cta-explore">Start exploring</a>
         <a href="./atlas-viewer.html?start=tour" class="btn btn-secondary" id="cta-tour">Take the 5-minute tour</a>
         <a href="./atlas-viewer.html?start=quiz" class="btn btn-secondary" id="cta-quiz">Quiz me</a>
       </div>
-      <p class="hero-note">Free. No account. Works on your phone.</p>
+      <p class="hero-note fx" style="--d:1.2s">Free. No account. Works on your phone.</p>
     </div>
 
     <div class="hero-image-wrap" aria-hidden="true">
       <div class="hero-glow"></div>
+      <svg class="links" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+        <path class="ln" style="--d:0s"   d="M10 20 Q22 22 32 38"/>
+        <path class="ln" style="--d:.9s"  d="M94 31 Q84 32 72 44"/>
+        <path class="ln" style="--d:1.7s" d="M16 85 Q26 80 38 66"/>
+        <path class="ln" style="--d:2.5s" d="M90 77 Q82 76 70 68"/>
+        <path class="pu" style="--d:0s"   d="M10 20 Q22 22 32 38"/>
+        <path class="pu" style="--d:.9s"  d="M94 31 Q84 32 72 44"/>
+        <path class="pu" style="--d:1.7s" d="M16 85 Q26 80 38 66"/>
+        <path class="pu" style="--d:2.5s" d="M90 77 Q82 76 70 68"/>
+      </svg>
+      <span class="chip c1" style="--d:1.0s">Frontal lobe</span>
+      <span class="chip c2" style="--d:1.2s">Occipital lobe</span>
+      <span class="chip c3" style="--d:1.4s">Temporal lobe</span>
+      <span class="chip c4" style="--d:1.6s">Cerebellum</span>
       <img
         src="./assets/brain-lateral.webp"
-        alt="3D model of the human brain seen from the left side, each region a different colour"
+        alt="3D model of the human brain seen from the left side"
         class="hero-brain-img"
-        width="460"
+        width="460" height="402"
         loading="eager"
       >
     </div>
@@ -648,6 +776,55 @@ footer a:hover{color:var(--text)}
   <span>For learning only. Not for medical use.</span>
 </footer>
 
+<!-- ══ GUIDE ══ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs><linearGradient id="gy-g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8b6cff"/><stop offset="1" stop-color="#22d3ee"/></linearGradient></defs>
+  <symbol id="oron" viewBox="0 0 64 84">
+    <!-- dendrite "hair" -->
+    <path d="M32 14 C31 9 28 6 25 3 M32 14 C33 8 37 6 40 2 M27 15 C24 11 20 10 16 9 M37 15 C40 11 44 10 48 9 M25 5.5 l-3.5 -.5 M40 4.5 l3.5 -1" stroke="url(#gy-g)" stroke-width="2.4" stroke-linecap="round" fill="none"/>
+    <!-- arms: dendrites, one waving -->
+    <path d="M17 36 C11 38 8 43 7 49 M7 49 l-3 3 M7 49 l1.5 4" stroke="url(#gy-g)" stroke-width="2.6" stroke-linecap="round" fill="none"/>
+    <path class="oron-wave" d="M47 34 C53 31 56 26 57 20 M57 20 l-3.5 -2.5 M57 20 l3 -2.5 M57 20 l.5 -4" stroke="url(#gy-g)" stroke-width="2.6" stroke-linecap="round" fill="none"/>
+    <!-- legs: two axon branches with myelin and bouton feet -->
+    <path d="M26 46 C25 54 24 62 23 72 M38 46 C39 54 40 62 41 72" stroke="#22d3ee" stroke-width="2.8" stroke-linecap="round" fill="none"/>
+    <rect x="21.6" y="54" width="6" height="11" rx="3" fill="#e8ecf6" transform="rotate(5 24.6 59.5)"/>
+    <rect x="36.4" y="54" width="6" height="11" rx="3" fill="#e8ecf6" transform="rotate(-5 39.4 59.5)"/>
+    <ellipse cx="20.5" cy="75" rx="6.5" ry="3.8" fill="#f472b6"/><ellipse cx="43.5" cy="75" rx="6.5" ry="3.8" fill="#f472b6"/>
+    <!-- soma -->
+    <ellipse cx="32" cy="31" rx="17" ry="17.5" fill="url(#gy-g)"/>
+    <ellipse cx="26" cy="22" rx="6" ry="3.2" fill="#fff" opacity=".22"/>
+    <!-- glasses, eyes, smile -->
+    <circle cx="25.5" cy="29.5" r="2" fill="#060912"/><circle cx="38.5" cy="29.5" r="2" fill="#060912"/>
+    <circle cx="26.2" cy="28.8" r=".7" fill="#fff"/><circle cx="39.2" cy="28.8" r=".7" fill="#fff"/>
+    <circle cx="25.5" cy="29.5" r="5.6" fill="rgba(255,255,255,.2)" stroke="#060912" stroke-width="1.8"/>
+    <circle cx="38.5" cy="29.5" r="5.6" fill="rgba(255,255,255,.2)" stroke="#060912" stroke-width="1.8"/>
+    <path d="M31.1 29 Q32 27.8 32.9 29 M19.9 28.6 L16.2 27 M44.1 28.6 L47.8 27" stroke="#060912" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+    <path d="M27.5 39 Q32 42.6 36.5 39" stroke="#060912" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+  </symbol>
+</svg>
+<div id="guide">
+  <section id="guide-panel" role="dialog" aria-label="Oron, the Gyrafold guide" hidden>
+    <div id="guide-head">
+      <svg width="30" height="40" aria-hidden="true"><use href="#oron"/></svg>
+      <h2>Oron<small>Your guide. Searches Gyrafold's lessons; not an AI.</small></h2>
+      <button type="button" id="guide-close">Close</button>
+    </div>
+    <div id="guide-log" role="log" aria-live="polite"></div>
+    <form id="guide-form" autocomplete="off">
+      <input id="guide-input" type="text" maxlength="120" aria-label="Ask about a brain structure or term" placeholder="Try: hippocampus, myelin, fMRI">
+      <button type="submit" id="guide-send">Ask</button>
+    </form>
+    <div id="guide-chips"></div>
+  </section>
+  <div id="guide-hello" hidden>
+    Hi, I'm Oron, the resident brain nerd. Want a hand finding your way around?
+    <button type="button" id="guide-hello-x" aria-label="Dismiss">&times;</button>
+  </div>
+  <button type="button" id="guide-launch" aria-label="Open Oron, the Gyrafold guide" aria-expanded="false" aria-controls="guide-panel">
+    <svg width="62" height="82" aria-hidden="true"><use href="#oron"/></svg>
+  </button>
+</div>
+
 <script>
 (function () {
   "use strict";
@@ -708,6 +885,12 @@ footer a:hover{color:var(--text)}
 
     // spikes (trail + dot)
     for (const sp of spikes) {
+      const A = nodes[sp.nodeA], B = nodes[sp.nodeB];
+      if (!A || !B) continue;
+      sp.ax = A.x; sp.ay = A.y; sp.bx = B.x; sp.by = B.y;
+      // the connection that is carrying a signal lights up
+      ctx.strokeStyle = "rgba(34,211,238,.22)"; ctx.lineWidth = 1.2;
+      ctx.beginPath(); ctx.moveTo(A.x, A.y); ctx.lineTo(B.x, B.y); ctx.stroke();
       const tx = sp.ax + (sp.bx - sp.ax) * sp.t;
       const ty = sp.ay + (sp.by - sp.ay) * sp.t;
       // fading trail
@@ -734,10 +917,14 @@ footer a:hover{color:var(--text)}
     // nodes
     for (const n of nodes) {
       const alpha = 0.70 + (n.flash > 0 ? n.flash * 0.30 : 0);
-      const r = 3 + (n.flash > 0 ? n.flash * 2 : 0);
+      const r = 3 + (n.flash > 0 ? n.flash * 2.5 : 0);
+      if (n.flash > 0.05) {            // a node that just fired glows
+        ctx.beginPath(); ctx.arc(n.x, n.y, r + 7 * n.flash, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(34,211,238,${(0.16 * n.flash).toFixed(3)})`; ctx.fill();
+      }
       ctx.beginPath();
       ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(139,108,255,${alpha.toFixed(2)})`;
+      ctx.fillStyle = n.flash > 0.4 ? `rgba(34,211,238,${alpha.toFixed(2)})` : `rgba(139,108,255,${alpha.toFixed(2)})`;
       ctx.fill();
     }
   }
@@ -761,19 +948,46 @@ footer a:hover{color:var(--text)}
 
     // advance spikes
     const SPIKE_DUR = 900;
+    const arrived = [];
     spikes = spikes.filter(sp => {
       sp.t += dt / SPIKE_DUR;
       if (sp.t >= 1) {
         // flash target node
         const tgt = nodes[sp.nodeB];
-        if (tgt) tgt.flash = 1;
+        if (tgt) { tgt.flash = 1; arrived.push(sp); }
         return false;
       }
       return true;
     });
 
+    // the signal passes on: a node that receives a spike fires to one or two neighbours
+    for (const sp of arrived) {
+      if (sp.gen >= 5 || spikes.length > 26) continue;
+      const nb = neighbours(sp.nodeB).filter(k => k !== sp.nodeA);
+      const n = Math.random() < 0.35 ? 2 : 1;
+      for (let k = 0; k < n && nb.length; k++) {
+        const j = nb.splice((Math.random() * nb.length) | 0, 1)[0];
+        spikes.push({ nodeA: sp.nodeB, nodeB: j, t: 0, gen: sp.gen + 1 });
+      }
+    }
+
     drawFrame();
     animId = requestAnimationFrame(tick);
+  }
+
+  function neighbours(i) {
+    const out = [], a = nodes[i], L = 140 * 140;
+    for (let j = 0; j < nodes.length; j++) {
+      if (j === i) continue;
+      const dx = a.x - nodes[j].x, dy = a.y - nodes[j].y;
+      if (dx * dx + dy * dy < L) out.push(j);
+    }
+    return out;
+  }
+  function fireFrom(i) {
+    const nb = neighbours(i); if (!nb.length) return;
+    nodes[i].flash = 1;
+    spikes.push({ nodeA: i, nodeB: nb[(Math.random() * nb.length) | 0], t: 0, gen: 0 });
   }
 
   function launchSpike() {
@@ -788,9 +1002,8 @@ footer a:hover{color:var(--text)}
       const dx = nodes[i].x - nodes[j].x;
       const dy = nodes[i].y - nodes[j].y;
       if (dx * dx + dy * dy < LINK_DIST_SQ) {
-        spikes.push({ ax: nodes[i].x, ay: nodes[i].y,
-                      bx: nodes[j].x, by: nodes[j].y,
-                      nodeB: j, t: 0 });
+        nodes[i].flash = 1;
+        spikes.push({ nodeA: i, nodeB: j, t: 0, gen: 0 });
         break;
       }
     }
@@ -804,7 +1017,22 @@ footer a:hover{color:var(--text)}
     drawFrame();
   } else {
     animId = requestAnimationFrame(tick);
-    spikeTimer = setInterval(launchSpike, 400);
+    spikeTimer = setInterval(launchSpike, 900);
+    // the network answers the pointer: the node nearest the cursor fires
+    let lastFire = 0;
+    document.getElementById("hero").addEventListener("pointermove", e => {
+      const now = performance.now(); if (now - lastFire < 260 || spikes.length > 22) return;
+      const r = canvas.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+      let best = -1, bd = 120 * 120;
+      nodes.forEach((n, i) => { const d = (n.x - x) ** 2 + (n.y - y) ** 2; if (d < bd) { bd = d; best = i; } });
+      if (best >= 0) { lastFire = now; fireFrom(best); }
+    }, { passive: true });
+    // pause the network when the hero is off screen
+    new IntersectionObserver(es => {
+      const on = es[0].isIntersecting;
+      cancelAnimationFrame(animId); clearInterval(spikeTimer);
+      if (on) { lastTime = performance.now(); animId = requestAnimationFrame(tick); spikeTimer = setInterval(launchSpike, 900); }
+    }).observe(canvas);
   }
 
   /* ──────────────────────────────────────────
@@ -920,6 +1148,176 @@ footer a:hover{color:var(--text)}
     cards.forEach(c => cardObserver.observe(c));
   }
 
+
+  /* ──────────────────────────────────────────
+     5.  Entrance and scroll motion
+  ────────────────────────────────────────── */
+  const root = document.documentElement;
+  const topbar = document.getElementById("topbar");
+  const onScroll = () => topbar.classList.toggle("scrolled", window.scrollY > 12);
+  onScroll(); window.addEventListener("scroll", onScroll, { passive: true });
+  new IntersectionObserver(([e]) => root.classList.toggle("hero-off", !e.isIntersecting)).observe(document.getElementById("hero"));
+
+  if (!reducedMotion) {
+    // headline: one word at a time
+    const h1 = document.getElementById("hero-heading");
+    const words = h1.textContent.trim().split(/\s+/);
+    h1.setAttribute("aria-label", words.join(" "));
+    h1.textContent = "";
+    words.forEach((w, i) => {
+      const sp = document.createElement("span");
+      sp.className = "w"; sp.setAttribute("aria-hidden", "true");
+      sp.style.setProperty("--i", i);
+      sp.textContent = w + (i < words.length - 1 ? " " : "");
+      h1.appendChild(sp);
+    });
+
+    // scroll reveal, staggered within each group
+    const groups = [".section-heading", ".modes-grid > *", ".features-grid > *", ".steps-row > *", "#stats-strip > *", ".cta-panel"];
+    const targets = [];
+    groups.forEach(sel => {
+      document.querySelectorAll(sel).forEach(el => {
+        const sibs = el.parentElement ? [...el.parentElement.children] : [el];
+        el.style.setProperty("--d", (Math.min(sibs.indexOf(el), 5) * 0.09) + "s");
+        el.classList.add("reveal"); targets.push(el);
+      });
+    });
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add("revealed"); io.unobserve(e.target); } });
+    }, { threshold: 0.12, rootMargin: "0px 0px -40px 0px" });
+    root.classList.add("motion");
+    targets.forEach(t => io.observe(t));
+    // once revealed, drop the stagger so hover responds at once
+    targets.forEach(t => t.addEventListener("transitionend", e => { if (e.propertyName !== "transform") return; t.style.removeProperty("--d"); t.classList.remove("reveal", "revealed"); }));
+  }
+
+  /* ──────────────────────────────────────────
+     6.  Oron: a guide that searches Gyrafold's own lessons (no AI, no network beyond this site)
+  ────────────────────────────────────────── */
+  (function guide() {
+    const $ = id => document.getElementById(id);
+    const panel = $("guide-panel"), launch = $("guide-launch"), hello = $("guide-hello");
+    const log = $("guide-log"), chips = $("guide-chips"), form = $("guide-form"), input = $("guide-input");
+    let index = null, greeted = false;
+
+    const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+    function say(parts, who) {
+      const m = el("div", "g-msg " + (who === "me" ? "g-me" : "g-bot"));
+      (Array.isArray(parts) ? parts : [parts]).forEach(p => {
+        if (typeof p === "string") m.appendChild(document.createTextNode(p));
+        else if (p.title) m.appendChild(el("strong", null, p.title));
+        else if (p.href) { const a = el("a", null, p.label); a.href = p.href; m.appendChild(a); }
+        else if (p.src) m.appendChild(el("span", "g-src", p.src));
+      });
+      log.appendChild(m); log.scrollTop = log.scrollHeight;
+    }
+    function setChips(list) {
+      chips.replaceChildren(...list.map(c => {
+        const b = el("button", "g-chip", c.label); b.type = "button";
+        b.addEventListener("click", () => { say(c.label, "me"); c.run ? c.run() : answer(c.q || c.label); });
+        return b;
+      }));
+    }
+    const START = [
+      { label: "What can I do here?", run: () => { say("Three things. Turn the whole brain and click any structure to learn it; zoom in to a single neuron and watch it fire; or compare the brain-imaging methods. Every lesson shows its source."); setChips(START.slice(1)); } },
+      { label: "Take the tour", run: () => say(["A five-minute tour of the brain's main regions.", { href: "./atlas-viewer.html?start=tour", label: "Start the tour" }]) },
+      { label: "Quiz me", run: () => say(["A quick quiz that brings back what you miss.", { href: "./atlas-viewer.html?start=quiz", label: "Start a quiz" }]) },
+      { label: "Show me a neuron", run: () => say(["Click the parts of a nerve cell and watch a signal travel.", { href: "./neuron.html?from=atlas", label: "Open neuron mode" }]) },
+      { label: "MRI or EEG?", run: () => say(["What each imaging method measures, and what it can't tell you.", { href: "./imaging.html", label: "Open the imaging guide" }]) }
+    ];
+
+    async function loadIndex() {
+      if (index) return index;
+      const get = u => fetch(u).then(r => r.ok ? r.json() : null).catch(() => null);
+      const [L, N, I] = await Promise.all([get("./content/learning.json"), get("./content/neuron.json"), get("./content/imaging.json")]);
+      const out = [];
+      const add = (title, text, href, label, kind) => { if (title && text) out.push({ title, text, href, label, kind, key: title.toLowerCase() }); };
+      if (L) {
+        (L.topics || []).forEach(t => { const id = t.applies_to && (t.applies_to.atlas_ids || [])[0]; add(t.title, t.short, "./atlas-viewer.html" + (id ? "#" + id : ""), id ? "Show it in the atlas" : "Open the atlas", "Brain structure"); });
+        (L.glossary || []).forEach(g => add(g.term, g.definition, null, null, "Glossary"));
+      }
+      if (N) {
+        (N.parts || []).forEach(p => add(p.name, p.short, "./neuron.html?part=" + encodeURIComponent(p.id), "See it on the neuron", "Part of a neuron"));
+        (N.processes || []).forEach(p => add(p.title, p.summary && p.summary.beginner, "./neuron.html?process=" + encodeURIComponent(p.id), "Watch it happen", "How neurons work"));
+        (N.glossary || []).forEach(g => add(g.term, g.definition, "./neuron.html", "Open neuron mode", "Glossary"));
+      }
+      if (I) {
+        (I.methods || []).forEach(m => { add(m.name, m.short, "./imaging.html#m-" + encodeURIComponent(m.id), "Read about " + m.name, m.full); if (m.full) add(m.full, m.short, "./imaging.html#m-" + encodeURIComponent(m.id), "Read about " + m.name, m.name); });
+        (I.glossary || []).forEach(g => add(g.term, g.definition, "./imaging.html", "Open the imaging guide", "Glossary"));
+      }
+      index = out; return out;
+    }
+    const STOP = new Set("a an the of in on to is are was what whats which who how why does do did can i me my you your about tell show explain please and or for with it its this that where when brain".split(" "));
+    const norm = q => q.toLowerCase().replace(/[^a-z0-9\s-]/g, " ").split(/\s+/).filter(w => w.length > 1 && !STOP.has(w)).map(w => w.length > 4 ? w.replace(/(es|s)$/, "") : w);
+    const esc = t => t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    function near(a, b) {            // edit distance of at most 1, for small misspellings
+      if (Math.abs(a.length - b.length) > 1) return false;
+      let i = 0, j = 0, d = 0;
+      while (i < a.length && j < b.length) {
+        if (a[i] === b[j]) { i++; j++; continue; }
+        if (++d > 1) return false;
+        if (a.length > b.length) i++; else if (b.length > a.length) j++; else { i++; j++; }
+      }
+      return d + (a.length - i) + (b.length - j) <= 1;
+    }
+    function search(q, idx) {
+      const toks = norm(q); if (!toks.length) return [];
+      const phrase = toks.join(" ");
+      const phraseRe = new RegExp("\\b" + esc(phrase));
+      return idx.map(e => {
+        let sc = 0;
+        const bare = e.key.replace(/\s*\(.*\)/, "");
+        if (e.key === phrase || bare === phrase || bare.replace(/s$/, "") === phrase) sc += 12;
+        else if (phraseRe.test(e.key)) sc += 6;
+        const kw = e.key.split(/[^a-z0-9]+/).filter(Boolean), text = e.text.toLowerCase();
+        toks.forEach(t => {
+          if (kw.some(w => w.startsWith(t) || (w.length > 3 && t.startsWith(w)))) sc += 4;
+          else if (t.length >= 5 && kw.some(w => w.length >= 5 && (near(w, t) || near(w.replace(/(es|s)$/, ""), t)))) sc += 3;
+          else if (new RegExp("\\b" + esc(t)).test(text)) sc += 2;
+        });
+        return { e, sc };
+      }).filter(x => x.sc >= 2).sort((a, b) => b.sc - a.sc || a.e.key.length - b.e.key.length).map(x => x.e);
+    }
+    async function answer(q) {
+      const lq = q.toLowerCase();
+      if (/\b(hi|hello|hey)\b/.test(lq) && lq.length < 14) { say("Hello! Ask me about a brain structure, a part of a neuron, or an imaging method. I do enjoy a good term."); return; }
+      if (/\b(are you|r u|is this|you an?)\b.*\b(ai|a\.i|bot|robot|chatbot|human|real|chatgpt|claude)\b|\bwho are you\b|\bwhat are you\b/.test(lq)) { say("I'm Oron, a lookup guide, not an AI. I match your words against Gyrafold's own lessons and show you the closest one."); return; }
+      if (/\b(free|cost|price|pay|account|sign ?up)\b/.test(lq)) { say("Gyrafold is free, with no account. It runs in your browser on a computer or phone."); return; }
+      if (/who (made|built|created)|author|creator/.test(lq)) { say(["Gyrafold was created by Giovanni Callahan.", { href: "https://giovannicallahan.github.io/", label: "About the creator" }]); return; }
+      if (/\b(sources?|accurate|accuracy|trust|cite|citations?|references?|medical|diagnos\w*)\b/.test(lq)) { say("Each lesson is paraphrased from a cited source such as an open textbook, and shows that source beside it. Gyrafold is for learning only; it is not medical advice."); return; }
+      if (/\btour\b/.test(lq)) { START[1].run(); return; }
+      if (/^(please )?(quiz|quiz me|test me|practice|start (a )?quiz)\W*$/.test(lq)) { START[2].run(); return; }
+      const idx = await loadIndex();
+      const hits = search(q, idx);
+      if (!hits.length) {
+        say("That one isn't in my notes. I only search what Gyrafold teaches, so try a structure or term such as hippocampus, myelin or fMRI.");
+        setChips(START); return;
+      }
+      const top = hits[0], parts = [{ title: top.title }, top.text, { src: top.kind }];
+      if (top.href) parts.push({ href: top.href, label: top.label });
+      say(parts);
+      const more = []; const seen = new Set([top.key]);
+      hits.slice(1).forEach(h => { if (!seen.has(h.key) && more.length < 3) { seen.add(h.key); more.push({ label: h.title, q: h.title }); } });
+      setChips(more.length ? more : START);
+    }
+    function open() {
+      panel.hidden = false; hello.hidden = true; launch.setAttribute("aria-expanded", "true");
+      if (!greeted) { greeted = true; say("Hi, I'm Oron, Gyrafold's resident brain nerd. Name a structure or a term and I'll look it up in the lessons, source included. Full disclosure: I'm a lookup guide, not an AI, so I only know what the app teaches."); setChips(START); loadIndex(); }
+      input.focus({ preventScroll: true });
+    }
+    function close() { panel.hidden = true; launch.setAttribute("aria-expanded", "false"); launch.focus({ preventScroll: true }); }
+    launch.addEventListener("click", () => panel.hidden ? open() : close());
+    $("guide-close").addEventListener("click", close);
+    hello.addEventListener("click", e => { if (e.target.id === "guide-hello-x") { hello.hidden = true; e.stopPropagation(); } else open(); });
+    document.addEventListener("keydown", e => { if (e.key !== "Escape") return; if (!panel.hidden) close(); else hello.hidden = true; });
+    form.addEventListener("submit", e => { e.preventDefault(); const q = input.value.trim(); if (!q) return; input.value = ""; say(q, "me"); answer(q); });
+    let seen = false; try { seen = sessionStorage.getItem("gyrafold.guide.hello") === "1"; } catch (e) {}
+    if (!seen) {
+      const showHello = () => { if (!panel.hidden || window.scrollY < window.innerHeight * 0.55) return; hello.hidden = false; window.removeEventListener("scroll", showHello);
+        try { sessionStorage.setItem("gyrafold.guide.hello", "1"); } catch (e) {} setTimeout(() => { hello.hidden = true; }, 9000); };
+      window.addEventListener("scroll", showHello, { passive: true });
+    }
+  })();
 
 })();
 </script>
