@@ -9,7 +9,7 @@
  *
  * Same-origin GET requests only. Nothing here talks to any other host.
  */
-const VERSION = "2026-11-13.1";
+const VERSION = "2026-11-14.1";
 const SHELL_CACHE = "gyrafold-shell-" + VERSION;
 const RUNTIME_CACHE = "gyrafold-runtime-" + VERSION;
 const MODELS_CACHE = "gyrafold-models-v1"; // also named in atlas-viewer.html
