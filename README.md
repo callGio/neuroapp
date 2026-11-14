@@ -14,7 +14,7 @@ It is designed for two kinds of learners at once:
 
 Every factual statement in the lessons cites an open, checkable source.
 
-**Live demo:** https://giovannicallahan.github.io/gyrafold/ (works in any modern desktop browser;
+**Live demo:** https://gyrafold.com/ (works in any modern desktop browser;
 the first load downloads about 55 MB of 3D models).
 
 > Educational use only. Not medical advice. The underlying atlas is not FDA-reviewed and
