@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /sample-preview.html
+Disallow: /models_sample/
+
+Sitemap: https://gyrafold.com/sitemap.xml
