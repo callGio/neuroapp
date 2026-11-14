@@ -10,8 +10,9 @@ def clk(sel):
     if not r: print('  covered:',sel)
     pg.evaluate('s=>document.querySelector(s).click()',sel)
 def ready(pg):
-    for _ in range(120):
-        if pg.evaluate("(()=>{const l=document.getElementById('loader');return !l||getComputedStyle(l).display=='none'||getComputedStyle(l).opacity=='0'})()"): break
+    for _ in range(240):
+        # loader gone AND every model loaded (the loader's 60 s fallback can hide it before loading ends)
+        if pg.evaluate("(()=>{const l=document.getElementById('loader');const s=(document.getElementById('status')||{}).textContent||'';return (!l||getComputedStyle(l).display=='none'||getComputedStyle(l).opacity=='0')&&/All \\d+ meshes|Saved for offline|Done:/.test(s)})()"): break
         pg.wait_for_timeout(1000)
     pg.wait_for_timeout(1500)
     for sel in ['#onboard-close','.onboard-skip']:

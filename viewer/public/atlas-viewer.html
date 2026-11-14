@@ -2,11 +2,14 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self' blob: data:; worker-src 'self' blob:; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; manifest-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self' blob: data:; worker-src 'self' blob:; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Gyrafold — 3D brain atlas</title>
-<link rel="icon" href="data:,">
+<link rel="icon" href="./assets/favicon.svg">
+<link rel="manifest" href="./manifest.webmanifest">
+<meta name="theme-color" content="#0b1120">
+<link rel="apple-touch-icon" href="./assets/icons/apple-touch-icon-180.png">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{background:#0d1117;color:#e6edf3;font-family:-apple-system,"Segoe UI",system-ui,sans-serif;overflow:hidden;font-size:13px}
@@ -1417,7 +1420,7 @@ function setupFooter(atlas) {
   const strong = document.createElement('strong');
   strong.textContent = atlas.name || 'Atlas';
   f.appendChild(strong);
-  [['License', atlas.license_url], ['Citation', atlas.citation_url]].forEach(([label, url]) => {
+  [['License', atlas.license_url], ['Citation', atlas.citation_url], ['Privacy', './privacy.html']].forEach(([label, url]) => {
     const href = safeUrl(url);
     if (!href) return;
     f.appendChild(document.createTextNode(' · '));
@@ -5348,6 +5351,72 @@ onLayoutChange();
     }
   }
 
+  // ── Offline support (Tier 7) ──
+  // The service worker (sw.js) keeps models in this cache; keep the names in sync.
+  const MODELS_CACHE = 'gyrafold-models-v1';
+  const OFFLINE_MSG  = "You're offline. Open the atlas once while online and it will work offline after that.";
+  const modelUrl = mod => new URL(mod.glb, location.href).href;
+
+  async function countCachedModels(models) {
+    try {
+      if (!('caches' in window) || !(await caches.has(MODELS_CACHE))) return 0;
+      const c = await caches.open(MODELS_CACHE);
+      const keys = new Set((await c.keys()).map(r => r.url));
+      return models.filter(m => keys.has(modelUrl(m))).length;
+    } catch (e) { return 0; }
+  }
+
+  const LOADFAIL_MSG = "The 3D brain couldn't be loaded. Check your connection and try again.";
+  function showOfflineMessage(msg = OFFLINE_MSG) {
+    loaderEl.dataset.offline = '1';
+    const bar = document.getElementById('loader-bar-wrap');
+    if (bar) bar.style.display = 'none';
+    loaderStatEl.textContent = msg;
+    if (!document.getElementById('loader-home')) {
+      const home = document.createElement('a');
+      home.id = 'loader-home';
+      home.href = './index.html';
+      const retry = document.createElement('a');
+      retry.href = location.href;
+      retry.textContent = 'Try again';
+      retry.style.cssText = 'color:var(--text);font-size:.9rem;text-decoration:underline;text-underline-offset:3px;padding:12px 12px 0';
+      retry.addEventListener('click', e => { e.preventDefault(); location.reload(); });
+      loaderEl.appendChild(retry);
+      home.textContent = 'Back to home';
+      home.style.cssText = 'color:var(--muted);font-size:.8rem;text-decoration:underline;text-underline-offset:3px;padding:12px';
+      loaderEl.appendChild(home);
+    }
+    setStatus(msg, true);
+  }
+
+  // After a full online load: make sure every model is in the offline cache
+  // (models fetched before the service worker took control are added here,
+  // mostly from the browser's HTTP cache), then say so once, quietly.
+  async function afterFullLoad(models, cachedBefore) {
+    try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {}); } catch (e) {}
+    try {
+      if (!('caches' in window) || !('serviceWorker' in navigator) || navigator.onLine === false) return;
+      if (!(await navigator.serviceWorker.getRegistration())) return;
+      if (cachedBefore >= models.length) return;   // already saved on an earlier visit
+      const c = await caches.open(MODELS_CACHE);
+      const have = new Set((await c.keys()).map(r => r.url));
+      const missing = models.map(modelUrl).filter(u => !have.has(u));
+      let next = 0, failed = 0;
+      async function lane() {
+        while (next < missing.length) {
+          const u = missing[next++];
+          try {
+            // force-cache: reuse the copy the browser just downloaded instead of fetching it again
+            const res = await fetch(u, { cache: 'force-cache' });
+            if (res.ok && res.status === 200) await c.put(u, res); else failed++;
+          } catch (e) { failed++; }
+        }
+      }
+      await Promise.all(Array.from({ length: 6 }, lane));
+      if (!failed) setStatus('Saved for offline use', false);
+    } catch (e) { /* offline saving is optional */ }
+  }
+
   // Patch startLoading to drive the bar and dismiss loader when done
   const _origStartLoading = startLoading;
   startLoading = async function(models) {
@@ -5373,10 +5442,26 @@ onLayoutChange();
     // Show wait card after a short delay (give learningData time to load)
     setTimeout(populateWaitCard, 600);
 
+    // Offline with no saved models: say so plainly instead of loading nothing.
+    const cachedBefore = await countCachedModels(models);
+    if (navigator.onLine === false && cachedBefore === 0) {
+      loaderDone = true;
+      setStatus = _origSetStatus;
+      showOfflineMessage();
+      return;
+    }
+
     await _origStartLoading(models);
 
     loaderDone = true;
     setStatus = _origSetStatus;
+
+    if (meshMap.size === 0) { showOfflineMessage(navigator.onLine === false ? OFFLINE_MSG : LOADFAIL_MSG); return; }
+    if (meshMap.size < total && navigator.onLine === false) {
+      setStatus(OFFLINE_MSG, true);
+    } else if (meshMap.size === total) {
+      afterFullLoad(models, cachedBefore);
+    }
 
     // Dismiss loader
     loaderBarEl.style.width = '100%';
@@ -5393,6 +5478,7 @@ onLayoutChange();
   setTimeout(() => {
     if (document.getElementById('loader')) {
       const l = document.getElementById('loader');
+      if (l.dataset.offline) return;   // keep the plain offline message up
       if (l) { l.classList.add('fade-out'); setTimeout(() => l.remove(), 420); }
     }
   }, 60000);
@@ -5647,6 +5733,16 @@ onLayoutChange();
     if (e.key === 'Backspace' && steps.length) { e.preventDefault(); goBack(); }
   });
   refresh();
+})();
+</script>
+<script>
+/* Offline support: register the service worker (https or localhost only). */
+(function () {
+  try {
+    var h = location.hostname, local = h === "localhost" || h === "127.0.0.1" || h === "[::1]";
+    if (!("serviceWorker" in navigator) || !(location.protocol === "https:" || local)) return;
+    window.addEventListener("load", function () { navigator.serviceWorker.register("./sw.js").catch(function () {}); });
+  } catch (e) { /* no offline support here */ }
 })();
 </script>
 </body>

@@ -138,6 +138,10 @@ against its sources before being marked reviewed. Corrections are welcome as iss
 The demo is served by GitHub Pages from the `gh-pages` branch, which holds only the
 contents of `viewer/public/`. After changing the app on `main`, publish it with:
 
+Before publishing, change `VERSION` at the top of `viewer/public/sw.js` (for example to today's date).
+The app works offline from saved copies of its files, and a new version tells browsers to fetch fresh ones.
+The 3D models are saved separately and are not downloaded again.
+
 ```bash
 git subtree split --prefix viewer/public -b gh-pages-tmp
 git push -f origin gh-pages-tmp:gh-pages

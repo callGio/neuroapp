@@ -2,11 +2,14 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self' blob: data:; worker-src 'self' blob:; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; manifest-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self' blob: data:; worker-src 'self' blob:; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Gyrafold — Neuron</title>
 <link rel="icon" href="./assets/favicon.svg">
+<link rel="manifest" href="./manifest.webmanifest">
+<meta name="theme-color" content="#0b1120">
+<link rel="apple-touch-icon" href="./assets/icons/apple-touch-icon-180.png">
 <style>
 @font-face{font-family:"Inter";src:url("./vendor/fonts/inter-var.woff2") format("woff2");font-weight:100 900;font-display:swap}
 @font-face{font-family:"Space Grotesk";src:url("./vendor/fonts/space-grotesk-var.woff2") format("woff2");font-weight:300 700;font-display:swap}
@@ -2168,6 +2171,16 @@ window.__neuron = { ready: true, parts: PARTS.map(p => p.id), pick: id => { swit
   tris: () => { let t = 0; scene.traverse(o => { if (o.isMesh && o.geometry) { const n = o.geometry.index ? o.geometry.index.count / 3 : o.geometry.attributes.position.count / 3; t += o.isInstancedMesh ? n * o.count : n; } }); return Math.round(t); },
   screenOf: id => { const v = anchors[id].clone().applyMatrix4(neuron.matrixWorld).project(camera); const r = canvas.getBoundingClientRect(); return { x: r.left + (v.x + 1) / 2 * r.width, y: r.top + (1 - v.y) / 2 * r.height }; },
   idle: () => idle };
+</script>
+<script>
+/* Offline support: register the service worker (https or localhost only). */
+(function () {
+  try {
+    var h = location.hostname, local = h === "localhost" || h === "127.0.0.1" || h === "[::1]";
+    if (!("serviceWorker" in navigator) || !(location.protocol === "https:" || local)) return;
+    window.addEventListener("load", function () { navigator.serviceWorker.register("./sw.js").catch(function () {}); });
+  } catch (e) { /* no offline support here */ }
+})();
 </script>
 </body>
 </html>
