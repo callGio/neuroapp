@@ -65,8 +65,19 @@ a{color:var(--cyan)}
 #syn-step{font-size:12.5px;color:var(--muted);margin-bottom:4px;min-height:18px}
 #syn-svg{width:100%;height:auto;display:block}
 #syn-svg .mv{transition:transform .9s ease,opacity .6s ease}
-#syn-nav{display:flex;gap:6px;margin-top:8px;align-items:center}
+#syn-nav{display:flex;gap:6px;margin-top:8px;align-items:center;flex-wrap:wrap}
 .ill{font-size:11px;color:var(--muted)}
+#syn-toggle-diag{display:none;align-items:center;min-height:36px;padding:6px 12px;background:var(--surface-solid);border:1px solid var(--border);border-radius:999px;font-size:12.5px;color:var(--text)}
+/* phone: cap syn-panel height so the 3-D view remains visible */
+@media (max-width:760px){
+  #syn-panel{top:auto;bottom:8px;right:8px;left:8px;width:auto;max-height:46dvh;overflow-y:auto;display:none;flex-direction:column}
+  #syn-panel.open{display:flex}
+  #syn-svg{width:100%;height:auto}
+  #syn-toggle-diag{display:inline-flex}
+  #syn-head{flex-wrap:wrap;gap:6px}
+  #syn-head h3,#syn-toggle-diag{white-space:nowrap}
+  #syn-head .ill{order:5;flex-basis:100%}
+}
 
 /* ── panel ── */
 #panel{position:fixed;top:var(--head-h);right:0;bottom:0;width:var(--panel-w);z-index:20;display:flex;flex-direction:column;
@@ -278,9 +289,11 @@ ul.points li::before{content:"";position:absolute;left:3px;top:8px;width:6px;hei
   <div id="arrive-chip" role="status"><span>Signal reached the terminals</span><button type="button" id="btn-arrive">Synapse close-up</button></div>
   <div id="scale-note" role="note"><div id="scale-note-text"></div><button class="btn2" type="button" id="btn-scale-close">Got it</button></div>
   <section id="syn-panel" aria-label="Synapse close-up">
-    <div id="syn-head"><h3>Synapse close-up</h3><span class="ill">Schematic, not to scale</span><button class="btn2" type="button" id="syn-close" aria-label="Close synapse close-up">Close</button></div>
+    <div id="syn-head"><h3>Synapse close-up</h3><span class="ill">Schematic, not to scale</span>
+      <button type="button" id="syn-toggle-diag" aria-pressed="true" aria-label="Hide diagram to see the neuron">Hide diagram</button>
+      <button class="btn2" type="button" id="syn-close" aria-label="Close synapse close-up">Close</button></div>
     <div id="syn-step" aria-live="polite"></div>
-    <svg id="syn-svg" viewBox="0 0 400 300" role="img" aria-label="Diagram of a chemical synapse: presynaptic terminal with vesicles, the synaptic cleft, and receptors on the postsynaptic membrane"></svg>
+    <div id="syn-svg-wrap"><svg id="syn-svg" viewBox="0 0 400 300" role="img" aria-label="Diagram of a chemical synapse: presynaptic terminal with vesicles, the synaptic cleft, and receptors on the postsynaptic membrane"></svg></div>
     <div id="syn-nav">
       <button class="btn2" type="button" id="syn-prev">Back</button>
       <button class="btn2" type="button" id="syn-next">Next step</button>
@@ -668,6 +681,20 @@ const spinePts = [];
     inst.setMatrixAt(i, M);
   });
   reg('dendritic_spines', inst, sm);
+  // invisible hit-target: same positions, ~3× the spine radius, transparent, no depth write
+  // parts in front still win because the raycaster returns hits sorted by distance
+  const hitSg = new THREE.SphereGeometry(1, 6, 4);
+  const hitSm = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false });
+  const hitInst = new THREE.InstancedMesh(hitSg, hitSm, spinePts.length);
+  hitInst.renderOrder = -1;
+  spinePts.forEach((s, i) => {
+    Q.setFromUnitVectors(new THREE.Vector3(0, 1, 0), s.n);
+    S.set(0.034 * 3, 0.06 * 3, 0.034 * 3);
+    M.compose(s.p, Q, S);
+    hitInst.setMatrixAt(i, M);
+  });
+  hitInst.userData.part = 'dendritic_spines';
+  neuron.add(hitInst); // picked up by the pickables traverse below
   // camera target for "spines": one spine on an upper outer branch
   let best = spinePts[0];
   spinePts.forEach(s => { if (s.p.y > best.p.y && s.p.x > -10) best = s; });
@@ -997,23 +1024,39 @@ function updateLabels() {
   const w = canvas.clientWidth, h = canvas.clientHeight;
   const v = new THREE.Vector3();
   const small = w < 500;
+  // first pass: compute desired positions and hide off-screen anchors
+  const visible = [];
   PARTS.forEach(p => {
     const d = lblEls[p.id], ln = lblLines[p.id];
     const show = labelsOn && anchors[p.id] && !(p.id === 'nucleus' && !lookInside && selected !== 'nucleus');
     if (!show) { d.style.display = 'none'; ln.style.display = 'none'; return; }
     v.copy(anchors[p.id]).applyMatrix4(neuron.matrixWorld).project(camera);
     if (v.z > 1 || v.z < -1) { d.style.display = 'none'; ln.style.display = 'none'; return; }
-    const x = (v.x + 1) / 2 * w, y = (1 - v.y) / 2 * h;
+    const ax = (v.x + 1) / 2 * w, ay = (1 - v.y) / 2 * h;
+    // hide if the 3-D anchor projects off the canvas
+    if (ax < -20 || ax > w + 20 || ay < -20 || ay > h + 20) { d.style.display = 'none'; ln.style.display = 'none'; return; }
     const off = LBL_OFF[p.id];
     const k = small ? 0.75 : 1;
-    let lx = x + off[0] * k, ly = y + off[1] * k;
+    let lx = ax + off[0] * k, ly = ay + off[1] * k;
     lx = Math.max(50, Math.min(w - 50, lx));
     ly = Math.max(56, Math.min(h - 16, ly));
-    if (x < -20 || x > w + 20 || y < -20 || y > h + 20) { d.style.display = 'none'; ln.style.display = 'none'; return; }
+    visible.push({ p, d, ln, ax, ay, lx, ly });
+  });
+  // second pass: sort by label y and push overlapping labels down (one pass)
+  visible.sort((a, b) => a.ly - b.ly);
+  const LBL_H = 20; // approximate label height px
+  for (let i = 1; i < visible.length; i++) {
+    const prev = visible[i - 1], cur = visible[i];
+    const gap = cur.ly - (prev.ly + LBL_H);
+    if (gap < 4) cur.ly = prev.ly + LBL_H + 4;
+    cur.ly = Math.min(h - 16, cur.ly);
+  }
+  // third pass: apply positions
+  visible.forEach(({ p, d, ln, ax, ay, lx, ly }) => {
     d.style.display = 'block'; ln.style.display = 'block';
     d.style.left = lx + 'px'; d.style.top = ly + 'px';
     d.classList.toggle('sel', selected === p.id);
-    ln.setAttribute('x1', x); ln.setAttribute('y1', y); ln.setAttribute('x2', lx); ln.setAttribute('y2', ly);
+    ln.setAttribute('x1', ax); ln.setAttribute('y1', ay); ln.setAttribute('x2', lx); ln.setAttribute('y2', ly);
   });
 }
 
@@ -1393,6 +1436,19 @@ function setSynStep(i) {
 function openSynPanel() { $('syn-panel').classList.add('open'); }
 function closeSynPanel() { $('syn-panel').classList.remove('open'); }
 $('syn-close').addEventListener('click', () => { closeSynPanel(); });
+// phone: hide/show the diagram so the 3-D view is accessible
+(function () {
+  const btn = $('syn-toggle-diag'), wrap = $('syn-svg-wrap');
+  if (!btn) return;
+  let shown = true;
+  btn.addEventListener('click', () => {
+    shown = !shown;
+    wrap.style.display = shown ? '' : 'none';
+    btn.textContent = shown ? 'Hide diagram' : 'Show diagram';
+    btn.setAttribute('aria-pressed', String(shown));
+    btn.setAttribute('aria-label', shown ? 'Hide diagram to see the neuron' : 'Show diagram');
+  });
+})();
 $('syn-prev').addEventListener('click', () => setSynStep(synStep - 1));
 $('syn-next').addEventListener('click', () => setSynStep(synStep + 1));
 $('syn-more').addEventListener('click', () => openProcess('synapse', synStep));
@@ -2011,6 +2067,20 @@ function answerMC(k, btn, opts, q, fb) {
   $('q-next').hidden = false;
   updateMeta();
 }
+// briefly outline the wrong part by boosting emissive; respects reduced motion
+let flashTimer = null;
+function flashPart(id) {
+  if (reducedMotion()) return;
+  clearTimeout(flashTimer);
+  const mats = partMats[id] || [];
+  mats.forEach(m => {
+    if (m.emissiveIntensity !== undefined) m.emissiveIntensity = (m.userData.base ? m.userData.base.emi : 0) + 1.4;
+    if (m.userData.rimStrength) m.userData.rimStrength.value = (m.userData.base ? m.userData.base.rim : 0.5) + 1.5;
+  });
+  flashTimer = setTimeout(() => {
+    applyHighlight();
+  }, 600);
+}
 function quizFindPick(id) {
   const st = quizState;
   const target = st.findTarget;
@@ -2019,6 +2089,7 @@ function quizFindPick(id) {
   fb.replaceChildren();
   if (!id) { fb.appendChild(el('span', 'no', 'Missed the model. ')); fb.appendChild(document.createTextNode('Click directly on a part.')); return; }
   if (id === target) {
+    clearTimeout(flashTimer);
     st.answered = true; st.findTarget = null;
     if (st.tries === 0) { st.score++; st.streak++; } else st.streak = 0;
     selected = id; applyHighlight();
@@ -2029,8 +2100,9 @@ function quizFindPick(id) {
   } else {
     st.tries++;
     st.streak = 0;
-    fb.appendChild(el('span', 'no', 'Not that one. '));
-    fb.appendChild(document.createTextNode(`That is the ${PART[id].name.toLowerCase()}. Try again, or press Show me.`));
+    flashPart(id);
+    fb.appendChild(el('span', 'no', 'That is the ' + PART[id].name + '. Try again.'));
+    if (st.tries >= 2) fb.appendChild(document.createTextNode(' Press Show me if needed.'));
     $('q-showme').hidden = false;
   }
   updateMeta();

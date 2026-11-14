@@ -91,6 +91,17 @@ caption{text-align:left;color:var(--muted);padding:0 0 8px;font-size:.88rem}
 th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--border);vertical-align:top}
 th{font-weight:600;color:var(--text)}
 td{color:var(--text)}
+/* stacked card view for the resolution table on narrow phones */
+#res-cards{display:none}
+.res-card{background:var(--surface-solid);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:10px}
+.res-card h4{font-family:"Space Grotesk",sans-serif;font-size:1rem;font-weight:600;margin:0 0 8px}
+.res-card dl{display:grid;grid-template-columns:max-content 1fr;gap:4px 12px;font-size:.88rem}
+.res-card dt{font-weight:600;color:var(--muted)}
+.res-card dd{color:var(--text);margin:0}
+@media (max-width:600px){
+  .tbl-wrap{display:none}
+  #res-cards{display:block;margin-top:16px}
+}
 
 /* method cards */
 .mcard{margin-bottom:18px;padding:0;overflow:hidden;scroll-margin-top:72px}
@@ -124,6 +135,11 @@ td{color:var(--text)}
 /* inline citation markers: hit area extended vertically only, so neighbouring markers never overlap */
 .cite::after{content:"";position:absolute;left:0;right:0;top:50%;height:40px;transform:translateY(-50%)}
 .cite:hover{background:rgba(88,166,255,.28)}
+/* phones: widen hit area to 44×44 and add horizontal spacing so markers don't overlap */
+@media (max-width:760px){
+  .cite{margin:0 3px 0 4px;padding:2px 8px;min-width:26px;vertical-align:super}
+  .cite::after{left:-4px;right:-4px;height:44px}
+}
 #cite-pop{position:absolute;z-index:80;max-width:min(420px,calc(100vw - 24px));padding:14px 16px;background:#16213b;border:1px solid rgba(148,163,209,.35);border-radius:var(--radius-sm);box-shadow:var(--shadow);font-size:.88rem;color:var(--text)}
 #cite-pop[hidden]{display:none}
 #cite-pop p{margin-bottom:6px}
@@ -267,6 +283,7 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:18
           <tbody></tbody>
         </table>
       </div>
+      <div id="res-cards" aria-label="Resolution by method"></div>
     </div>
   </section>
 
@@ -614,6 +631,20 @@ function renderTable() {
     el('td', { text: fmtSpace(m.resolution.spatial_mm) }),
     el('td', { text: fmtTime(m.resolution.temporal_s) }),
     el('td', null, m.resolution.text, ' ', ...citeButtons(m.resolution.cite)))));
+  // stacked card view for narrow phones (below 600 px, table is hidden via CSS)
+  const cards = document.getElementById('res-cards');
+  cards.replaceChildren(...data.methods.map(m => {
+    const card = el('div', { class: 'res-card' });
+    card.append(el('h4', { text: m.name + ' (' + m.full + ')' }));
+    const dl = el('dl');
+    dl.append(
+      el('dt', { text: 'Finest detail' }), el('dd', { text: fmtSpace(m.resolution.spatial_mm) }),
+      el('dt', { text: 'Finest timing' }), el('dd', { text: fmtTime(m.resolution.temporal_s) }),
+      el('dt', { text: 'In plain words' }), el('dd', null, m.resolution.text, ' ', ...citeButtons(m.resolution.cite))
+    );
+    card.append(dl);
+    return card;
+  }));
 }
 
 // ── schematics (illustrations, not to scale) ──
