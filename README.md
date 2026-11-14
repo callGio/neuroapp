@@ -1,6 +1,6 @@
-# NeuroApp — learn the human brain in 3D
+# Gyrafold — learn the human brain in 3D
 
-NeuroApp is a free, offline, browser-based 3D brain atlas for **learning** neuroanatomy.
+Gyrafold is a free, offline, browser-based 3D brain atlas for **learning** neuroanatomy.
 Rotate a whole human brain built from 328 real anatomical structures, click any part to
 see what it is and how it connects, take guided tours, and quiz yourself with spaced
 review that adapts to what you know.
@@ -14,7 +14,7 @@ It is designed for two kinds of learners at once:
 
 Every factual statement in the lessons cites an open, checkable source.
 
-**Live demo:** https://giovannicallahan.github.io/neuroapp/ (works in any modern desktop browser;
+**Live demo:** https://giovannicallahan.github.io/gyrafold/ (works in any modern desktop browser;
 the first load downloads about 55 MB of 3D models).
 
 > Educational use only. Not medical advice. The underlying atlas is not FDA-reviewed and
@@ -65,7 +65,7 @@ the first load downloads about 55 MB of 3D models).
 The practice design follows two well-replicated findings: retrieving information beats
 re-reading it, and spacing practice over time beats cramming. In anatomy specifically,
 distributed retrieval practice produced the best recall in Dobson, Perez, and Linderholm
-(2017). NeuroApp therefore teaches a structure first, then asks you to retrieve it, then
+(2017). Gyrafold therefore teaches a structure first, then asks you to retrieve it, then
 brings it back at growing intervals.
 
 Dobson, J. L., Perez, J., & Linderholm, T. (2017). Distributed retrieval practice promotes
@@ -78,8 +78,8 @@ You need Python 3 (already on macOS and most Linux systems). No accounts, no API
 nothing to install.
 
 ```bash
-git clone https://github.com/giovannicallahan/neuroapp.git
-cd neuroapp/viewer/public
+git clone https://github.com/giovannicallahan/gyrafold.git
+cd gyrafold/viewer/public
 python3 -m http.server 8080 --bind 127.0.0.1
 ```
 

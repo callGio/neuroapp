@@ -4,7 +4,7 @@ The MIT License in `LICENSE` covers only material written for this project
 (the scripts, the viewer pages, and the lesson text in
 `viewer/public/content/learning.json`). Third-party material below keeps its own license.
 
-NeuroApp bundles or derives from the following third-party material. Each keeps its own license.
+Gyrafold bundles or derives from the following third-party material. Each keeps its own license.
 
 ## SPL/NAC Brain Atlas (3D models)
 
