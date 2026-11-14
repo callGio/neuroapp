@@ -1,0 +1,32 @@
+{
+  "name": "Gyrafold",
+  "short_name": "Gyrafold",
+  "description": "A free 3D app for learning the parts of the human brain and what they do.",
+  "id": "/",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#060912",
+  "theme_color": "#0b1120",
+  "orientation": "any",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": ["education", "science"],
+  "icons": [
+    { "src": "./assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "./assets/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "./assets/icons/maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "./assets/icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Brain atlas", "short_name": "Atlas", "description": "Open the 3D whole-brain atlas", "url": "./atlas-viewer.html", "icons": [{ "src": "./assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png" }] },
+    { "name": "Neuron", "short_name": "Neuron", "description": "Look inside a neuron", "url": "./neuron.html", "icons": [{ "src": "./assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png" }] },
+    { "name": "Brain imaging", "short_name": "Imaging", "description": "How MRI, fMRI, EEG and other methods look at the brain", "url": "./imaging.html", "icons": [{ "src": "./assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png" }] }
+  ],
+  "screenshots": [
+    { "src": "./assets/screens/atlas-wide.webp", "sizes": "1280x720", "type": "image/webp", "form_factor": "wide", "label": "The 3D brain atlas, showing the whole brain from above" },
+    { "src": "./assets/screens/welcome-wide.webp", "sizes": "1280x720", "type": "image/webp", "form_factor": "wide", "label": "The Gyrafold welcome page" },
+    { "src": "./assets/screens/atlas-narrow.webp", "sizes": "585x1266", "type": "image/webp", "form_factor": "narrow", "label": "The 3D brain atlas on a phone" },
+    { "src": "./assets/screens/welcome-narrow.webp", "sizes": "585x1266", "type": "image/webp", "form_factor": "narrow", "label": "The Gyrafold welcome page on a phone" }
+  ]
+}

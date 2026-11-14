@@ -4,13 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta http-equiv="Content-Security-Policy"
-  content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  content="default-src 'self'; manifest-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <meta name="description" content="Spin, slice and click through 300+ structures. Learn what each part does with cited lessons, take a guided tour, and quiz yourself with questions that adapt to you.">
 <meta property="og:title" content="Gyrafold: explore the human brain in 3D">
 <meta property="og:description" content="Spin, slice and click through 300+ structures. Learn what each part does with cited lessons, take a guided tour, and quiz yourself with questions that adapt to you.">
 <meta property="og:image" content="./assets/og-card.png">
 <link rel="icon" href="./assets/favicon.svg">
+<link rel="manifest" href="./manifest.webmanifest">
+<meta name="theme-color" content="#0b1120">
+<link rel="apple-touch-icon" href="./assets/icons/apple-touch-icon-180.png">
 <title>Gyrafold — learn the human brain in 3D</title>
 <style>
 /* ── Fonts ── */
@@ -379,6 +382,10 @@ footer{
 footer a{color:var(--muted);text-decoration:underline;text-underline-offset:3px}
 footer a:hover{color:var(--text)}
 .footer-sep::before{content:"·";margin-right:20px;color:var(--faint)}
+/* Install app (shown only when the browser offers installing) */
+#cta-install{min-height:44px}
+#cta-install[hidden],#ios-install-tip[hidden]{display:none}
+#ios-install-tip{flex-basis:100%;margin:0;color:var(--muted)}
 
 /* ── Responsive ── */
 @media(max-width:760px){
@@ -581,6 +588,7 @@ body{padding-bottom:96px}
         <a href="./atlas-viewer.html" class="btn btn-primary" id="cta-explore">Start exploring</a>
         <a href="./atlas-viewer.html?start=tour" class="btn btn-secondary" id="cta-tour">Take the 5-minute tour</a>
         <a href="./atlas-viewer.html?start=quiz" class="btn btn-secondary" id="cta-quiz">Quiz me</a>
+        <button type="button" class="btn btn-secondary" id="cta-install" hidden>Install app</button>
       </div>
       <p class="hero-note fx" style="--d:1.2s">Free. No account. Works on your phone.</p>
     </div>
@@ -774,6 +782,9 @@ body{padding-bottom:96px}
   <a id="notice-link" href="https://github.com/giovannicallahan/gyrafold/blob/main/NOTICE.md" target="_blank" rel="noopener noreferrer">3D models: SPL/NAC Brain Atlas (Halle et al., 2017)</a>
   <span class="footer-sep"></span>
   <span>For learning only. Not for medical use.</span>
+  <span class="footer-sep"></span>
+  <a href="./privacy.html">Privacy</a>
+  <p id="ios-install-tip" hidden>On iPhone: Share, then Add to Home Screen</p>
 </footer>
 
 <!-- ══ GUIDE ══ -->
@@ -1319,6 +1330,46 @@ body{padding-bottom:96px}
     }
   })();
 
+})();
+</script>
+<script>
+/* Install app: the button appears only when the browser offers to install
+   (beforeinstallprompt, Chromium/Edge). iOS gets one line of help instead. */
+(function () {
+  try {
+    var btn = document.getElementById("cta-install");
+    var tip = document.getElementById("ios-install-tip");
+    var standalone = function () {
+      return (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) || navigator.standalone === true;
+    };
+    var deferred = null;
+    window.addEventListener("beforeinstallprompt", function (e) {
+      e.preventDefault();
+      if (standalone()) return;
+      deferred = e;
+      btn.hidden = false;
+    });
+    btn.addEventListener("click", function () {
+      if (!deferred) { btn.hidden = true; return; }
+      var ev = deferred; deferred = null;
+      btn.hidden = true;   // one offer per visit; the browser menu can still install
+      try { var r = ev.prompt(); if (r && r.catch) r.catch(function () {}); } catch (e) {}
+    });
+    window.addEventListener("appinstalled", function () { deferred = null; btn.hidden = true; });
+    var ua = navigator.userAgent || "";
+    var ios = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+    if (ios && !standalone()) tip.hidden = false;
+  } catch (e) { /* optional */ }
+})();
+</script>
+<script>
+/* Offline support: register the service worker (https or localhost only). */
+(function () {
+  try {
+    var h = location.hostname, local = h === "localhost" || h === "127.0.0.1" || h === "[::1]";
+    if (!("serviceWorker" in navigator) || !(location.protocol === "https:" || local)) return;
+    window.addEventListener("load", function () { navigator.serviceWorker.register("./sw.js").catch(function () {}); });
+  } catch (e) { /* no offline support here */ }
 })();
 </script>
 </body>
