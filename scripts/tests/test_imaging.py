@@ -66,8 +66,8 @@ def run_case(browser, base, w, h, reduced, tag):
     p = f"[{tag}] "
 
     check(p + "content loaded", page.locator("#load-err").is_hidden())
-    check(p + "header has three mode links, Imaging current",
-          page.locator(".modes a").count() == 3 and page.locator(".modes a[aria-current='page']").inner_text() == "Imaging")
+    check(p + "header has Home plus three mode links, Imaging current",
+          page.locator(".modes a").count() == 4 and page.locator(".modes a[aria-current='page']").inner_text() == "Imaging")
     check(p + "seven method chips", page.locator("#chips .chip").count() == 7)
     check(p + "two families", page.locator("#fam .card").count() == 2)
 
